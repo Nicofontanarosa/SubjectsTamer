@@ -200,7 +200,7 @@ def make_boss(monster):
     base_stats = boss["stats"]
     boss["normalStats"] = dict(base_stats)
     boss["battleStats"] = {
-        key: max(1, round(value * 1.5)) for key, value in base_stats.items()
+        key: max(1, round(value * 2)) for key, value in base_stats.items()
     }
     boss["stats"] = dict(boss["battleStats"])
     boss["isBoss"] = True

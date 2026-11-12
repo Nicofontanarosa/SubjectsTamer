@@ -1,0 +1,121 @@
+openapi: 3.1.0
+info:
+  title: Collector API
+  version: 1.0.0
+  description: Collection ownership, team constraints, card catalog, and image delivery.
+servers:
+  - url: https://collector:5005
+paths:
+  /monsters:
+    get:
+      security:
+        - bearerAuth: []
+      summary: Return catalog cards with the caller's ownership state
+      responses:
+        "200": { description: Image-backed subject catalog }
+  /monsters/{monsterId}/image:
+    get:
+      parameters:
+        - name: monsterId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Supplied JPEG art
+          content:
+            image/jpeg:
+              schema: { type: string, format: binary }
+        "404": { description: Unknown card }
+  /players/{playerId}/collection:
+    get:
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: playerId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200": { description: Owned card details, active team, and progress }
+        "403": { description: Not the collection owner }
+  /players/{playerId}/team:
+    put:
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: playerId
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [monsterIds]
+              properties:
+                monsterIds:
+                  type: array
+                  minItems: 3
+                  maxItems: 3
+                  uniqueItems: true
+                  items: { type: string }
+      responses:
+        "200": { description: Team saved }
+        "400": { description: Invalid team or unowned card }
+  /internal/players/{playerId}/collection/initialize:
+    post:
+      security:
+        - internalToken: []
+      parameters:
+        - $ref: "#/components/parameters/playerId"
+      summary: Assign three distinct random 6/9-CFU cards and create the initial team
+      responses:
+        "201": { description: Starter collection created }
+  /internal/players/{playerId}/team:
+    get:
+      security:
+        - internalToken: []
+      parameters:
+        - $ref: "#/components/parameters/playerId"
+      summary: Return the validated team and owned card IDs to Game Manager
+      responses:
+        "200": { description: Validated team }
+        "409": { description: Team is missing or invalid }
+  /internal/players/{playerId}/collection/monsters:
+    post:
+      security:
+        - internalToken: []
+      parameters:
+        - $ref: "#/components/parameters/playerId"
+      summary: Add a captured catalog card (idempotent)
+      responses:
+        "200": { description: Card belongs to player's collection }
+        "400": { description: Unknown card }
+  /internal/players/{playerId}/collection:
+    delete:
+      security:
+        - internalToken: []
+      parameters:
+        - $ref: "#/components/parameters/playerId"
+      summary: Delete collection and team
+      responses:
+        "204": { description: Player collection removed }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    internalToken:
+      type: apiKey
+      in: header
+      name: X-Internal-Token
+  parameters:
+    playerId:
+      name: playerId
+      in: path
+      required: true
+      schema: { type: string }

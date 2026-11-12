@@ -1,0 +1,226 @@
+openapi: 3.1.0
+info:
+  title: Monster Tamer Public API
+  version: 1.0.0
+  description: Public HTTPS contract. The frontend must use the API Gateway only.
+servers:
+  - url: https://localhost:5000
+security:
+  - bearerAuth: []
+paths:
+  /health:
+    get:
+      security: []
+      responses:
+        "200": { description: Gateway health }
+  /players:
+    post:
+      security: []
+      summary: Create a tamer and assign three starter cards
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, nickname]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, minLength: 10 }
+                nickname: { type: string, minLength: 1, maxLength: 32 }
+                avatar: { type: string }
+                bio: { type: string, maxLength: 500 }
+      responses:
+        "201": { description: Account and access token created }
+        "400": { description: Invalid account details }
+        "409": { description: Email or nickname already used }
+  /auth/login:
+    post:
+      security: []
+      summary: Start an authenticated session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string }
+      responses:
+        "200": { description: Player and JWT access token }
+        "401": { description: Invalid credentials }
+  /auth/session:
+    get:
+      summary: Return the current authenticated player
+      responses:
+        "200": { description: Current player profile }
+        "401": { description: Invalid or expired session }
+  /auth/logout:
+    post:
+      summary: Revoke the current session
+      responses:
+        "204": { description: Session revoked }
+        "401": { description: Invalid session }
+  /players/{playerId}:
+    parameters:
+      - $ref: "#/components/parameters/playerId"
+    get:
+      summary: Read the authenticated player's profile
+      responses:
+        "200": { description: Player profile }
+        "403": { description: Player does not own this profile }
+    put:
+      summary: Update nickname, avatar, and biography
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [nickname, avatar, bio]
+              properties:
+                nickname: { type: string, maxLength: 32 }
+                avatar: { type: string, maxLength: 40 }
+                bio: { type: string, maxLength: 500 }
+      responses:
+        "200": { description: Updated profile }
+        "400": { description: Invalid profile }
+        "409": { description: Nickname already used }
+    delete:
+      summary: Delete account and coordinate removal of collection and history
+      responses:
+        "204": { description: Account and associated data deleted }
+        "502": { description: Distributed cleanup is incomplete; retry }
+  /tutorial:
+    get:
+      summary: Read the game rules
+      responses:
+        "200": { description: Tutorial guide }
+  /monsters:
+    get:
+      summary: Browse every image-backed catalog card
+      responses:
+        "200": { description: Catalog cards and ownership flags }
+  /monsters/{monsterId}/image:
+    get:
+      parameters:
+        - $ref: "#/components/parameters/monsterId"
+      summary: Retrieve a card's original supplied artwork
+      responses:
+        "200":
+          description: JPEG card art
+          content:
+            image/jpeg:
+              schema: { type: string, format: binary }
+        "404": { description: Unknown card }
+  /players/{playerId}/collection:
+    get:
+      parameters:
+        - $ref: "#/components/parameters/playerId"
+      summary: Read owned cards and the active team
+      responses:
+        "200": { description: Collection, team IDs, and progress }
+        "403": { description: Player does not own this collection }
+  /players/{playerId}/team:
+    put:
+      parameters:
+        - $ref: "#/components/parameters/playerId"
+      summary: Replace the active team
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [monsterIds]
+              properties:
+                monsterIds:
+                  type: array
+                  minItems: 3
+                  maxItems: 3
+                  uniqueItems: true
+                  items: { type: string }
+      responses:
+        "200": { description: Saved active team }
+        "400": { description: Team size, duplicate, or ownership validation failed }
+  /battles:
+    post:
+      summary: Begin or resume the authenticated player's encounter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [playerId]
+              properties:
+                playerId: { type: string }
+      responses:
+        "201": { description: New battle, boss, team, and coin-toss initiative }
+        "200": { description: Existing active battle resumed }
+        "409": { description: Invalid team or all cards collected }
+  /battles/{battleId}/actions:
+    post:
+      parameters:
+        - $ref: "#/components/parameters/battleId"
+      summary: Perform a player attack and resolve the boss response
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [actionType, moveId]
+              properties:
+                actionType: { const: attack }
+                moveId: { type: string, description: Living card ID from the active team }
+      responses:
+        "200": { description: Updated battle state and final result, if concluded }
+        "400": { description: Invalid action or unavailable attacker }
+        "409": { description: Wrong turn }
+  /battles/{battleId}:
+    post:
+      parameters:
+        - $ref: "#/components/parameters/battleId"
+      summary: Withdraw from an active encounter (recorded as a loss)
+      responses:
+        "200": { description: Abandoned encounter and restored team }
+        "404": { description: Battle is unknown or expired }
+  /players/{playerId}/encounters:
+    get:
+      parameters:
+        - $ref: "#/components/parameters/playerId"
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+        - name: offset
+          in: query
+          schema: { type: integer, minimum: 0, default: 0 }
+      summary: Read encounter history
+      responses:
+        "200": { description: Paginated encounter records }
+        "403": { description: Player does not own this history }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    playerId:
+      name: playerId
+      in: path
+      required: true
+      schema: { type: string }
+    monsterId:
+      name: monsterId
+      in: path
+      required: true
+      schema: { type: string }
+    battleId:
+      name: battleId
+      in: path
+      required: true
+      schema: { type: string }

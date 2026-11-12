@@ -1,0 +1,146 @@
+[
+  {
+    "id": "programming-algorithms",
+    "name": "Programming and Algorithms",
+    "cfu": 15,
+    "department": "Computer Science",
+    "image": "informatica/ProgrammazioneAlgoritmica.jpeg",
+    "baseStats": { "hp": 200, "attack": 34, "defense": 26 }
+  },
+  {
+    "id": "mathematical-analysis",
+    "name": "Mathematical Analysis",
+    "cfu": 15,
+    "department": "Computer Science",
+    "image": "informatica/Analisi.jpeg",
+    "baseStats": { "hp": 200, "attack": 34, "defense": 26 }
+  },
+  {
+    "id": "computer-science-foundations",
+    "name": "Foundations of Computer Science",
+    "cfu": 12,
+    "department": "Computer Science",
+    "image": "informatica/FondamentiInformatica.jpeg",
+    "baseStats": { "hp": 179, "attack": 30, "defense": 22 }
+  },
+  {
+    "id": "computer-science-lab-i",
+    "name": "Computer Science Laboratory I",
+    "cfu": 12,
+    "department": "Computer Science",
+    "image": "informatica/LaboratorioI.jpeg",
+    "baseStats": { "hp": 179, "attack": 30, "defense": 22 }
+  },
+  {
+    "id": "linear-algebra",
+    "name": "Linear Algebra",
+    "cfu": 6,
+    "department": "Computer Science",
+    "image": "informatica/AlgebraLinarea.jpeg",
+    "baseStats": { "hp": 137, "attack": 21, "defense": 15 }
+  },
+  {
+    "id": "computer-architecture",
+    "name": "Computer Architecture and Operating Systems",
+    "cfu": 12,
+    "department": "Computer Science",
+    "image": "informatica/ArchitetturaSistemiOperativi.jpeg",
+    "baseStats": { "hp": 179, "attack": 30, "defense": 22 }
+  },
+  {
+    "id": "computer-science-lab-ii",
+    "name": "Computer Science Laboratory II",
+    "cfu": 12,
+    "department": "Computer Science",
+    "image": "informatica/LaboratorioII.jpeg",
+    "baseStats": { "hp": 179, "attack": 30, "defense": 22 }
+  },
+  {
+    "id": "programming-paradigms",
+    "name": "Programming Paradigms",
+    "cfu": 6,
+    "department": "Computer Science",
+    "image": "informatica/ParadigmiProgrammazione.jpeg",
+    "baseStats": { "hp": 137, "attack": 21, "defense": 15 }
+  },
+  {
+    "id": "operations-research",
+    "name": "Operations Research",
+    "cfu": 6,
+    "department": "Computer Science",
+    "image": "informatica/RicercaOperativa.jpeg",
+    "baseStats": { "hp": 137, "attack": 21, "defense": 15 }
+  },
+  {
+    "id": "numerical-computing",
+    "name": "Numerical Computing",
+    "cfu": 6,
+    "department": "Computer Science",
+    "image": "informatica/CalcoloNumerico.jpeg",
+    "baseStats": { "hp": 137, "attack": 21, "defense": 15 }
+  },
+  {
+    "id": "statistics",
+    "name": "Statistics",
+    "cfu": 6,
+    "department": "Computer Science",
+    "image": "informatica/Statistica.jpeg",
+    "baseStats": { "hp": 137, "attack": 21, "defense": 15 }
+  },
+  {
+    "id": "database-systems",
+    "name": "Database Systems",
+    "cfu": 9,
+    "department": "Computer Science",
+    "image": "informatica/BasiDati.jpeg",
+    "baseStats": { "hp": 158, "attack": 26, "defense": 19 }
+  },
+  {
+    "id": "software-engineering",
+    "name": "Software Engineering",
+    "cfu": 9,
+    "department": "Computer Science",
+    "image": "informatica/IngegneriaSoftware.jpg",
+    "baseStats": { "hp": 158, "attack": 26, "defense": 19 }
+  },
+  {
+    "id": "artificial-intelligence",
+    "name": "Artificial Intelligence",
+    "cfu": 6,
+    "department": "Computer Science",
+    "image": "informatica/IntelligenzaArtificiale.jpg",
+    "baseStats": { "hp": 137, "attack": 21, "defense": 15 }
+  },
+  {
+    "id": "english-qualification",
+    "name": "English Language Qualification",
+    "cfu": 3,
+    "department": "Computer Science",
+    "image": "informatica/IdoneitaLinguaInglese.jpg",
+    "baseStats": { "hp": 116, "attack": 16, "defense": 12 }
+  },
+  {
+    "id": "general-physics-i",
+    "name": "General Physics I",
+    "cfu": 12,
+    "department": "Engineering",
+    "image": "Ingegneria/FisicaGeneraleI.jpg",
+    "baseStats": { "hp": 179, "attack": 30, "defense": 22 }
+  },
+  {
+    "id": "geometry",
+    "name": "Geometry",
+    "cfu": 6,
+    "department": "Engineering",
+    "image": "Ingegneria/Geometria.jpg",
+    "baseStats": { "hp": 137, "attack": 21, "defense": 15 }
+  },
+  {
+    "id": "business-economics",
+    "name": "Business Economics and Management",
+    "cfu": 6,
+    "department": "Engineering",
+    "image": "Ingegneria/EconomiaOrganizzazioneAziendale.jpg",
+    "baseStats": { "hp": 137, "attack": 21, "defense": 15 }
+  }
+]

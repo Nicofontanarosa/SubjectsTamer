@@ -1,0 +1,74 @@
+openapi: 3.1.0
+info:
+  title: Encounter History API
+  version: 1.0.0
+  description: Encounter owns concluded match history. Game Manager submits authoritative results.
+servers:
+  - url: https://encounter:5005
+paths:
+  /players/{playerId}/encounters:
+    get:
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: playerId
+          in: path
+          required: true
+          schema: { type: string }
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+        - name: offset
+          in: query
+          schema: { type: integer, minimum: 0, default: 0 }
+      responses:
+        "200": { description: Paginated history with boss and team card data }
+        "403": { description: Not the history owner }
+  /internal/encounters:
+    post:
+      security:
+        - internalToken: []
+      summary: Persist a completed encounter once per battle ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [battleId, playerId, bossId, teamUsed, result, turns, timestamp]
+              properties:
+                battleId: { type: string }
+                playerId: { type: string }
+                bossId: { type: string }
+                teamUsed: { type: array, minItems: 3, maxItems: 3, uniqueItems: true, items: { type: string } }
+                result: { type: string, enum: [win, loss] }
+                outcome: { type: string }
+                turns: { type: integer, minimum: 0 }
+                timestamp: { type: string, format: date-time }
+                startedAt: { type: string, format: date-time }
+      responses:
+        "201": { description: Encounter saved }
+        "200": { description: Identical retry acknowledged }
+        "409": { description: Battle ID already belongs to a different result }
+  /internal/players/{playerId}/encounters:
+    delete:
+      security:
+        - internalToken: []
+      parameters:
+        - name: playerId
+          in: path
+          required: true
+          schema: { type: string }
+      summary: Delete a player's history during account deletion
+      responses:
+        "204": { description: History removed }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    internalToken:
+      type: apiKey
+      in: header
+      name: X-Internal-Token

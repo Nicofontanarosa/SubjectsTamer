@@ -1,0 +1,77 @@
+openapi: 3.1.0
+info:
+  title: Player Manager Internal API
+  version: 1.0.0
+  description: Account, profile, session, and tutorial service. Service calls use HTTPS.
+servers:
+  - url: https://player-manager:5005
+paths:
+  /players:
+    post:
+      summary: Register player and initialize the collection
+      responses:
+        "201": { description: Player and access token created }
+  /auth/login:
+    post:
+      summary: Verify password and issue a signed JWT
+      responses:
+        "200": { description: Player profile and access token }
+        "401": { description: Invalid credentials }
+  /auth/logout:
+    post:
+      summary: Revoke a session
+      responses:
+        "204": { description: Session revoked }
+  /auth/session:
+    get:
+      summary: Read the session's player
+      responses:
+        "200": { description: Player profile }
+  /internal/auth/introspect:
+    get:
+      security:
+        - internalToken: []
+          bearerAuth: []
+      summary: Validate token signature, expiry, and persisted session revocation
+      responses:
+        "200": { description: Active player ID }
+        "401": { description: Invalid or revoked token }
+        "403": { description: Internal service token required }
+  /players/{playerId}:
+    parameters:
+      - name: playerId
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      security:
+        - bearerAuth: []
+      responses:
+        "200": { description: Player profile }
+        "403": { description: Not the profile owner }
+    put:
+      security:
+        - bearerAuth: []
+      responses:
+        "200": { description: Updated player profile }
+    delete:
+      security:
+        - bearerAuth: []
+      responses:
+        "204": { description: Account and coordinated service data deleted }
+  /tutorial:
+    get:
+      security:
+        - bearerAuth: []
+      responses:
+        "200": { description: Static field guide }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    internalToken:
+      type: apiKey
+      in: header
+      name: X-Internal-Token

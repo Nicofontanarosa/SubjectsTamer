@@ -49,7 +49,7 @@ Computer Science receives its documented 20% Attack advantage against Engineerin
 
 ## Image-backed catalog
 
-Only the 18 pictured subjects are enabled: 15 Computer Science courses and 3 Engineering courses. Their catalog records, department, CFU, derived rarity/stats, and artwork paths are in `shared/catalog.json`; the Collector serves the corresponding existing card images. New subjects are not added unless matching project artwork is provided.
+Only subjects with matching artwork in `icons/` are enabled: 15 Computer Science courses, 3 Engineering courses, and 16 Medicina e Chirurgia courses. Their catalog records, department, CFU, derived rarity/stats, and artwork paths are in `shared/catalog.json`; the corresponding card images are kept in `shared/assets/` and served by the Collector. New subjects are not added unless matching project artwork is provided.
 
 ## Project structure
 
@@ -62,7 +62,7 @@ code/
 ├── game_manager/         In-memory turn-based battle lifecycle and rewards
 ├── gateway/              The only host-published REST entry point
 ├── player_manager/       Registration, password login, profiles, and tutorial
-├── shared/               Image-backed catalog and tutorial JSON
+├── shared/               Image-backed catalog, tutorial, and card artwork
 ├── docs/openapi/          Public and service REST API contracts
 └── docker-compose.yml     Backend deployment
 ```

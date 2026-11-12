@@ -6,7 +6,6 @@ RUN pip install --no-cache-dir -r requirements.txt \
     && mkdir -p /data \
     && chown -R appuser:appuser /app /data
 COPY common /app/common
-COPY shared /app/shared
 COPY player_manager/app.py /app/app.py
 COPY shared/tutorial.json /app/tutorial.json
 USER 10001:10001

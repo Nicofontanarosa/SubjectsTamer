@@ -14,10 +14,11 @@ from common.storage import connect
 app = Flask(__name__)
 app.logger.setLevel(logging.INFO)
 CATALOG, MONSTERS = load_catalog()
-ASSET_DIR = Path("/app/assets")
+ASSET_DIR = Path("/app/shared/assets")
 
-
+# eseguita all'avvio del servizio per assicurarsi che il database sia pronto prima di gestire le richieste
 def initialize_database():
+    # nome db = collection.sqlite
     with connect("collection.sqlite") as db:
         db.executescript(
             """
@@ -36,7 +37,6 @@ def initialize_database():
             """
         )
 
-
 def owned_ids(db, player_id):
     rows = db.execute(
         "SELECT monster_id FROM collection WHERE player_id = ? ORDER BY acquired_at, monster_id",
@@ -44,20 +44,17 @@ def owned_ids(db, player_id):
     ).fetchall()
     return [row["monster_id"] for row in rows]
 
-
 def saved_team(db, player_id):
     row = db.execute(
         "SELECT slot_1, slot_2, slot_3 FROM teams WHERE player_id = ?", (player_id,)
     ).fetchone()
     return list(row) if row else None
 
-
 def monster_payload(monster_id, current_hp=None):
     payload = add_stats(MONSTERS[monster_id])
     if current_hp is not None:
         payload["currentHp"] = current_hp
     return payload
-
 
 @app.post("/internal/players/<player_id>/collection/initialize")
 def initialize_collection(player_id):
@@ -81,7 +78,6 @@ def initialize_collection(player_id):
         )
     return jsonify({"playerId": player_id, "monsterIds": [monster["id"] for monster in chosen]}), 201
 
-
 @app.get("/players/<player_id>/collection")
 def get_collection(player_id):
     with connect("collection.sqlite") as db:
@@ -95,7 +91,7 @@ def get_collection(player_id):
         }
     ), 200
 
-
+# collezione personale
 @app.get("/monsters")
 def get_catalog():
     player_id = request.args.get("playerId")
@@ -103,7 +99,6 @@ def get_catalog():
         owned = set(owned_ids(db, player_id)) if player_id else set()
     monsters = [{**monster_payload(monster["id"]), "owned": monster["id"] in owned} for monster in CATALOG]
     return jsonify({"monsters": monsters, "progress": {"owned": len(owned), "total": len(CATALOG)}}), 200
-
 
 @app.get("/monsters/<monster_id>/image")
 def get_monster_image(monster_id):
@@ -115,7 +110,6 @@ def get_monster_image(monster_id):
         app.logger.error("Catalog image is missing for %s", monster_id)
         return error_response("image_unavailable", "Card artwork is unavailable", 500)
     return send_file(image_path, mimetype="image/jpeg", conditional=True, max_age=3600)
-
 
 @app.put("/players/<player_id>/team")
 def update_team(player_id):
@@ -142,7 +136,6 @@ def update_team(player_id):
         )
     return jsonify({"playerId": player_id, "team": monster_ids}), 200
 
-
 @app.get("/internal/players/<player_id>/team")
 def get_validated_team(player_id):
     with connect("collection.sqlite") as db:
@@ -160,7 +153,6 @@ def get_validated_team(player_id):
         }
     ), 200
 
-
 @app.post("/internal/players/<player_id>/collection/monsters")
 def add_monster(player_id):
     body = request.get_json(silent=True)
@@ -175,7 +167,6 @@ def add_monster(player_id):
         ids = owned_ids(db, player_id)
     return jsonify({"playerId": player_id, "monster": monster_payload(monster_id), "owned": len(ids)}), 200
 
-
 @app.delete("/internal/players/<player_id>/collection")
 def delete_collection(player_id):
     with connect("collection.sqlite") as db:
@@ -183,10 +174,8 @@ def delete_collection(player_id):
         db.execute("DELETE FROM collection WHERE player_id = ?", (player_id,))
     return "", 204
 
-
 @app.get("/health")
 def health():
     return jsonify({"status": "ok", "service": "collector"}), 200
-
 
 initialize_database()

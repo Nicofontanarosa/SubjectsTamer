@@ -1,6 +1,6 @@
 {
   "title": "The Tamer's Field Guide",
-  "objective": "Collect every pictured subject and earn your graduation.",
+  "objective": "Collect every subject and earn your Graduation.",
   "rules": [
     "Choose three distinct subjects from your collection before an encounter.",
     "Wild subjects are chosen by credit value and never repeat a subject you own.",
@@ -9,7 +9,6 @@
     "The boss answers with a random strike against one of your living allies.",
     "A victory adds the boss at its normal stats. A defeat grants no subject.",
     "Every encounter restores your team. Battles are unlimited.",
-    "Department matchups can strengthen a strike or expose a weakness.",
-    "Only courses with artwork in this edition's card gallery are playable."
+    "Department matchups can strengthen a strike or expose a weakness."
   ]
 }

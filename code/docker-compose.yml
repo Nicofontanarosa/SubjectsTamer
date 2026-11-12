@@ -1,5 +1,8 @@
+# Docker Compose file for the project, 5 services, 1 published port, 3 volumes, 1 network
+
 services:
   gateway:
+  # invece di fare build: ./gateway, facciamo build con context e dockerfile separati
     build:
       context: .
       dockerfile: gateway/Dockerfile
@@ -10,6 +13,8 @@ services:
       COLLECTOR_URL: http://collector:5005
       GAME_MANAGER_URL: http://game-manager:5005
       ENCOUNTER_URL: http://encounter:5005
+      # variabile di configurazione del gateway. Indica quali indirizzi del frontend possono fare
+      # richieste al gateway via browser
       CORS_ORIGINS: http://localhost:8000,http://127.0.0.1:8000
     depends_on:
       player-manager:
@@ -21,6 +26,8 @@ services:
       encounter:
         condition: service_healthy
     healthcheck:
+    # test: ["CMD", "python", "-c", ...] è un modo per eseguire un comando python inline
+      # È il controllo di salute di Docker Compose per il servizio, richiede http://localhost:5005/health e aspetta al massimo 3 secondi.
       test:
         - CMD
         - python
@@ -40,6 +47,7 @@ services:
       COLLECTOR_URL: http://collector:5005
       ENCOUNTER_URL: http://encounter:5005
       GAME_MANAGER_URL: http://game-manager:5005
+    # montiamo un volume per i dati dei giocatori, così che siano persistenti anche se il container viene ricreato
     volumes:
       - player-data:/data
     depends_on:
@@ -84,6 +92,7 @@ services:
     environment:
       COLLECTOR_URL: http://collector:5005
       ENCOUNTER_URL: http://encounter:5005
+      # Se non ci sono mosse per 30 minuti, Game Manager la considera scaduta e libera lo stato temporaneo in memoria
       BATTLE_TTL_MINUTES: 30
     depends_on:
       collector:
@@ -120,6 +129,7 @@ services:
       retries: 12
       start_period: 15s
 
+# i volumi sono definiti qui, così che siano persistenti anche se i container vengono ricreati
 volumes:
   player-data:
   collector-data:

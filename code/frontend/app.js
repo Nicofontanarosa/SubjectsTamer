@@ -250,6 +250,7 @@ function codexTemplate() {
         <option value="all" ${state.department === "all" ? "selected" : ""}>All halls</option>
         <option value="Computer Science" ${state.department === "Computer Science" ? "selected" : ""}>Computer Science</option>
         <option value="Engineering" ${state.department === "Engineering" ? "selected" : ""}>Engineering</option>
+        <option value="Medicina e Chirurgia" ${state.department === "Medicina e Chirurgia" ? "selected" : ""}>Medicina e Chirurgia</option>
       </select>
     </div>
     <div class="card-grid">${available.length ? available.map((monster) => cardTemplate(monster, { owned: monster.owned })).join("") : `<div class="card-empty">Every card in this hall is already yours.</div>`}</div>`;

@@ -142,5 +142,117 @@
     "department": "Engineering",
     "image": "Ingegneria/EconomiaOrganizzazioneAziendale.jpg",
     "baseStats": { "hp": 137, "attack": 21, "defense": 15 }
+  },
+  {
+    "id": "chimiche-della-vita",
+    "name": "Chimiche della Vita",
+    "cfu": 12,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/ChimichedellaVita.jpeg"
+  },
+  {
+    "id": "biologia-molecolare",
+    "name": "Biologia Molecolare",
+    "cfu": 12,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/BiologiaMolecolare.jpeg"
+  },
+  {
+    "id": "istologia-ed-embriologia",
+    "name": "Istologia ed Embriologia",
+    "cfu": 9,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/IstologiaEmbriologia.jpeg"
+  },
+  {
+    "id": "anatomia-umana-i",
+    "name": "Anatomia Umana I",
+    "cfu": 12,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/AnatomiaUmanaI.jpeg"
+  },
+  {
+    "id": "biochimica-clinica",
+    "name": "Biochimica Clinica",
+    "cfu": 12,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/BiochimicaClinica.jpeg"
+  },
+  {
+    "id": "inglese-scientifico",
+    "name": "Inglese Scientifico",
+    "cfu": 3,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/IngleseScientifico.jpeg"
+  },
+  {
+    "id": "anatomia-umana-ii",
+    "name": "Anatomia Umana II",
+    "cfu": 9,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/AnatomiaUmanaII.jpeg"
+  },
+  {
+    "id": "fisiologia-umana",
+    "name": "Fisiologia Umana",
+    "cfu": 15,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/FisiologiaUmana.jpeg"
+  },
+  {
+    "id": "patologia-generale-e-immunologia",
+    "name": "Patologia Generale e Immunologia",
+    "cfu": 12,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/PatologiaGeneraleImmunologia.jpeg"
+  },
+  {
+    "id": "microbiologia",
+    "name": "Microbiologia",
+    "cfu": 9,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/Microbiologia.jpeg"
+  },
+  {
+    "id": "fisiopatologia-generale",
+    "name": "Fisiopatologia Generale",
+    "cfu": 9,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/FisiopatologiaGenerale.jpeg"
+  },
+  {
+    "id": "farmacologia-e-tossicologia",
+    "name": "Farmacologia e Tossicologia",
+    "cfu": 12,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/FarmacologiaTossicologia.jpeg"
+  },
+  {
+    "id": "anatomia-patologica",
+    "name": "Anatomia Patologica",
+    "cfu": 12,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/AnatomiaPatologica.jpeg"
+  },
+  {
+    "id": "semiotica-e-metodologia-clinica",
+    "name": "Semiotica e Metodologia Clinica",
+    "cfu": 12,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/SemioticaMetodologiaClinica.jpeg"
+  },
+  {
+    "id": "medicina-di-laboratorio-e-diagnostica",
+    "name": "Medicina di Laboratorio e Diagnostica",
+    "cfu": 9,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/MedicinaLaboratorioDiagnostica.jpeg"
+  },
+  {
+    "id": "malattie-infettive-e-dermatologia",
+    "name": "Malattie Infettive e Dermatologia",
+    "cfu": 9,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/MalattieInfettiveDermatologia.jpeg"
   }
 ]

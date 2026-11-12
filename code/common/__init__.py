@@ -1,0 +1,1 @@
+# serve a Python per riconoscere common come pacchetto importabile.

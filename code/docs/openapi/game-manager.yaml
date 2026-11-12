@@ -2,11 +2,9 @@ openapi: 3.1.0
 info:
   title: Game Manager API
   version: 1.0.0
-  description: Battle lifecycle and resolution. Client requests are routed only through the API Gateway.
+  description: Battle lifecycle and resolution. Client requests are routed through the API Gateway.
 servers:
-  - url: https://localhost:5000
-security:
-  - bearerAuth: []
+  - url: http://localhost:5000
 paths:
   /battles:
     post:
@@ -35,12 +33,13 @@ paths:
           application/json:
             schema:
               type: object
-              required: [actionType, moveId]
+              required: [actionType, moveId, playerId]
               properties:
                 actionType: { const: attack }
                 moveId: { type: string }
+                playerId: { type: string }
       responses:
-        "200": { description: Current battle state; on completion, reward and history are persisted }
+        "200": { description: Current battle state; reward and history are persisted on completion }
         "400": { description: Invalid action or card }
         "409": { description: Not the player's turn }
         "502": { description: Reward or history persistence is pending; retry safely }
@@ -49,13 +48,20 @@ paths:
       parameters:
         - $ref: "#/components/parameters/battleId"
       summary: Withdraw from an active battle and record the loss
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [playerId]
+              properties:
+                playerId: { type: string }
       responses:
         "200": { description: Battle abandoned and team restored }
         "404": { description: Battle missing or expired }
   /internal/players/{playerId}/battles:
     delete:
-      security:
-        - internalToken: []
       parameters:
         - name: playerId
           in: path
@@ -65,15 +71,6 @@ paths:
       responses:
         "204": { description: Player battle state removed }
 components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-    internalToken:
-      type: apiKey
-      in: header
-      name: X-Internal-Token
   parameters:
     battleId:
       name: battleId

@@ -7,9 +7,7 @@ from flask import Flask, jsonify, request
 from common.game import (
     add_stats,
     error_response,
-    internal_required,
     load_catalog,
-    require_player_access,
 )
 from common.storage import connect
 
@@ -64,7 +62,6 @@ def encounter_payload(row):
 
 
 @app.post("/internal/encounters")
-@internal_required
 def record_encounter():
     body = request.get_json(silent=True)
     if not isinstance(body, dict):
@@ -141,9 +138,6 @@ def record_encounter():
 
 @app.get("/players/<player_id>/encounters")
 def get_encounters(player_id):
-    denial = require_player_access(player_id)
-    if denial:
-        return denial
     try:
         limit = int(request.args.get("limit", "20"))
         offset = int(request.args.get("offset", "0"))
@@ -169,7 +163,6 @@ def get_encounters(player_id):
 
 
 @app.delete("/internal/players/<player_id>/encounters")
-@internal_required
 def delete_encounters(player_id):
     with connect("encounters.sqlite") as db:
         db.execute("DELETE FROM encounters WHERE player_id = ?", (player_id,))

@@ -4,13 +4,15 @@ info:
   version: 1.0.0
   description: Collection ownership, team constraints, card catalog, and image delivery.
 servers:
-  - url: https://collector:5005
+  - url: http://collector:5005
 paths:
   /monsters:
     get:
-      security:
-        - bearerAuth: []
-      summary: Return catalog cards with the caller's ownership state
+      parameters:
+        - name: playerId
+          in: query
+          schema: { type: string }
+      summary: Return catalog cards with optional ownership state
       responses:
         "200": { description: Image-backed subject catalog }
   /monsters/{monsterId}/image:
@@ -29,25 +31,14 @@ paths:
         "404": { description: Unknown card }
   /players/{playerId}/collection:
     get:
-      security:
-        - bearerAuth: []
       parameters:
-        - name: playerId
-          in: path
-          required: true
-          schema: { type: string }
+        - $ref: "#/components/parameters/playerId"
       responses:
         "200": { description: Owned card details, active team, and progress }
-        "403": { description: Not the collection owner }
   /players/{playerId}/team:
     put:
-      security:
-        - bearerAuth: []
       parameters:
-        - name: playerId
-          in: path
-          required: true
-          schema: { type: string }
+        - $ref: "#/components/parameters/playerId"
       requestBody:
         required: true
         content:
@@ -67,8 +58,6 @@ paths:
         "400": { description: Invalid team or unowned card }
   /internal/players/{playerId}/collection/initialize:
     post:
-      security:
-        - internalToken: []
       parameters:
         - $ref: "#/components/parameters/playerId"
       summary: Assign three distinct random 6/9-CFU cards and create the initial team
@@ -76,8 +65,6 @@ paths:
         "201": { description: Starter collection created }
   /internal/players/{playerId}/team:
     get:
-      security:
-        - internalToken: []
       parameters:
         - $ref: "#/components/parameters/playerId"
       summary: Return the validated team and owned card IDs to Game Manager
@@ -86,8 +73,6 @@ paths:
         "409": { description: Team is missing or invalid }
   /internal/players/{playerId}/collection/monsters:
     post:
-      security:
-        - internalToken: []
       parameters:
         - $ref: "#/components/parameters/playerId"
       summary: Add a captured catalog card (idempotent)
@@ -96,23 +81,12 @@ paths:
         "400": { description: Unknown card }
   /internal/players/{playerId}/collection:
     delete:
-      security:
-        - internalToken: []
       parameters:
         - $ref: "#/components/parameters/playerId"
       summary: Delete collection and team
       responses:
         "204": { description: Player collection removed }
 components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-    internalToken:
-      type: apiKey
-      in: header
-      name: X-Internal-Token
   parameters:
     playerId:
       name: playerId

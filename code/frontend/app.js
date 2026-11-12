@@ -1,4 +1,5 @@
-const API_BASE = (window.MONSTER_TAMER_API || "https://localhost:5000").replace(/\/+$/, "");
+const API_BASE = (window.MONSTER_TAMER_API || "http://localhost:5000").replace(/\/+$/, "");
+localStorage.removeItem("monsterTamerToken");
 const app = document.getElementById("app");
 const toastElement = document.getElementById("toast");
 const detailDialog = document.getElementById("detail-dialog");
@@ -6,7 +7,6 @@ const guideDialog = document.getElementById("guide-dialog");
 const imageCache = new Map();
 const avatarMarks = { ranger: "♧", scholar: "✧", warden: "⬟", sage: "◈" };
 const state = {
-  token: localStorage.getItem("monsterTamerToken"),
   player: null,
   collection: [],
   teamIds: [],
@@ -44,7 +44,6 @@ function avatarMark(value) {
 
 async function api(path, options = {}) {
   const headers = new Headers(options.headers || {});
-  if (state.token) headers.set("Authorization", `Bearer ${state.token}`);
   if (options.body !== undefined) headers.set("Content-Type", "application/json");
   let response;
   try {
@@ -56,7 +55,7 @@ async function api(path, options = {}) {
       keepalive: Boolean(options.keepalive),
     });
   } catch {
-    throw new ApiError(`The academy gateway at ${API_BASE} could not be reached. Start the backend and trust its local certificate.`, 0);
+    throw new ApiError(`The academy gateway at ${API_BASE} could not be reached. Start the backend and try again.`, 0);
   }
   if (options.raw && response.ok) return response.blob();
   if (response.status === 204) return null;
@@ -90,7 +89,7 @@ function authScreen(mode = "login", message = "") {
   app.innerHTML = `
     <section class="auth-shell">
       <div class="auth-art">
-        <div class="auth-wordmark">Monster Tamer<span>The Academy of Ashenvale</span></div>
+        <div class="auth-wordmark">Subject Tamer</div>
         <div class="art-sigil" aria-hidden="true">✦</div>
         <div class="auth-copy">
           <div class="eyebrow">A living card chronicle</div>
@@ -100,14 +99,13 @@ function authScreen(mode = "login", message = "") {
       </div>
       <div class="auth-panel">
         <form class="auth-card" data-form="${registering ? "register" : "login"}">
-          <div class="eyebrow">${registering ? "Begin your chronicle" : "Welcome back, Tamer"}</div>
+          <div class="eyebrow">${registering ? "Begin your journey" : "Welcome back, Tamer"}</div>
           <h2>${registering ? "Claim your place" : "Enter the halls"}</h2>
-          <p class="subline">${registering ? "Your first companions await." : "Your collection is kept safe between visits."}</p>
+          ${registering ? "" : `<p class="subline">Your collection is kept safe between visits.</p>`}
           <div class="form-error" aria-live="polite">${escapeHtml(message)}</div>
           ${registering ? `<div class="field"><label for="nickname">Tamer name</label><input id="nickname" name="nickname" autocomplete="nickname" maxlength="32" required placeholder="e.g. Rowan of the Vale"></div>` : ""}
           <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required maxlength="254" placeholder="you@example.com"></div>
           <div class="field"><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="${registering ? "new-password" : "current-password"}" minlength="${registering ? "10" : "1"}" required placeholder="${registering ? "At least 10 characters" : "Your password"}"></div>
-          ${registering ? `<div class="field"><label for="avatar">Emblem</label><select id="avatar" name="avatar"><option value="ranger">Ranger</option><option value="scholar">Scholar</option><option value="warden">Warden</option><option value="sage">Sage</option></select></div>` : ""}
           <button class="button primary full" type="submit">${registering ? "Create account" : "Sign in"} <span aria-hidden="true">✦</span></button>
           <div class="auth-switch">${registering ? "Already sworn to the academy?" : "New to Ashenvale?"}
             <button type="button" class="text-button" data-action="auth-switch">${registering ? "Sign in" : "Create an account"}</button>
@@ -179,7 +177,7 @@ function topbarTemplate() {
   ];
   return `
     <header class="topbar">
-      <div class="brand"><div class="brand-mark"><span>✦</span></div><div>Monster Tamer<small>Academy of Ashenvale</small></div></div>
+      <div class="brand"><div class="brand-mark"><span>✦</span></div><div>Subject Tamer</div></div>
       <div class="topbar-right">
         <div class="player-chip"><div class="avatar" aria-label="${escapeHtml(state.player?.avatar || "ranger")} emblem">${avatarMark(state.player?.avatar)}</div><span>${escapeHtml(state.player?.nickname || "Tamer")}</span></div>
         <button class="button ghost small" data-action="logout" type="button">Leave</button>
@@ -211,7 +209,7 @@ function hallTemplate() {
       </div>
     </section>
     <div style="margin-top:1.2rem">${progressTemplate()}</div>
-    ${pageHeading("Ready at your side", "Active company", "Three cards. One oath.")}
+    ${pageHeading("Ready at your side", "Active company")}
     <div class="card-grid">${team.length ? team.map((monster) => cardTemplate(monster, { owned: true })).join("") : `<div class="card-empty">Choose three companions in your collection.</div>`}</div>
     ${pageHeading("Recent deeds", "Latest in the chronicle")}
     ${historyPreviewTemplate()}`;
@@ -363,7 +361,7 @@ function currentPageTemplate() {
 }
 
 function render() {
-  app.innerHTML = `<div class="game-shell">${topbarTemplate()}<main>${currentPageTemplate()}</main><footer class="footer-mark">By wisdom, strength, and fellowship</footer></div>`;
+  app.innerHTML = `<div class="game-shell">${topbarTemplate()}<main>${currentPageTemplate()}</main><footer class="footer-mark">by Nicolò, Sara, Antonio e Riccardo</footer></div>`;
   hydrateImages(app);
 }
 
@@ -397,7 +395,7 @@ async function refreshGameData() {
   const [profile, collection, catalog, history, tutorial] = await Promise.all([
     api(`/players/${encodeURIComponent(state.player.playerId)}`),
     api(`/players/${encodeURIComponent(state.player.playerId)}/collection`),
-    api("/monsters"),
+    api(`/monsters?playerId=${encodeURIComponent(state.player.playerId)}`),
     api(`/players/${encodeURIComponent(state.player.playerId)}/encounters?limit=100`),
     api("/tutorial"),
   ]);
@@ -415,8 +413,8 @@ async function enterGame() {
     const storedPlayer = localStorage.getItem("monsterTamerPlayer");
     state.player = storedPlayer ? JSON.parse(storedPlayer) : null;
     if (!state.player?.playerId) {
-      const session = await api("/auth/session");
-      state.player = session.player;
+      authScreen("login");
+      return;
     }
     await refreshGameData();
     localStorage.setItem("monsterTamerPlayer", JSON.stringify(state.player));
@@ -427,10 +425,8 @@ async function enterGame() {
       starterReveal();
     }
   } catch (error) {
-    if (error.status === 401 || error.status === 404) {
-      localStorage.removeItem("monsterTamerToken");
+    if (error.status === 404) {
       localStorage.removeItem("monsterTamerPlayer");
-      state.token = null;
       authScreen("login", "Your session has ended. Sign in to continue.");
     } else {
       authScreen("login", error.message);
@@ -455,10 +451,8 @@ async function submitAuth(form) {
     const response = mode === "register"
       ? await api("/players", { method: "POST", body: { ...data, bio: "" } })
       : await api("/auth/login", { method: "POST", body: data });
-    state.token = response.accessToken;
     state.player = response.player;
     state.justRegistered = mode === "register";
-    localStorage.setItem("monsterTamerToken", state.token);
     localStorage.setItem("monsterTamerPlayer", JSON.stringify(state.player));
     await enterGame();
   } catch (error) {
@@ -510,7 +504,7 @@ async function attack(monsterId, button) {
   try {
     state.battle = await api(`/battles/${encodeURIComponent(state.battle.battleId)}/actions`, {
       method: "POST",
-      body: { actionType: "attack", moveId: monsterId },
+      body: { actionType: "attack", moveId: monsterId, playerId: state.player.playerId },
     });
     if (state.battle.finalized) await refreshGameData();
     render();
@@ -526,7 +520,10 @@ async function attack(monsterId, button) {
 async function abandonBattle() {
   if (!window.confirm("Withdraw from this encounter? It will be recorded as a defeat.")) return;
   try {
-    state.battle = await api(`/battles/${encodeURIComponent(state.battle.battleId)}`, { method: "POST" });
+    state.battle = await api(`/battles/${encodeURIComponent(state.battle.battleId)}`, {
+      method: "POST",
+      body: { playerId: state.player.playerId },
+    });
     await refreshGameData();
     render();
   } catch (error) {
@@ -633,13 +630,11 @@ async function deleteAccount() {
 }
 
 function clearSession() {
-  localStorage.removeItem("monsterTamerToken");
   localStorage.removeItem("monsterTamerPlayer");
   for (const urlPromise of imageCache.values()) {
     urlPromise.then((url) => URL.revokeObjectURL(url)).catch(() => {});
   }
   imageCache.clear();
-  state.token = null;
   state.player = null;
   state.collection = [];
   state.teamIds = [];
@@ -649,14 +644,6 @@ function clearSession() {
 }
 
 async function logout() {
-  try {
-    await api("/auth/logout", { method: "POST" });
-  } catch (error) {
-    if (error.status !== 401) {
-      notify(error.message, "error");
-      return;
-    }
-  }
   clearSession();
   authScreen("login");
 }
@@ -706,7 +693,7 @@ app.addEventListener("change", (event) => {
   }
 });
 
-app.addEventListener("click", async (event) => {
+document.addEventListener("click", async (event) => {
   const pageButton = event.target.closest("[data-page]");
   if (pageButton) {
     openPage(pageButton.dataset.page);
@@ -779,14 +766,12 @@ guideDialog.addEventListener("click", (event) => {
   if (event.target === guideDialog) guideDialog.close();
 });
 window.addEventListener("pagehide", () => {
-  if (state.token) {
-    for (const urlPromise of imageCache.values()) {
-      urlPromise.then((url) => URL.revokeObjectURL(url)).catch(() => {});
-    }
+  for (const urlPromise of imageCache.values()) {
+    urlPromise.then((url) => URL.revokeObjectURL(url)).catch(() => {});
   }
 });
 
-if (state.token) {
+if (localStorage.getItem("monsterTamerPlayer")) {
   enterGame();
 } else {
   authScreen("login");

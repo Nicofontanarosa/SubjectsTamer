@@ -1,18 +1,4 @@
 services:
-  cert-init:
-    build:
-      context: .
-      dockerfile: cert_init/Dockerfile
-    user: "10001:10001"
-    volumes:
-      - cert-ca:/out/ca
-      - cert-gateway:/out/gateway
-      - cert-player-manager:/out/player-manager
-      - cert-collector:/out/collector
-      - cert-game-manager:/out/game-manager
-      - cert-encounter:/out/encounter
-    restart: "no"
-
   gateway:
     build:
       context: .
@@ -20,21 +6,12 @@ services:
     ports:
       - "127.0.0.1:5000:5005"
     environment:
-      PLAYER_MANAGER_URL: https://player-manager:5005
-      COLLECTOR_URL: https://collector:5005
-      GAME_MANAGER_URL: https://game-manager:5005
-      ENCOUNTER_URL: https://encounter:5005
-      JWT_SECRET: ${JWT_SECRET:-local-development-jwt-secret-change-before-deployment}
-      INTERNAL_TOKEN: ${INTERNAL_TOKEN:-local-development-internal-token-change-before-deployment}
-      TLS_CA: /certs/ca.pem
+      PLAYER_MANAGER_URL: http://player-manager:5005
+      COLLECTOR_URL: http://collector:5005
+      GAME_MANAGER_URL: http://game-manager:5005
+      ENCOUNTER_URL: http://encounter:5005
       CORS_ORIGINS: http://localhost:8000,http://127.0.0.1:8000
-    volumes:
-      - cert-ca:/certs:ro
-      - cert-gateway:/server-cert:ro
-    command: ["gunicorn", "--bind", "0.0.0.0:5005", "--workers", "2", "--certfile", "/server-cert/server.pem", "--keyfile", "/server-cert/server-key.pem", "app:app"]
     depends_on:
-      cert-init:
-        condition: service_completed_successfully
       player-manager:
         condition: service_healthy
       collector:
@@ -48,7 +25,7 @@ services:
         - CMD
         - python
         - -c
-        - "import ssl,urllib.request; urllib.request.urlopen('https://localhost:5005/health',context=ssl.create_default_context(cafile='/certs/ca.pem'),timeout=3)"
+        - "import urllib.request; urllib.request.urlopen('http://localhost:5005/health',timeout=3)"
       interval: 10s
       timeout: 5s
       retries: 12
@@ -60,21 +37,12 @@ services:
       dockerfile: player_manager/Dockerfile
     environment:
       DATA_DIR: /data
-      COLLECTOR_URL: https://collector:5005
-      ENCOUNTER_URL: https://encounter:5005
-      GAME_MANAGER_URL: https://game-manager:5005
-      JWT_SECRET: ${JWT_SECRET:-local-development-jwt-secret-change-before-deployment}
-      INTERNAL_TOKEN: ${INTERNAL_TOKEN:-local-development-internal-token-change-before-deployment}
-      DATA_ENCRYPTION_KEY: ${DATA_ENCRYPTION_KEY:-local-development-data-encryption-secret-change-before-deployment}
-      TLS_CA: /certs/ca.pem
+      COLLECTOR_URL: http://collector:5005
+      ENCOUNTER_URL: http://encounter:5005
+      GAME_MANAGER_URL: http://game-manager:5005
     volumes:
       - player-data:/data
-      - cert-ca:/certs:ro
-      - cert-player-manager:/server-cert:ro
-    command: ["gunicorn", "--bind", "0.0.0.0:5005", "--workers", "2", "--certfile", "/server-cert/server.pem", "--keyfile", "/server-cert/server-key.pem", "app:app"]
     depends_on:
-      cert-init:
-        condition: service_completed_successfully
       collector:
         condition: service_healthy
       encounter:
@@ -84,7 +52,7 @@ services:
         - CMD
         - python
         - -c
-        - "import ssl,urllib.request; urllib.request.urlopen('https://localhost:5005/health',context=ssl.create_default_context(cafile='/certs/ca.pem'),timeout=3)"
+        - "import urllib.request; urllib.request.urlopen('http://localhost:5005/health',timeout=3)"
       interval: 10s
       timeout: 5s
       retries: 12
@@ -96,23 +64,14 @@ services:
       dockerfile: collector/Dockerfile
     environment:
       DATA_DIR: /data
-      TLS_CA: /certs/ca.pem
-      JWT_SECRET: ${JWT_SECRET:-local-development-jwt-secret-change-before-deployment}
-      INTERNAL_TOKEN: ${INTERNAL_TOKEN:-local-development-internal-token-change-before-deployment}
     volumes:
       - collector-data:/data
-      - cert-ca:/certs:ro
-      - cert-collector:/server-cert:ro
-    command: ["gunicorn", "--bind", "0.0.0.0:5005", "--workers", "2", "--certfile", "/server-cert/server.pem", "--keyfile", "/server-cert/server-key.pem", "app:app"]
-    depends_on:
-      cert-init:
-        condition: service_completed_successfully
     healthcheck:
       test:
         - CMD
         - python
         - -c
-        - "import ssl,urllib.request; urllib.request.urlopen('https://localhost:5005/health',context=ssl.create_default_context(cafile='/certs/ca.pem'),timeout=3)"
+        - "import urllib.request; urllib.request.urlopen('http://localhost:5005/health',timeout=3)"
       interval: 10s
       timeout: 5s
       retries: 12
@@ -123,19 +82,10 @@ services:
       context: .
       dockerfile: game_manager/Dockerfile
     environment:
-      COLLECTOR_URL: https://collector:5005
-      ENCOUNTER_URL: https://encounter:5005
-      TLS_CA: /certs/ca.pem
-      JWT_SECRET: ${JWT_SECRET:-local-development-jwt-secret-change-before-deployment}
-      INTERNAL_TOKEN: ${INTERNAL_TOKEN:-local-development-internal-token-change-before-deployment}
+      COLLECTOR_URL: http://collector:5005
+      ENCOUNTER_URL: http://encounter:5005
       BATTLE_TTL_MINUTES: 30
-    volumes:
-      - cert-ca:/certs:ro
-      - cert-game-manager:/server-cert:ro
-    command: ["gunicorn", "--bind", "0.0.0.0:5005", "--workers", "1", "--threads", "8", "--certfile", "/server-cert/server.pem", "--keyfile", "/server-cert/server-key.pem", "app:app"]
     depends_on:
-      cert-init:
-        condition: service_completed_successfully
       collector:
         condition: service_healthy
       encounter:
@@ -145,7 +95,7 @@ services:
         - CMD
         - python
         - -c
-        - "import ssl,urllib.request; urllib.request.urlopen('https://localhost:5005/health',context=ssl.create_default_context(cafile='/certs/ca.pem'),timeout=3)"
+        - "import urllib.request; urllib.request.urlopen('http://localhost:5005/health',timeout=3)"
       interval: 10s
       timeout: 5s
       retries: 12
@@ -157,23 +107,14 @@ services:
       dockerfile: encounter/Dockerfile
     environment:
       DATA_DIR: /data
-      TLS_CA: /certs/ca.pem
-      JWT_SECRET: ${JWT_SECRET:-local-development-jwt-secret-change-before-deployment}
-      INTERNAL_TOKEN: ${INTERNAL_TOKEN:-local-development-internal-token-change-before-deployment}
     volumes:
       - encounter-data:/data
-      - cert-ca:/certs:ro
-      - cert-encounter:/server-cert:ro
-    command: ["gunicorn", "--bind", "0.0.0.0:5005", "--workers", "2", "--certfile", "/server-cert/server.pem", "--keyfile", "/server-cert/server-key.pem", "app:app"]
-    depends_on:
-      cert-init:
-        condition: service_completed_successfully
     healthcheck:
       test:
         - CMD
         - python
         - -c
-        - "import ssl,urllib.request; urllib.request.urlopen('https://localhost:5005/health',context=ssl.create_default_context(cafile='/certs/ca.pem'),timeout=3)"
+        - "import urllib.request; urllib.request.urlopen('http://localhost:5005/health',timeout=3)"
       interval: 10s
       timeout: 5s
       retries: 12
@@ -183,9 +124,3 @@ volumes:
   player-data:
   collector-data:
   encounter-data:
-  cert-ca:
-  cert-gateway:
-  cert-player-manager:
-  cert-collector:
-  cert-game-manager:
-  cert-encounter:

@@ -11,4 +11,4 @@ COPY player_manager/app.py /app/app.py
 COPY shared/tutorial.json /app/tutorial.json
 USER 10001:10001
 EXPOSE 5005
-CMD ["gunicorn", "--bind", "0.0.0.0:5005", "--workers", "2", "--certfile", "/certs/server.pem", "--keyfile", "/certs/server-key.pem", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5005", "--workers", "2", "app:app"]

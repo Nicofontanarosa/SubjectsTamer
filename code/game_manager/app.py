@@ -9,19 +9,15 @@ import requests
 from flask import Flask, jsonify, request
 
 from common.game import (
-    INTERNAL_TOKEN,
     add_stats,
-    authenticated_player_id,
     error_response,
-    internal_required,
     load_catalog,
-    tls_verify,
 )
 
 app = Flask(__name__)
 app.logger.setLevel(logging.INFO)
-COLLECTOR_URL = os.environ.get("COLLECTOR_URL", "https://collector:5005").rstrip("/")
-ENCOUNTER_URL = os.environ.get("ENCOUNTER_URL", "https://encounter:5005").rstrip("/")
+COLLECTOR_URL = os.environ.get("COLLECTOR_URL", "http://collector:5005").rstrip("/")
+ENCOUNTER_URL = os.environ.get("ENCOUNTER_URL", "http://encounter:5005").rstrip("/")
 BATTLE_TTL_MINUTES = int(os.environ.get("BATTLE_TTL_MINUTES", "30"))
 CATALOG, MONSTERS = load_catalog()
 BATTLES = {}
@@ -29,16 +25,13 @@ PLAYER_BATTLES = {}
 BATTLE_LOCK = threading.RLock()
 
 
-def internal_headers():
-    return {"X-Internal-Token": INTERNAL_TOKEN}
-
-
 def client_error(error, message, status):
     return error_response(error, message, status)
 
 
-def player_id_from_request():
-    return authenticated_player_id()
+def player_id_from_request(body):
+    player_id = body.get("playerId") if isinstance(body, dict) else None
+    return player_id if isinstance(player_id, str) and player_id else None
 
 
 def living_team(battle):
@@ -153,9 +146,7 @@ def finalize_battle(battle):
             response = requests.post(
                 f"{COLLECTOR_URL}/internal/players/{battle['playerId']}/collection/monsters",
                 json={"monsterId": battle["boss"]["id"]},
-                headers=internal_headers(),
                 timeout=5,
-                verify=tls_verify(),
             )
         except requests.RequestException:
             app.logger.exception("Collector could not record the encounter reward")
@@ -180,9 +171,7 @@ def finalize_battle(battle):
         response = requests.post(
             f"{ENCOUNTER_URL}/internal/encounters",
             json=record,
-            headers=internal_headers(),
             timeout=5,
-            verify=tls_verify(),
         )
     except requests.RequestException:
         app.logger.exception("Encounter service could not record the completed battle")
@@ -225,12 +214,10 @@ def touch(battle):
 
 @app.post("/battles")
 def start_battle():
-    player_id = player_id_from_request()
-    if player_id is None:
-        return client_error("unauthorized", "Sign in to continue", 401)
     body = request.get_json(silent=True)
-    if not isinstance(body, dict) or body.get("playerId") != player_id:
-        return client_error("invalid_player", "Battle player must match the signed-in player", 400)
+    player_id = player_id_from_request(body)
+    if player_id is None:
+        return client_error("invalid_player", "A player ID is required to start a battle", 400)
     cleanup_expired()
     with BATTLE_LOCK:
         active_id = PLAYER_BATTLES.get(player_id)
@@ -241,9 +228,7 @@ def start_battle():
         try:
             response = requests.get(
                 f"{COLLECTOR_URL}/internal/players/{player_id}/team",
-                headers=internal_headers(),
                 timeout=5,
-                verify=tls_verify(),
             )
         except requests.RequestException:
             app.logger.exception("Collector could not provide the active team")
@@ -310,9 +295,6 @@ def start_battle():
 
 @app.post("/battles/<battle_id>/actions")
 def play_action(battle_id):
-    player_id = player_id_from_request()
-    if player_id is None:
-        return client_error("unauthorized", "Sign in to continue", 401)
     body = request.get_json(silent=True)
     if (
         not isinstance(body, dict)
@@ -320,6 +302,9 @@ def play_action(battle_id):
         or not isinstance(body.get("moveId"), str)
     ):
         return client_error("invalid_action", "Choose a team card and use the attack action", 400)
+    player_id = player_id_from_request(body)
+    if player_id is None:
+        return client_error("invalid_player", "A player ID is required for this action", 400)
     cleanup_expired()
     with BATTLE_LOCK:
         battle = BATTLES.get(battle_id)
@@ -374,9 +359,9 @@ def play_action(battle_id):
 
 @app.post("/battles/<battle_id>")
 def abandon_battle(battle_id):
-    player_id = player_id_from_request()
+    player_id = player_id_from_request(request.get_json(silent=True))
     if player_id is None:
-        return client_error("unauthorized", "Sign in to continue", 401)
+        return client_error("invalid_player", "A player ID is required to abandon a battle", 400)
     cleanup_expired()
     with BATTLE_LOCK:
         battle = BATTLES.get(battle_id)
@@ -399,7 +384,6 @@ def abandon_battle(battle_id):
 
 
 @app.delete("/internal/players/<player_id>/battles")
-@internal_required
 def delete_player_battles(player_id):
     with BATTLE_LOCK:
         battle_ids = [

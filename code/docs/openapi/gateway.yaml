@@ -2,20 +2,16 @@ openapi: 3.1.0
 info:
   title: Monster Tamer Public API
   version: 1.0.0
-  description: Public HTTPS contract. The frontend must use the API Gateway only.
+  description: Unauthenticated local HTTP API. The frontend uses the API Gateway only.
 servers:
-  - url: https://localhost:5000
-security:
-  - bearerAuth: []
+  - url: http://localhost:5000
 paths:
   /health:
     get:
-      security: []
       responses:
         "200": { description: Gateway health }
   /players:
     post:
-      security: []
       summary: Create a tamer and assign three starter cards
       requestBody:
         required: true
@@ -31,13 +27,12 @@ paths:
                 avatar: { type: string }
                 bio: { type: string, maxLength: 500 }
       responses:
-        "201": { description: Account and access token created }
+        "201": { description: Created player profile }
         "400": { description: Invalid account details }
         "409": { description: Email or nickname already used }
   /auth/login:
     post:
-      security: []
-      summary: Start an authenticated session
+      summary: Verify credentials and return a player profile
       requestBody:
         required: true
         content:
@@ -49,28 +44,21 @@ paths:
                 email: { type: string, format: email }
                 password: { type: string }
       responses:
-        "200": { description: Player and JWT access token }
+        "200": { description: Player profile }
         "401": { description: Invalid credentials }
-  /auth/session:
-    get:
-      summary: Return the current authenticated player
-      responses:
-        "200": { description: Current player profile }
-        "401": { description: Invalid or expired session }
   /auth/logout:
     post:
-      summary: Revoke the current session
+      summary: End the local client session
       responses:
-        "204": { description: Session revoked }
-        "401": { description: Invalid session }
+        "204": { description: Completed }
   /players/{playerId}:
     parameters:
       - $ref: "#/components/parameters/playerId"
     get:
-      summary: Read the authenticated player's profile
+      summary: Read a player profile
       responses:
         "200": { description: Player profile }
-        "403": { description: Player does not own this profile }
+        "404": { description: Player not found }
     put:
       summary: Update nickname, avatar, and biography
       requestBody:
@@ -100,7 +88,11 @@ paths:
         "200": { description: Tutorial guide }
   /monsters:
     get:
-      summary: Browse every image-backed catalog card
+      parameters:
+        - name: playerId
+          in: query
+          schema: { type: string }
+      summary: Browse every image-backed catalog card and optional ownership state
       responses:
         "200": { description: Catalog cards and ownership flags }
   /monsters/{monsterId}/image:
@@ -122,7 +114,6 @@ paths:
       summary: Read owned cards and the active team
       responses:
         "200": { description: Collection, team IDs, and progress }
-        "403": { description: Player does not own this collection }
   /players/{playerId}/team:
     put:
       parameters:
@@ -147,7 +138,7 @@ paths:
         "400": { description: Team size, duplicate, or ownership validation failed }
   /battles:
     post:
-      summary: Begin or resume the authenticated player's encounter
+      summary: Begin or resume a player's encounter
       requestBody:
         required: true
         content:
@@ -172,10 +163,11 @@ paths:
           application/json:
             schema:
               type: object
-              required: [actionType, moveId]
+              required: [actionType, moveId, playerId]
               properties:
                 actionType: { const: attack }
-                moveId: { type: string, description: Living card ID from the active team }
+                moveId: { type: string }
+                playerId: { type: string }
       responses:
         "200": { description: Updated battle state and final result, if concluded }
         "400": { description: Invalid action or unavailable attacker }
@@ -184,7 +176,16 @@ paths:
     post:
       parameters:
         - $ref: "#/components/parameters/battleId"
-      summary: Withdraw from an active encounter (recorded as a loss)
+      summary: Withdraw from an active encounter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [playerId]
+              properties:
+                playerId: { type: string }
       responses:
         "200": { description: Abandoned encounter and restored team }
         "404": { description: Battle is unknown or expired }
@@ -201,13 +202,7 @@ paths:
       summary: Read encounter history
       responses:
         "200": { description: Paginated encounter records }
-        "403": { description: Player does not own this history }
 components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
   parameters:
     playerId:
       name: playerId

@@ -6,11 +6,8 @@ from pathlib import Path
 
 from common.game import (
     add_stats,
-    authenticated_player_id,
     error_response,
-    internal_required,
     load_catalog,
-    require_player_access,
 )
 from common.storage import connect
 
@@ -63,7 +60,6 @@ def monster_payload(monster_id, current_hp=None):
 
 
 @app.post("/internal/players/<player_id>/collection/initialize")
-@internal_required
 def initialize_collection(player_id):
     candidates = [monster for monster in CATALOG if monster["cfu"] in (6, 9)]
     if len(candidates) < 3:
@@ -88,9 +84,6 @@ def initialize_collection(player_id):
 
 @app.get("/players/<player_id>/collection")
 def get_collection(player_id):
-    denial = require_player_access(player_id)
-    if denial:
-        return denial
     with connect("collection.sqlite") as db:
         ids = owned_ids(db, player_id)
         team_ids = saved_team(db, player_id)
@@ -105,11 +98,9 @@ def get_collection(player_id):
 
 @app.get("/monsters")
 def get_catalog():
-    player_id = authenticated_player_id()
-    if player_id is None:
-        return error_response("unauthorized", "Sign in to continue", 401)
+    player_id = request.args.get("playerId")
     with connect("collection.sqlite") as db:
-        owned = set(owned_ids(db, player_id))
+        owned = set(owned_ids(db, player_id)) if player_id else set()
     monsters = [{**monster_payload(monster["id"]), "owned": monster["id"] in owned} for monster in CATALOG]
     return jsonify({"monsters": monsters, "progress": {"owned": len(owned), "total": len(CATALOG)}}), 200
 
@@ -128,9 +119,6 @@ def get_monster_image(monster_id):
 
 @app.put("/players/<player_id>/team")
 def update_team(player_id):
-    denial = require_player_access(player_id)
-    if denial:
-        return denial
     body = request.get_json(silent=True)
     monster_ids = body.get("monsterIds") if isinstance(body, dict) else None
     if (
@@ -156,7 +144,6 @@ def update_team(player_id):
 
 
 @app.get("/internal/players/<player_id>/team")
-@internal_required
 def get_validated_team(player_id):
     with connect("collection.sqlite") as db:
         ids = owned_ids(db, player_id)
@@ -175,7 +162,6 @@ def get_validated_team(player_id):
 
 
 @app.post("/internal/players/<player_id>/collection/monsters")
-@internal_required
 def add_monster(player_id):
     body = request.get_json(silent=True)
     monster_id = body.get("monsterId") if isinstance(body, dict) else None
@@ -191,7 +177,6 @@ def add_monster(player_id):
 
 
 @app.delete("/internal/players/<player_id>/collection")
-@internal_required
 def delete_collection(player_id):
     with connect("collection.sqlite") as db:
         db.execute("DELETE FROM teams WHERE player_id = ?", (player_id,))

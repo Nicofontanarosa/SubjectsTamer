@@ -4,7 +4,7 @@
   "rules": [
     "Choose three distinct subjects from your collection before an encounter.",
     "Wild subjects are chosen by credit value and never repeat a subject you own.",
-    "The wild boss gains 50% HP, Attack, and Defense for the encounter.",
+    "The wild boss gains 150% HP, Attack, and Defense for the encounter (2.5x total).",
     "A coin toss decides who strikes first. Choose one living ally for each attack.",
     "The boss answers with a random strike against one of your living allies.",
     "A victory adds the boss at its normal stats. A defeat grants no subject.",

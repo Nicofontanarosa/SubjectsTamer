@@ -15,17 +15,17 @@ docker compose up --build
 The API Gateway is available at [http://localhost:5000](http://localhost:5000). Serve the frontend separately:
 
 ```sh
+docker build -f frontend/Dockerfile -t monster-tamer-frontend .
+docker run --rm -p 8000:8080 monster-tamer-frontend
+```
+
+An optional way to run frontend is:
+
+```sh
 python -m http.server 8000 --directory frontend
 ```
 
 Open [http://localhost:8000](http://localhost:8000), register a tamer, and begin exploring. The browser connects only to the API Gateway; it never calls an internal service or a database.
-
-An optional standalone frontend image is also available:
-
-```sh
-docker build -f frontend/Dockerfile -t monster-tamer-frontend .
-docker run --rm -p 8000:8080 monster-tamer-frontend
-```
 
 The frontend container is not part of Compose and is not attached to the backend network.
 
@@ -41,11 +41,11 @@ Persistent SQLite files are owned independently by Player Manager, Collector, an
 
 1. Register with an email, password, and tamer name. Three distinct random 6/9-CFU cards are bound to your first team.
 2. Inspect your collection and the complete playable codex; edit and save a three-card team.
-3. Start an encounter. Game Manager selects an unowned subject with CFU-weighted odds, raises its HP/Attack/Defense by 50%, and tosses initiative.
+3. Start an encounter. Game Manager selects an unowned subject with CFU-weighted odds, raises its HP/Attack/Defense by 150% (2.5x total), and tosses initiative.
 4. Choose a living companion to strike. The boss answers against a random living companion. A victory awards the normal, unboosted subject; a defeat awards nothing.
 5. View your chronicle and graduation progress. The entire team heals after every concluded encounter; there are no stamina limits.
 
-Department advantages form a wheel: Computer Science > Engineering > Medicina e Chirurgia > Giurisprudenza > Computer Science. An advantaged strike gains 20% Attack and the defender receives 20% less Defense. HP, Attack, and Defense scale with CFU. The battle engine scales player and boss strike power separately to keep encounters playable while retaining the documented stat buff and department modifiers.
+Department advantages form a wheel: Computer Science > Engineering > Medicina e Chirurgia > Giurisprudenza > Computer Science. An advantaged strike gains 20% Attack and the defender receives 20% less Defense. HP, Attack, and Defense start from catalog values or scale with CFU, then each receives an independent, stable pseudo-random reduction of 0-10 points per card. The reduction is derived from the card ID, so a card's stats match across services and do not change between requests. The battle engine scales player and boss strike power separately to keep encounters playable while retaining the stat buff and department modifiers.
 
 ## Image-backed catalog
 

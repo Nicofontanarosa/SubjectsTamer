@@ -1,4 +1,5 @@
 # Docker Compose file for the project, 5 services, 1 published port, 3 volumes, 1 network
+name: grasp
 
 services:
   gateway:
@@ -133,5 +134,8 @@ services:
 # i volumi sono definiti qui, così che siano persistenti anche se i container vengono ricreati
 volumes:
   player-data:
+    name: code_player-data
   collector-data:
+    name: code_collector-data
   encounter-data:
+    name: code_encounter-data

@@ -6,6 +6,12 @@ const detailDialog = document.getElementById("detail-dialog");
 const guideDialog = document.getElementById("guide-dialog");
 const imageCache = new Map();
 const avatarMarks = { ranger: "♧", scholar: "✧", warden: "⬟", sage: "◈" };
+const departmentWheel = [
+  "Computer Science",
+  "Engineering",
+  "Medicina e Chirurgia",
+  "Giurisprudenza",
+];
 const state = {
   player: null,
   collection: [],
@@ -119,6 +125,18 @@ function rarityClass(rarity) {
   return String(rarity || "common").toLowerCase();
 }
 
+function matchupTemplate(monster) {
+  const index = departmentWheel.indexOf(monster.department);
+  if (index < 0) return "";
+  const advantage = departmentWheel[(index + 1) % departmentWheel.length];
+  const weakness = departmentWheel[(index - 1 + departmentWheel.length) % departmentWheel.length];
+  return `
+    <div class="card-matchups" aria-label="Department combat matchups">
+      <span class="matchup-bonus"><strong>Bonus</strong> +20% ATK vs ${escapeHtml(advantage)}</span>
+      <span class="matchup-weakness"><strong>Malus</strong> -20% DEF vs ${escapeHtml(weakness)}</span>
+    </div>`;
+}
+
 function cardTemplate(monster, options = {}) {
   const stats = monster.stats || {};
   const selected = options.selectable && state.selectedTeam.has(monster.id);
@@ -139,6 +157,7 @@ function cardTemplate(monster, options = {}) {
           <div class="stat"><strong>${stats.attack ?? "—"}</strong><span>ATK</span></div>
           <div class="stat"><strong>${stats.defense ?? "—"}</strong><span>DEF</span></div>
         </div>
+        ${matchupTemplate(monster)}
         ${options.battle ? `
           <div class="hp-row" style="margin-top:.7rem"><span>Vitality</span><span>${Math.max(0, monster.currentHp)}/${stats.hp}</span></div>
           <div class="hp-track"><div class="hp-fill ally" style="width:${Math.max(0, Math.min(100, monster.currentHp / stats.hp * 100))}%"></div></div>
@@ -333,10 +352,11 @@ function battleTemplate() {
           <div class="boss-details">
             <div class="eyebrow">${escapeHtml(boss.rarity)} · ${boss.cfu} CFU</div>
             <h2>${escapeHtml(boss.name)}</h2>
-            <p>${escapeHtml(boss.department)} · Wild boss · +50% battle stats</p>
+            <p>${escapeHtml(boss.department)} · Wild boss · +150% battle stats</p>
             <div class="hp-row"><span>Boss vitality</span><span>${Math.max(0, bossHp)} / ${boss.stats.hp}</span></div>
             <div class="hp-track"><div class="hp-fill" style="width:${bossPercent}%"></div></div>
             <div class="boss-stats"><span>ATK ${boss.stats.attack}</span><span>DEF ${boss.stats.defense}</span></div>
+            ${matchupTemplate(boss)}
           </div>
         </div>
         <div class="battle-team">${battle.team.map((monster) => cardTemplate(monster, { battle: true })).join("")}</div>
@@ -554,7 +574,8 @@ function openDetails(monsterId) {
           <div class="detail-stat"><strong>${stats.attack}</strong><span>Attack</span></div>
           <div class="detail-stat"><strong>${stats.defense}</strong><span>Defense</span></div>
         </div>
-        <p>Higher credit value means greater rarity and stronger base statistics. In a wild encounter, a boss temporarily gains 50% to all three attributes.</p>
+        ${matchupTemplate(monster)}
+        <p>Higher credit value means greater rarity and stronger base statistics. In a wild encounter, a boss temporarily gains 150% to all three attributes (2.5x total).</p>
         <button class="button ghost small" data-action="close-detail" type="button">Close</button>
       </div>
     </div>`;
@@ -582,6 +603,7 @@ function openHistoryDetails(battleId) {
             <div class="detail-stat"><strong>${encounter.boss.stats.attack}</strong><span>Attack</span></div>
             <div class="detail-stat"><strong>${encounter.teamUsed.length}</strong><span>Companions</span></div>
           </div>
+          ${matchupTemplate(encounter.boss)}
         </div>
       </div>
       <div class="eyebrow" style="margin:1.4rem 0 .8rem">Team used</div>

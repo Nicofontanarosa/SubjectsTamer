@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -12,14 +13,24 @@ def load_catalog():
         catalog = json.load(catalog_file)
     return catalog, {monster["id"]: monster for monster in catalog}
 
-# aggiunge a una materia rarità, statistiche e URL dell’immagine. Se nel catalogo sono già definite le statistiche, le usa;
-# altrimenti le calcola dai CFU.
+# aggiunge rarità, statistiche e URL dell’immagine. Le statistiche derivano dai CFU o dai valori del catalogo;
+# una penalità indipendente per statistica viene ricavata dall’ID così resta stabile in tutti i servizi e le partite.
 def add_stats(monster):
     cfu = monster["cfu"]
-    stats = monster.get("baseStats") or {
+    base_stats = monster.get("baseStats") or {
         "hp": 95 + 7 * cfu,
         "attack": round(12 + 1.5 * cfu),
         "defense": round(8 + 1.2 * cfu),
+    }
+    stats = {
+        stat: max(
+            1,
+            value - int.from_bytes(
+                hashlib.sha256(f"{monster['id']}:{stat}".encode("utf-8")).digest()[:4],
+                "big",
+            ) % 11,
+        )
+        for stat, value in base_stats.items()
     }
     return {
         **monster,

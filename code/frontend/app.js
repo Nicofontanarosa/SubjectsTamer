@@ -251,6 +251,7 @@ function codexTemplate() {
         <option value="Computer Science" ${state.department === "Computer Science" ? "selected" : ""}>Computer Science</option>
         <option value="Engineering" ${state.department === "Engineering" ? "selected" : ""}>Engineering</option>
         <option value="Medicina e Chirurgia" ${state.department === "Medicina e Chirurgia" ? "selected" : ""}>Medicina e Chirurgia</option>
+        <option value="Giurisprudenza" ${state.department === "Giurisprudenza" ? "selected" : ""}>Giurisprudenza</option>
       </select>
     </div>
     <div class="card-grid">${available.length ? available.map((monster) => cardTemplate(monster, { owned: monster.owned })).join("") : `<div class="card-empty">Every card in this hall is already yours.</div>`}</div>`;
@@ -284,11 +285,12 @@ function fieldGuideTemplate() {
   return `
     ${pageHeading("A tamer's field guide", state.tutorial.title, state.tutorial.objective)}
     <div class="guide-grid">${state.tutorial.rules.map((rule, index) => `<article class="guide-card"><span>${String(index + 1).padStart(2, "0")}</span><p>${escapeHtml(rule)}</p></article>`).join("")}</div>
-    <div style="margin-top:1.4rem">${pageHeading("The department wheel", "Strengths & vulnerabilities", "Computer Science strikes strongly against Engineering. Engineering is vulnerable to those strikes.")}</div>
+    <div style="margin-top:1.4rem">${pageHeading("The department wheel", "Strengths & vulnerabilities", "Each department has an advantage against the next in the wheel.")}</div>
     <div class="guide-grid">
       <article class="guide-card"><span>Ⅰ</span><p>Computer Science gains 20% Attack against Engineering.</p></article>
-      <article class="guide-card"><span>Ⅱ</span><p>Department effects alter both Attack and Defense in battle.</p></article>
-      <article class="guide-card"><span>Ⅲ</span><p>Only departments represented by pictured cards appear in this edition.</p></article>
+      <article class="guide-card"><span>Ⅱ</span><p>Engineering gains 20% Attack against Medicina e Chirurgia.</p></article>
+      <article class="guide-card"><span>Ⅲ</span><p>Medicina e Chirurgia gains 20% Attack against Giurisprudenza.</p></article>
+      <article class="guide-card"><span>Ⅳ</span><p>Giurisprudenza gains 20% Attack against Computer Science.</p></article>
     </div>`;
 }
 

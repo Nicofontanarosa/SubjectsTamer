@@ -44,13 +44,13 @@ def type_matchup(attacker_department, defender_department):
     if attacker_department == "Computer Science" and defender_department == "Engineering":
         attack_multiplier = 1.2
         defense_multiplier = 0.8
-    elif attacker_department == "Engineering" and defender_department == "Medicine":
+    elif attacker_department == "Engineering" and defender_department == "Medicina e Chirurgia":
         attack_multiplier = 1.2
         defense_multiplier = 0.8
-    elif attacker_department == "Medicine" and defender_department == "Law":
+    elif attacker_department == "Medicina e Chirurgia" and defender_department == "Giurisprudenza":
         attack_multiplier = 1.2
         defense_multiplier = 0.8
-    elif attacker_department == "Law" and defender_department == "Computer Science":
+    elif attacker_department == "Giurisprudenza" and defender_department == "Computer Science":
         attack_multiplier = 1.2
         defense_multiplier = 0.8
     return attack_multiplier, defense_multiplier

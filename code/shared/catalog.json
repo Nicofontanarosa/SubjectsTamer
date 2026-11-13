@@ -254,5 +254,131 @@
     "cfu": 9,
     "department": "Medicina e Chirurgia",
     "image": "medicina/MalattieInfettiveDermatologia.jpeg"
+  },
+  {
+    "id": "diritto-costituzionale",
+    "name": "Diritto Costituzionale",
+    "cfu": 15,
+    "department": "Giurisprudenza",
+    "image": "giurisprudenza/DirittoCostituzionale.jpeg"
+  },
+  {
+    "id": "diritto-privato-i",
+    "name": "Diritto Privato I",
+    "cfu": 15,
+    "department": "Giurisprudenza",
+    "image": "giurisprudenza/DirittoPrivatoI.jpeg"
+  },
+  {
+    "id": "diritto-romano",
+    "name": "Diritto Romano",
+    "cfu": 12,
+    "department": "Giurisprudenza",
+    "image": "giurisprudenza/DirittoRomano.jpeg"
+  },
+  {
+    "id": "filosofia-del-diritto",
+    "name": "Filosofia del Diritto",
+    "cfu": 9,
+    "department": "Giurisprudenza",
+    "image": "giurisprudenza/FilosofiadelDiritto.jpeg"
+  },
+  {
+    "id": "economia-politica",
+    "name": "Economia Politica",
+    "cfu": 9,
+    "department": "Giurisprudenza",
+    "image": "giurisprudenza/EconomiaPolitica.jpeg"
+  },
+  {
+    "id": "diritto-civile",
+    "name": "Diritto Civile",
+    "cfu": 15,
+    "department": "Giurisprudenza",
+    "image": "giurisprudenza/DirittoCivile.jpeg"
+  },
+  {
+    "id": "diritto-penale-i",
+    "name": "Diritto Penale I",
+    "cfu": 9,
+    "department": "Giurisprudenza",
+    "image": "giurisprudenza/DirittoPenaleI.jpeg"
+  },
+  {
+    "id": "diritto-commerciale",
+    "name": "Diritto Commerciale",
+    "cfu": 12,
+    "department": "Giurisprudenza",
+    "image": "giurisprudenza/DirittoCommerciale.jpeg"
+  },
+  {
+    "id": "diritto-dell-unione-europea",
+    "name": "Diritto dell'Unione Europea",
+    "cfu": 9,
+    "department": "Giurisprudenza",
+    "image": "giurisprudenza/DirittoUnioneEuropea.jpeg"
+  },
+  {
+    "id": "storia-del-diritto-medievale-e-moderno",
+    "name": "Storia del Diritto Medioevale e Moderno",
+    "cfu": 9,
+    "department": "Giurisprudenza",
+    "image": "giurisprudenza/StoriaDirittoMedioevaleModerno.jpeg"
+  },
+  {
+    "id": "inglese-giuridico",
+    "name": "Inglese Giuridico",
+    "cfu": 6,
+    "department": "Giurisprudenza",
+    "image": "giurisprudenza/IngleseGiuridico.jpeg"
+  },
+  {
+    "id": "diritto-processuale-civile",
+    "name": "Diritto Processuale Civile",
+    "cfu": 15,
+    "department": "Giurisprudenza",
+    "image": "giurisprudenza/DirittoProcessualeCivile.jpeg"
+  },
+  {
+    "id": "diritto-processuale-penale",
+    "name": "Diritto Processuale Penale",
+    "cfu": 15,
+    "department": "Giurisprudenza",
+    "image": "giurisprudenza/DirittoProcessualePenale.jpeg"
+  },
+  {
+    "id": "diritto-amministrativo-i",
+    "name": "Diritto Amministrativo I",
+    "cfu": 12,
+    "department": "Giurisprudenza",
+    "image": "giurisprudenza/DirittoAmministrativoI.jpeg"
+  },
+  {
+    "id": "diritto-internazionale",
+    "name": "Diritto Internazionale",
+    "cfu": 9,
+    "department": "Giurisprudenza",
+    "image": "giurisprudenza/DirittoInternazionale.jpeg"
+  },
+  {
+    "id": "diritto-del-lavoro",
+    "name": "Diritto del Lavoro",
+    "cfu": 9,
+    "department": "Giurisprudenza",
+    "image": "giurisprudenza/DirittodelLavoro.jpeg"
+  },
+  {
+    "id": "diritto-penale-ii",
+    "name": "Diritto Penale II",
+    "cfu": 9,
+    "department": "Giurisprudenza",
+    "image": "giurisprudenza/DirittoPenaleII.jpeg"
+  },
+  {
+    "id": "diritto-amministrativo-ii",
+    "name": "Diritto Amministrativo II",
+    "cfu": 9,
+    "department": "Giurisprudenza",
+    "image": "giurisprudenza/DirittoAmministrativoII.jpeg"
   }
 ]

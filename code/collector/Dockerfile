@@ -21,7 +21,8 @@ RUN pip install --no-cache-dir -r requirements.txt \
 # contiene moduli condivisi da microservizi diversi, come la logica di gioco, le classi dei mostri e le funzioni per caricare il catalogo.
 COPY common /app/common
 # Il catalogo e le immagini delle carte sono risorse condivise dal progetto.
-COPY shared /app/shared
+COPY shared/catalog.json /app/catalog.json
+COPY shared/assets /app/assets
 COPY collector/app.py /app/app.py
 # indica a Docker di eseguire i comandi successivi e il processo del container come utente ID 10001 e gruppo ID 10001.
 USER 10001:10001

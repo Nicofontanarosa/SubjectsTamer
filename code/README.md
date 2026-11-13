@@ -1,6 +1,6 @@
 # Subject Tamer
 
-A single-player university-subject collecting game. Each card is a course from the source specification, illustrated only with artwork already present in the workspace's `icons/` directory. The browser client is plain JavaScript; all game rules and saved progress live in the backend.
+A single-player university-subject collecting game. Each card is a course from the source specification, illustrated with artwork stored in `shared/assets/`. The browser client is plain JavaScript; all game rules and saved progress live in the backend.
 
 ## Get started
 
@@ -45,11 +45,11 @@ Persistent SQLite files are owned independently by Player Manager, Collector, an
 4. Choose a living companion to strike. The boss answers against a random living companion. A victory awards the normal, unboosted subject; a defeat awards nothing.
 5. View your chronicle and graduation progress. The entire team heals after every concluded encounter; there are no stamina limits.
 
-Computer Science receives its documented 20% Attack advantage against Engineering; Engineering's documented 20% Defense vulnerability to Computer Science is also applied. HP, Attack, and Defense scale linearly with CFU. The battle engine scales player and boss strike power separately to keep the boss encounter playable while retaining the documented stat buff and department modifiers.
+Department advantages form a wheel: Computer Science > Engineering > Medicina e Chirurgia > Giurisprudenza > Computer Science. An advantaged strike gains 20% Attack and the defender receives 20% less Defense. HP, Attack, and Defense scale with CFU. The battle engine scales player and boss strike power separately to keep encounters playable while retaining the documented stat buff and department modifiers.
 
 ## Image-backed catalog
 
-Only subjects with matching artwork in `icons/` are enabled: 15 Computer Science courses, 3 Engineering courses, and 16 Medicina e Chirurgia courses. Their catalog records, department, CFU, derived rarity/stats, and artwork paths are in `shared/catalog.json`; the corresponding card images are kept in `shared/assets/` and served by the Collector. New subjects are not added unless matching project artwork is provided.
+Only subjects with matching artwork in `shared/assets/` are enabled: 15 Computer Science courses, 3 Engineering courses, 16 Medicina e Chirurgia courses, and 18 Giurisprudenza courses (52 in total). Their catalog records, department, CFU, derived rarity/stats, and artwork paths are in `shared/catalog.json`; the corresponding card images are served by the Collector. New subjects are not added unless matching project artwork is provided.
 
 ## Project structure
 

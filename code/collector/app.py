@@ -56,18 +56,21 @@ def monster_payload(monster_id, current_hp=None):
         payload["currentHp"] = current_hp
     return payload
 
+# Inizializza team e collezione del giocatore con tre carte casuali da catalogo (CFU 6 o 9)
 @app.post("/internal/players/<player_id>/collection/initialize")
 def initialize_collection(player_id):
     candidates = [monster for monster in CATALOG if monster["cfu"] in (6, 9)]
     if len(candidates) < 3:
         return error_response("catalog_invalid", "At least three 6 or 9 CFU cards are required", 500)
     chosen = random.sample(candidates, 3)
+    # Cerca nel database se il giocatore ha già una collezione. Se sì, la restituisce con stato 200, evitando di assegnare un nuovo set.
     with connect("collection.sqlite") as db:
         existing = db.execute(
             "SELECT monster_id FROM collection WHERE player_id = ?", (player_id,)
         ).fetchall()
         if existing:
             return jsonify({"playerId": player_id, "monsterIds": [row["monster_id"] for row in existing]}), 200
+        # Se non esiste ancora, salva le tre materie nella collezione e negli slot della squadra, poi restituisce il risultato con stato 201.
         db.executemany(
             "INSERT INTO collection(player_id, monster_id) VALUES (?, ?)",
             [(player_id, monster["id"]) for monster in chosen],
@@ -78,6 +81,7 @@ def initialize_collection(player_id):
         )
     return jsonify({"playerId": player_id, "monsterIds": [monster["id"] for monster in chosen]}), 201
 
+# visualizza la collezione del giocatore, le carte possedute e la squadra salvata (CFU 6 o 9)
 @app.get("/players/<player_id>/collection")
 def get_collection(player_id):
     with connect("collection.sqlite") as db:
@@ -91,7 +95,7 @@ def get_collection(player_id):
         }
     ), 200
 
-# collezione personale
+# catalogo completo dei mostri, con indicazione se il giocatore possiede o meno ciascuna carta
 @app.get("/monsters")
 def get_catalog():
     player_id = request.args.get("playerId")
@@ -100,6 +104,7 @@ def get_catalog():
     monsters = [{**monster_payload(monster["id"]), "owned": monster["id"] in owned} for monster in CATALOG]
     return jsonify({"monsters": monsters, "progress": {"owned": len(owned), "total": len(CATALOG)}}), 200
 
+# visualizza l'immagine della carta del mostro, se esiste, usando il catalog e l'asset condiviso.
 @app.get("/monsters/<monster_id>/image")
 def get_monster_image(monster_id):
     monster = MONSTERS.get(monster_id)
@@ -111,6 +116,7 @@ def get_monster_image(monster_id):
         return error_response("image_unavailable", "Card artwork is unavailable", 500)
     return send_file(image_path, mimetype="image/jpeg", conditional=True, max_age=3600)
 
+# aggiorna la squadra del giocatore con tre carte distinte, tutte possedute dal giocatore e presenti nel catalogo.
 @app.put("/players/<player_id>/team")
 def update_team(player_id):
     body = request.get_json(silent=True)
@@ -136,6 +142,7 @@ def update_team(player_id):
         )
     return jsonify({"playerId": player_id, "team": monster_ids}), 200
 
+# richiesta del team da parte di game manager, con validazione che il team sia completo e composto da carte possedute dal giocatore.
 @app.get("/internal/players/<player_id>/team")
 def get_validated_team(player_id):
     with connect("collection.sqlite") as db:
@@ -153,6 +160,7 @@ def get_validated_team(player_id):
         }
     ), 200
 
+# aggiungi una carta del mostro alla collezione del giocatore, se valida e presente nel catalogo.
 @app.post("/internal/players/<player_id>/collection/monsters")
 def add_monster(player_id):
     body = request.get_json(silent=True)
@@ -167,6 +175,7 @@ def add_monster(player_id):
         ids = owned_ids(db, player_id)
     return jsonify({"playerId": player_id, "monster": monster_payload(monster_id), "owned": len(ids)}), 200
 
+# elimina la collezione e la squadra del giocatore, se esistono, restituendo uno stato 204 senza contenuto.
 @app.delete("/internal/players/<player_id>/collection")
 def delete_collection(player_id):
     with connect("collection.sqlite") as db:

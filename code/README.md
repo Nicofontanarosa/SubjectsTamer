@@ -1,4 +1,5 @@
 # Subject Tamer
+## A project by the GRASP group
 
 A single-player university-subject collecting game. Each card is a course from the source specification, illustrated with artwork stored in `shared/assets/`. The browser client is plain JavaScript; all game rules and saved progress live in the backend.
 
@@ -105,3 +106,22 @@ The response contains the updated state and any final result. A repeated `POST /
 ## Verification
 
 No automated test suite or test collection was created, as requested. The user-facing flows can be checked manually in the browser. The source functional-requirements PDF asks for Bruno/Postman component/integration tests, Locust performance tests, and CI security analysis; those deliverables are intentionally not included.
+
+---
+
+# 🙌 DISCLAIMER
+
+While We do our best to detect code anomalies, We cannot guarantee that this software is error-free. Please ensure that you respect users' privacy and have proper authorization to use it.
+
+---
+
+# 👥 Authors & Acknowledgments
+
+This project was developed as part of an academic project at the [University of Pisa](https://github.com/Unipisa) by the following contributors:
+
+* [@diperanto](https://github.com/diperanto)
+* [@riccardo-cristofani](https://github.com/riccardo-cristofani)
+* [@SaraCroft02](https://github.com/SaraCroft02)
+* [@Nicofontanarosa](https://github.com/Nicofontanarosa)
+
+![GitHub followers](https://img.shields.io/github/followers/Nicofontanarosa?style=social)

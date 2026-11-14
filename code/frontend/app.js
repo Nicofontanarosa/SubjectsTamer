@@ -112,7 +112,7 @@ function authScreen(mode = "login", message = "") {
           <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required maxlength="254" placeholder="you@example.com"></div>
           <div class="field"><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="${registering ? "new-password" : "current-password"}" minlength="${registering ? "10" : "1"}" required placeholder="${registering ? "At least 10 characters" : "Your password"}"></div>
           <button class="button primary full" type="submit">${registering ? "Create account" : "Sign in"} <span aria-hidden="true">✦</span></button>
-          <div class="auth-switch">${registering ? "Already sworn to the academy?" : "New to Ashenvale?"}
+          <div class="auth-switch">${registering ? "Already sworn to the academy?" : "New user?"}
             <button type="button" class="text-button" data-action="auth-switch">${registering ? "Sign in" : "Create an account"}</button>
           </div>
         </form>

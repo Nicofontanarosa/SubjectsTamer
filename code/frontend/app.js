@@ -98,7 +98,6 @@ function authScreen(mode = "login", message = "") {
         <div class="auth-wordmark">Subject Tamer</div>
         <div class="art-sigil" aria-hidden="true">✦</div>
         <div class="auth-copy">
-          <div class="eyebrow">A living card chronicle</div>
           <h1>Bind the<br>ancient lessons.</h1>
           <p>Gather the knowledge of the represented halls, command your chosen team, and earn the right to graduate.</p>
         </div>
@@ -208,30 +207,19 @@ function topbarTemplate() {
 }
 
 function hallTemplate() {
-  const team = state.collection.filter((monster) => state.teamIds.includes(monster.id));
   const activeBattle = state.battle && state.battle.status === "in_progress";
   return `
     <section class="hero">
       <div class="hero-copy">
         <div class="eyebrow">The old academy calls</div>
         <h1>${state.collection.length === state.catalog.length ? "Your name is<br>ready for the rolls." : "A realm of knowledge<br>awaits its tamer."}</h1>
-        <p>Gather the pictured subjects, master the halls, and write your own way to graduation.</p>
         <div class="hero-actions">
           <button class="button primary" data-action="${activeBattle ? "resume-battle" : "begin-battle"}" type="button">${activeBattle ? "Return to encounter" : state.collection.length === state.catalog.length ? "View your honors" : "Seek an encounter"} <span aria-hidden="true">✦</span></button>
           <button class="button ghost" data-page="collection" type="button">Prepare team</button>
         </div>
       </div>
-      <div class="hero-stats">
-        <div class="hero-stat"><strong>${state.collection.length}</strong><span>Cards bound</span></div>
-        <div class="hero-stat"><strong>${state.history.length}</strong><span>Encounters</span></div>
-        <div class="hero-stat"><strong>${state.history.filter((entry) => entry.result === "win").length}</strong><span>Victories</span></div>
-      </div>
     </section>
-    <div style="margin-top:1.2rem">${progressTemplate()}</div>
-    ${pageHeading("Ready at your side", "Active company")}
-    <div class="card-grid">${team.length ? team.map((monster) => cardTemplate(monster, { owned: true })).join("") : `<div class="card-empty">Choose three companions in your collection.</div>`}</div>
-    ${pageHeading("Recent deeds", "Latest in the chronicle")}
-    ${historyPreviewTemplate()}`;
+  `;
 }
 
 function collectionTemplate() {
@@ -276,12 +264,6 @@ function codexTemplate() {
     <div class="card-grid">${available.length ? available.map((monster) => cardTemplate(monster, { owned: monster.owned })).join("") : `<div class="card-empty">Every card in this hall is already yours.</div>`}</div>`;
 }
 
-function historyPreviewTemplate() {
-  const recent = state.history.slice(0, 3);
-  if (!recent.length) return `<div class="card-empty">Your first encounter awaits.</div>`;
-  return `<div class="history-list">${recent.map((entry) => historyItemTemplate(entry)).join("")}</div>`;
-}
-
 function historyItemTemplate(entry) {
   const won = entry.result === "win";
   const date = new Date(entry.completedAt).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
@@ -315,12 +297,12 @@ function fieldGuideTemplate() {
 
 function profileTemplate() {
   return `
-    ${pageHeading("The keeper of your chronicle", "Tamer's profile")}
+    ${pageHeading("The keeper of your journey", "Tamer's profile")}
     <div class="battle-side" style="max-width:760px">
       <form class="side-panel" data-form="profile">
         <h3>Profile details</h3>
         <div class="field"><label for="profile-nickname">Tamer name</label><input id="profile-nickname" name="nickname" maxlength="32" required value="${escapeHtml(state.player.nickname)}"></div>
-        <div class="field"><label for="profile-avatar">Emblem</label><select id="profile-avatar" name="avatar">
+        <div class="field"><label for="profile-avatar">Icon</label><select id="profile-avatar" name="avatar">
           ${["ranger", "scholar", "warden", "sage"].map((avatar) => `<option value="${avatar}" ${state.player.avatar === avatar ? "selected" : ""}>${avatar[0].toUpperCase() + avatar.slice(1)}</option>`).join("")}
         </select></div>
         <div class="field"><label for="profile-bio">Personal history</label><textarea id="profile-bio" name="bio" maxlength="500" placeholder="A few words about your journey…">${escapeHtml(state.player.bio || "")}</textarea></div>

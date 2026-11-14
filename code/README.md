@@ -74,7 +74,7 @@ code/
 | API Gateway | Plain HTTP route dispatch | `GET /health`, all public routes below |
 | Player Manager | Account creation/login, profile, deletion coordination, tutorial | `POST /players`, `POST /auth/login`, `POST /auth/logout`, `GET/PUT/DELETE /players/{playerId}`, `GET /tutorial` |
 | Collector | Collection, image delivery, exact-three team validation | `GET /monsters`, `GET /players/{playerId}/collection`, `GET /monsters/{monsterId}/image`, `PUT /players/{playerId}/team` |
-| Game Manager | Boss selection, initiative, turn processing, outcomes, reward orchestration | `POST /battles`, `POST /battles/{battleId}/actions`, `POST /battles/{battleId}` (abandon) |
+| Game Manager | Boss selection, initiative, turn processing, outcomes, reward orchestration | `POST /battles`, `POST /battles/{battleId}/actions` |
 | Encounter | Idempotent result persistence and player history | `GET /players/{playerId}/encounters` |
 
 Service-to-service endpoints are documented separately under `docs/openapi/`. The gateway does not forward `/internal/` paths, and no internal service port is published. There are no bearer-token or internal-token headers.
@@ -98,9 +98,9 @@ The response contains the created `player` profile and HTTP 201. The frontend st
 
 `POST /battles` accepts `{ "playerId": "<player-id>" }`. The response contains the `battleId`, boosted boss stats, team HP, initiative, and battle status.
 
-`POST /battles/{battleId}/actions` accepts `{ "actionType": "attack", "moveId": "<living-team-card-id>", "playerId": "<player-id>" }`. The server validates the team, turn order, and living HP, then returns updated state and any final result.
+`POST /battles/{battleId}/actions` accepts `{ "actionType": "attack", "moveId": "<living-team-card-id>", "playerId": "<player-id>" }` to attack, or `{ "actionType": "abandon", "playerId": "<player-id>" }` to withdraw. The server validates the action and, for attacks, the turn order and living HP; withdrawal is recorded as a loss.
 
-`POST /battles/{battleId}` accepts `{ "playerId": "<player-id>" }` to withdraw from an active encounter; withdrawal is recorded as a loss. A repeated `POST /battles` resumes the player's existing in-memory battle instead of creating a second battle.
+The response contains the updated state and any final result. A repeated `POST /battles` resumes the player's existing in-memory battle instead of creating a second battle.
 
 ## Verification
 

@@ -298,10 +298,13 @@ def play_action(battle_id):
     body = request.get_json(silent=True)
     if (
         not isinstance(body, dict)
-        or body.get("actionType") != "attack"
-        or not isinstance(body.get("moveId"), str)
+        or body.get("actionType") not in ("attack", "abandon")
+        or (
+            body.get("actionType") == "attack"
+            and not isinstance(body.get("moveId"), str)
+        )
     ):
-        return client_error("invalid_action", "Choose a team card and use the attack action", 400)
+        return client_error("invalid_action", "Use attack with a team card or abandon the encounter", 400)
     player_id = player_id_from_request(body)
     if player_id is None:
         return client_error("invalid_player", "A player ID is required for this action", 400)
@@ -313,6 +316,18 @@ def play_action(battle_id):
         if battle["playerId"] != player_id:
             return client_error("forbidden", "This encounter belongs to another player", 403)
         if battle["finalized"]:
+            return jsonify(public_battle(battle)), 200
+        if body["actionType"] == "abandon":
+            if battle["status"] == "in_progress":
+                battle["status"] = "lost"
+                battle["result"] = "loss"
+                battle["outcome"] = "abandoned"
+                battle["activeTurn"] = "complete"
+                touch(battle)
+                append_event(battle, "You withdrew from the encounter.")
+            failure = finalize_battle(battle)
+            if failure:
+                return failure
             return jsonify(public_battle(battle)), 200
         if battle["status"] != "in_progress":
             failure = finalize_battle(battle)
@@ -354,34 +369,7 @@ def play_action(battle_id):
             failure = finalize_battle(battle)
             if failure:
                 return failure
-        return jsonify(public_battle(battle)), 200
-
-
-@app.post("/battles/<battle_id>")
-def abandon_battle(battle_id):
-    player_id = player_id_from_request(request.get_json(silent=True))
-    if player_id is None:
-        return client_error("invalid_player", "A player ID is required to abandon a battle", 400)
-    cleanup_expired()
-    with BATTLE_LOCK:
-        battle = BATTLES.get(battle_id)
-        if battle is None:
-            return client_error("battle_not_found", "This encounter has expired or does not exist", 404)
-        if battle["playerId"] != player_id:
-            return client_error("forbidden", "This encounter belongs to another player", 403)
-        if battle["finalized"]:
             return jsonify(public_battle(battle)), 200
-        battle["status"] = "lost"
-        battle["result"] = "loss"
-        battle["outcome"] = "abandoned"
-        battle["activeTurn"] = "complete"
-        touch(battle)
-        append_event(battle, "You withdrew from the encounter.")
-        failure = finalize_battle(battle)
-        if failure:
-            return failure
-        return jsonify(public_battle(battle)), 200
-
 
 @app.delete("/internal/players/<player_id>/battles")
 def delete_player_battles(player_id):

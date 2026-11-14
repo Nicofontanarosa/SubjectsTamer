@@ -156,39 +156,22 @@ paths:
     post:
       parameters:
         - $ref: "#/components/parameters/battleId"
-      summary: Perform a player attack and resolve the boss response
+      summary: Perform an attack or abandon an encounter
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [actionType, moveId, playerId]
+              required: [actionType, playerId]
               properties:
-                actionType: { const: attack }
-                moveId: { type: string }
+                actionType: { enum: [attack, abandon] }
+                moveId: { type: string, description: Required when actionType is attack }
                 playerId: { type: string }
       responses:
-        "200": { description: Updated battle state and final result, if concluded }
+        "200": { description: Updated battle state and final result, if concluded or abandoned }
         "400": { description: Invalid action or unavailable attacker }
         "409": { description: Wrong turn }
-  /battles/{battleId}:
-    post:
-      parameters:
-        - $ref: "#/components/parameters/battleId"
-      summary: Withdraw from an active encounter
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [playerId]
-              properties:
-                playerId: { type: string }
-      responses:
-        "200": { description: Abandoned encounter and restored team }
-        "404": { description: Battle is unknown or expired }
   /players/{playerId}/encounters:
     get:
       parameters:

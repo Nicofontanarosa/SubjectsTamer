@@ -41,8 +41,6 @@ def target_for(path, method):
         return GAME_MANAGER_URL
     if re.fullmatch(r"battles/[^/]+/actions", path) and method == "POST":
         return GAME_MANAGER_URL
-    if re.fullmatch(r"battles/[^/]+", path) and method == "POST":
-        return GAME_MANAGER_URL
 
     player_match = re.fullmatch(r"players/([^/]+)", path)
     if player_match and method in ("GET", "PUT", "DELETE"):

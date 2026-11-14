@@ -543,9 +543,9 @@ async function attack(monsterId, button) {
 async function abandonBattle() {
   if (!window.confirm("Withdraw from this encounter? It will be recorded as a defeat.")) return;
   try {
-    state.battle = await api(`/battles/${encodeURIComponent(state.battle.battleId)}`, {
+    state.battle = await api(`/battles/${encodeURIComponent(state.battle.battleId)}/actions`, {
       method: "POST",
-      body: { playerId: state.player.playerId },
+      body: { actionType: "abandon", playerId: state.player.playerId },
     });
     await refreshGameData();
     render();

@@ -26,40 +26,23 @@ paths:
     post:
       parameters:
         - $ref: "#/components/parameters/battleId"
-      summary: Attack with one living team card; resolve the boss reply and terminal state
+      summary: Perform an action in the encounter
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [actionType, moveId, playerId]
+              required: [actionType, playerId]
               properties:
-                actionType: { const: attack }
-                moveId: { type: string }
+                actionType: { enum: [attack, abandon] }
+                moveId: { type: string, description: Required when actionType is attack }
                 playerId: { type: string }
       responses:
-        "200": { description: Current battle state; reward and history are persisted on completion }
+        "200": { description: Updated battle state; reward and history are persisted when completed or abandoned }
         "400": { description: Invalid action or card }
         "409": { description: Not the player's turn }
         "502": { description: Reward or history persistence is pending; retry safely }
-  /battles/{battleId}:
-    post:
-      parameters:
-        - $ref: "#/components/parameters/battleId"
-      summary: Withdraw from an active battle and record the loss
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [playerId]
-              properties:
-                playerId: { type: string }
-      responses:
-        "200": { description: Battle abandoned and team restored }
-        "404": { description: Battle missing or expired }
   /internal/players/{playerId}/battles:
     delete:
       parameters:

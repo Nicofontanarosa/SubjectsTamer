@@ -49,7 +49,7 @@ Department advantages form a wheel: Computer Science > Engineering > Medicina e 
 
 ## Image-backed catalog
 
-Only subjects with matching artwork in `shared/assets/` are enabled: 15 Computer Science courses, 3 Engineering courses, 16 Medicina e Chirurgia courses, and 18 Giurisprudenza courses (52 in total). Their catalog records, department, CFU, derived rarity/stats, and artwork paths are in `shared/catalog.json`; the corresponding card images are served by the Collector. New subjects are not added unless matching project artwork is provided.
+Only subjects with matching artwork in `shared/assets/` are enabled: 15 Computer Science courses, 14 Engineering courses, 16 Medicina e Chirurgia courses, and 18 Giurisprudenza courses (63 in total). Their catalog records, department, CFU, derived rarity/stats, and artwork paths are in `shared/catalog.json`; the corresponding card images are served by the Collector. New subjects are not added unless matching project artwork is provided.
 
 ## Project structure
 

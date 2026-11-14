@@ -45,6 +45,7 @@ paths:
       responses:
         "201": { description: Encounter saved }
         "200": { description: Identical retry acknowledged }
+        "400": { description: Invalid encounter data }
         "409": { description: Battle ID already belongs to a different result }
   /internal/players/{playerId}/encounters:
     delete:
@@ -56,3 +57,7 @@ paths:
       summary: Delete a player's history during account deletion
       responses:
         "204": { description: History removed }
+  /health:
+    get:
+      responses:
+        "200": { description: Encounter service health }

@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   title: Game Manager API
   version: 1.0.0
-  description: Battle lifecycle and resolution. Client requests are routed through the API Gateway.
+  description: Battle lifecycle and resolution. Public requests are routed through the API Gateway; internal requests use the service network.
 servers:
   - url: http://localhost:5000
 paths:
@@ -21,7 +21,9 @@ paths:
       responses:
         "201": { description: New battle with a CFU-weighted unowned boss and coin-flip initiative }
         "200": { description: Existing battle resumed }
+        "400": { description: Player ID is required }
         "409": { description: Invalid team or graduation complete }
+        "502": { description: Collector is unavailable or returned an invalid response }
   /battles/{battleId}/actions:
     post:
       parameters:
@@ -32,19 +34,29 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required: [actionType, playerId]
-              properties:
-                actionType: { enum: [attack, abandon] }
-                moveId: { type: string, description: Required when actionType is attack }
-                playerId: { type: string }
+              oneOf:
+                - type: object
+                  required: [actionType, moveId, playerId]
+                  properties:
+                    actionType: { const: attack }
+                    moveId: { type: string }
+                    playerId: { type: string }
+                - type: object
+                  required: [actionType, playerId]
+                  properties:
+                    actionType: { const: abandon }
+                    playerId: { type: string }
       responses:
         "200": { description: Updated battle state; reward and history are persisted when completed or abandoned }
-        "400": { description: Invalid action or card }
+        "400": { description: Invalid action, player ID, or attacker }
+        "403": { description: Battle belongs to another player }
+        "404": { description: Battle is missing or expired }
         "409": { description: Not the player's turn }
         "502": { description: Reward or history persistence is pending; retry safely }
   /internal/players/{playerId}/battles:
     delete:
+      servers:
+        - url: http://game-manager:5005
       parameters:
         - name: playerId
           in: path
@@ -53,6 +65,10 @@ paths:
       summary: Clear temporary battles during account deletion
       responses:
         "204": { description: Player battle state removed }
+  /health:
+    get:
+      responses:
+        "200": { description: Game Manager service health and active battle count }
 components:
   parameters:
     battleId:

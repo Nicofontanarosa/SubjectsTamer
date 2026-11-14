@@ -333,7 +333,7 @@ def play_action(battle_id):
             failure = finalize_battle(battle)
             if failure:
                 return failure
-            return jsonify(public_battle(battle)), 200
+        return jsonify(public_battle(battle)), 200
         if battle["activeTurn"] != "player":
             return client_error("wrong_turn", "Wait for the boss turn to finish", 409)
         attacker = next(

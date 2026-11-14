@@ -104,19 +104,11 @@ The response contains the created `player` profile and HTTP 201. The frontend st
 
 ### Battle API shapes
 
-`POST /battles` accepts `{ "playerId": "<player-id>" }`. The response contains the `battleId`, boosted boss stats, team HP, initiative, and battle status.
+- `POST /battles` accepts `{ "playerId": "<player-id>" }`. The response contains the `battleId`, boosted boss stats, team HP, initiative, and battle status.
 
-`POST /battles/{battleId}/actions` accepts `{ "actionType": "attack", "moveId": "<living-team-card-id>", "playerId": "<player-id>" }` to attack, or `{ "actionType": "abandon", "playerId": "<player-id>" }` to withdraw. The server validates the action and, for attacks, the turn order and living HP; withdrawal is recorded as a loss.
+- `POST /battles/{battleId}/actions` accepts `{ "actionType": "attack", "moveId": "<living-team-card-id>", "playerId": "<player-id>" }` to attack, or `{ "actionType": "abandon", "playerId": "<player-id>" }` to withdraw. The server validates the action and, for attacks, the turn order and living HP; withdrawal is recorded as a loss.
 
 The response contains the updated state and any final result. A repeated `POST /battles` resumes the player's existing in-memory battle instead of creating a second battle.
-
-## Verification
-
-No automated test suite or test collection was created, as requested. The user-facing flows can be checked manually in the browser. The source functional-requirements PDF asks for Bruno/Postman component/integration tests, Locust performance tests, and CI security analysis; those deliverables are intentionally not included.
-
-
-
-
 
 # 🔐 Architecture & Security Gaps
 
@@ -136,9 +128,9 @@ While We do our best to detect code anomalies, We cannot guarantee that this sof
 
 This project was developed as part of an academic project at the [University of Pisa](https://github.com/Unipisa) by the GRASP group, by the following contributors:
 
-* [@diperanto](https://github.com/diperanto) a.diperna@studenti.unipi.it
-* [@riccardo-cristofani](https://github.com/riccardo-cristofani) r.cristofani@studenti.unipi.it
-* [@SaraCroft02](https://github.com/SaraCroft02) s.boscardin1@studenti.unipi.it
-* [@Nicofontanarosa](https://github.com/Nicofontanarosa) n.fontanarosa@studenti.unipi.it
+* [@diperanto](https://github.com/diperanto) | a.diperna@studenti.unipi.it
+* [@riccardo-cristofani](https://github.com/riccardo-cristofani) | r.cristofani@studenti.unipi.it
+* [@SaraCroft02](https://github.com/SaraCroft02) | s.boscardin1@studenti.unipi.it
+* [@Nicofontanarosa](https://github.com/Nicofontanarosa) | n.fontanarosa@studenti.unipi.it
 
 ![GitHub followers](https://img.shields.io/github/followers/Nicofontanarosa?style=social)

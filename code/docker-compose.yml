@@ -28,7 +28,7 @@ services:
       encounter:
         condition: service_healthy
     healthcheck:
-    # test: ["CMD", "python", "-c", ...] è un modo per eseguire un comando python inline
+      # test: ["CMD", "python", "-c", ...] è un modo per eseguire un comando python inline
       # È il controllo di salute di Docker Compose per il servizio, richiede http://localhost:5005/health e aspetta al massimo 3 secondi.
       test:
         - CMD

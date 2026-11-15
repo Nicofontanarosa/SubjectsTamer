@@ -37,7 +37,7 @@ This stops the services but preserves player accounts, collections, and history.
 
 Player Manager, Collector, and Encounter each own a persistent SQLite database. Active battle state is held in Game Manager memory and is discarded after 30 minutes of inactivity or when Game Manager restarts. Completed history and rewards are saved before a battle is reported complete.
 
-# ⚙️ How it works?
+# ⚙️ How does it work?
 
 For detailed architectural and functional specifications, please refer to the `doc/` directory. The OpenAPI specification files for the microservices are located in the `docs/openapi/` directory and can be viewed via Swagger UI.
 

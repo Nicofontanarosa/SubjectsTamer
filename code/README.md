@@ -87,21 +87,6 @@ code/
 
 Service-to-service endpoints are documented separately under `docs/openapi/`. The gateway does not forward `/internal/` paths, and no internal service port is published. There are no bearer-token or internal-token headers.
 
-### Account examples
-
-Register:
-
-```json
-{
-  "email": "tamer@example.com",
-  "password": "a-long-password",
-  "nickname": "Rowan",
-  "bio": "A student of the old halls."
-}
-```
-
-The response contains the created `player` profile and HTTP 201. The frontend stores that profile locally to reopen the same player after a page refresh. `POST /auth/login` accepts `{ "email": "...", "password": "..." }` and returns the matching profile; this is not an access-control mechanism.
-
 # API calls on startup and login
 
 When the frontend opens with no player profile saved in the browser, it displays the login page without making an API request. Submitting the login form sends `POST /auth/login` with the email and password to the API Gateway; because the request uses JSON from a different origin, the browser first sends an `OPTIONS /auth/login` CORS preflight. The Gateway forwards the `POST` to Player Manager. A successful response contains the player profile, which the frontend saves in `localStorage`.
@@ -123,14 +108,6 @@ Once these requests succeed, the frontend renders the Hall; rendering that page 
 The Collector responses include progress counts, but the frontend calculates the “Road to graduation” display from the loaded lists: `state.collection.length` is the number owned, `state.catalog.length` is the catalog total, and the percentage is `Math.round(owned / total * 100)`. For example, 8 owned cards out of 63 gives `8 / 63` and `13%`.
 
 Card artwork is fetched from `GET /monsters/{monsterId}/image`. In the frontend, `imageCache` keeps a promise for each card's downloaded image blob and its generated object URL, keyed by monster ID. This reuses the same download when an image is requested again during that page session and avoids duplicate concurrent requests. If a download fails, its cache entry is removed so a later render can retry. Object URLs are revoked and the map cleared on logout; URLs are also revoked when the page is left. The Collector marks image responses as conditionally cacheable for one hour, but the frontend's shared `fetch` helper sets `cache: "no-store"` on API requests, so browser HTTP caching is not relied on by these calls.
-
-### Battle API shapes
-
-- `POST /battles` accepts `{ "playerId": "<player-id>" }`. The response contains the `battleId`, boosted boss stats, team HP, initiative, and battle status.
-
-- `POST /battles/{battleId}/actions` accepts `{ "actionType": "attack", "moveId": "<living-team-card-id>", "playerId": "<player-id>" }` to attack, or `{ "actionType": "abandon", "playerId": "<player-id>" }` to withdraw. The server validates the action and, for attacks, the turn order and living HP; withdrawal is recorded as a loss.
-
-The response contains the updated state and any final result. A repeated `POST /battles` resumes the player's existing in-memory battle instead of creating a second battle.
 
 # 🔐 Architecture & Security Gaps
 

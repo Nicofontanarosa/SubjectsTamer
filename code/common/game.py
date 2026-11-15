@@ -50,5 +50,6 @@ def rarity(cfu):
         return "Uncommon"
     return "Common"
 
+# restituisce un oggetto JSON con un messaggio di errore e lo stato HTTP specificato. Viene usato per rispondere a richieste non valide o quando si verificano errori.
 def error_response(code, message, status):
     return jsonify({"error": code, "message": message}), status

@@ -1,43 +1,41 @@
-# Occupa molta meno memoria e riduce la superficie di attacco per la sicurezza
+# Uses less memory and reduces the security attack surface.
 FROM python:3.12.10-slim-bookworm
 WORKDIR /app
-# Gunicorn è un server HTTP WSGI (Web Server Gateway Interface) pensato per il linguaggio Python
-# utilizzato principalmente per far girare applicazioni web in ambiente di produzione.
-# Con Flask, quando scrivi codice in locale usi un server di sviluppo integrato 
-# (es. quello che parte con python manage.py runserver). Quel server è comodo per fare i test, ma non è sicuro,
-# non è scalabile e non è pensato per reggere il traffico reale di utenti su internet. Gunicorn serve esattamente a 
-# colmare questo divario. Si posiziona nel mezzo tra il web server principale (come Nginx o Apache) e la tua applicazione Python.
+
+# Gunicorn is a Python WSGI (Web Server Gateway Interface) HTTP server primarily used to run web applications in production.
+# Flask's built-in development server is convenient for local testing, but it is not secure or scalable and is not designed
+# to handle real internet traffic. Gunicorn fills this gap by sitting between the main web server (such as Nginx or Apache)
+# and the Python application.
 COPY collector/requirements.txt .
+
 RUN pip install --no-cache-dir -r requirements.txt \
     && useradd --system --uid 10001 --create-home appuser \
     && mkdir -p /data \
     && chown -R appuser:appuser /app /data
+# This is a security best practice: instead of running everything with maximum privileges (as root),
+# these steps isolate the application, protect the system, and follow the principle of least privilege.
+# Creates the "appuser" account with UID 10001, creates the /data directory, and assigns ownership of /app and /data to "appuser".
 
-# quella sopra è una best practice per la sicurezza, Invece di far girare tutto con i privilegi massimi
-# (come root), si compiono queste operazioni per isolare l'applicazione, proteggere il sistema e rispettare il principio del minimo privilegio.
-
-# crea un utente "appuser" con UID 10001, crea la cartella /data e cambia il proprietario di /app e /data a "appuser".
-
-# contiene moduli condivisi da microservizi diversi, come la logica di gioco, le classi dei mostri e le funzioni per caricare il catalogo.
+# Contains modules shared by multiple microservices, such as game logic, monster classes, and catalog-loading functions.
 COPY common /app/common
-# Il catalogo e le immagini delle carte sono risorse condivise dal progetto.
+# The catalog and card images are shared project resources.
 COPY shared/catalog.json /app/shared/catalog.json
 COPY shared/assets /app/shared/assets
+
 COPY collector/app.py /app/app.py
-# indica a Docker di eseguire i comandi successivi e il processo del container come utente ID 10001 e gruppo ID 10001.
+COPY collector/routes /app/routes
+
+# Tells Docker to run subsequent commands and the container process as user ID 10001 and group ID 10001.
 USER 10001:10001
 EXPOSE 5005
 
-# - Avvia l'applicazione Flask (app.py, istanza "app") esponendola sulla porta 5005 all'interno del container.
-# - Il parametro "--bind 0.0.0.0:5005" permette al server di accettare traffico proveniente dall'esterno del container Docker.
-# - Il parametro "--workers 2" avvia 2 processi worker paralleli per gestire le richieste degli utenti sfruttando più risorse.
+# - Starts the Flask application (the "app" instance in app.py) on port 5005 inside the container.
+# - The "--bind 0.0.0.0:5005" option allows the server to accept traffic from outside the Docker container.
+# - The "--workers 2" option starts two parallel worker processes to handle user requests.
 CMD ["gunicorn", "--bind", "0.0.0.0:5005", "--workers", "2", "app:app"]
 
-# se facessi CMD ["flask", "--app", "app", "run", "--host=0.0.0.0", "--port=5005"]
-# Usa un server di sviluppo (basato su Werkzeug) che in genere è single-threaded o gestisce le richieste in modo 
-# molto limitato. Se due utenti fanno una richiesta pesante nello stesso momento, il secondo utente dovrà aspettare
-# che il primo finisca (blocco).
-
-# Con Gunicorn: Sfrutta un modello pre-fork worker. Nel tuo comando hai impostato --workers 2, il che significa
-# che Gunicorn avvia due processi distinti e indipendenti in parallelo per gestire le richieste. Può servire più 
-# utenti contemporaneamente senza bloccarsi.
+# If you used CMD ["flask", "--app", "app", "run", "--host=0.0.0.0", "--port=5005"],
+# it would use a development server that is generally single-threaded or handles requests with limited concurrency.
+# If two users submit resource-intensive requests at the same time, the second may have to wait for the first to finish.
+# Gunicorn uses a pre-fork worker model. The --workers 2 option starts two separate, independent processes
+# to handle requests in parallel, allowing it to serve multiple users concurrently.

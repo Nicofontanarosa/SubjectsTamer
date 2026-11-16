@@ -2,13 +2,12 @@
 
 import logging
 
-from flask import Flask, request
+from flask import Flask, request, jsonify
 
 # Se app.py viene importato come package, usa import relativi.
 if __package__:
     from .component import (
         authentication,
-        health as health_component,
         player_profile,
         tutorial as tutorial_component,
     )
@@ -18,7 +17,6 @@ if __package__:
 else:
     from component import (
         authentication,
-        health as health_component,
         player_profile,
         tutorial as tutorial_component,
     )
@@ -74,7 +72,7 @@ def tutorial():
 # GET /health: endpoint usato dagli healthcheck Docker.
 @app.get("/health")
 def health():
-    return health_component.health()
+    return jsonify({"status": "ok", "service": "player-manager"}), 200
 
 
 # All’avvio inizializza la tabella players con il contesto Flask attivo.
@@ -84,7 +82,7 @@ with app.app_context():
 # ======================================================================
 # ESEMPI DI CHIAMATE HTTP (dal terminale del computer)
 # ======================================================================
-# curl http://127.0.0.1:5000/health
+# curl http://127.0.0.1:5000/health  # controlla lo stato del gateway
 # curl http://127.0.0.1:5000/tutorial
 # curl http://127.0.0.1:5000/players/123
 # curl -X POST http://127.0.0.1:5000/auth/login \

@@ -1,3 +1,4 @@
+# accesso al database sqlite del player manager.
 
 import os
 import sqlite3
@@ -5,47 +6,55 @@ from pathlib import Path
 
 
 class Database:
-    # Eccezioni SQLite utilizzabili dalle altre componenti.
+    # queste eccezioni le metto qui cosi posso usarle anche dagli altri file.
+    # non le sto creando io, sono gia quelle di sqlite3.
     Error = sqlite3.Error
     IntegrityError = sqlite3.IntegrityError
 
+    # questo metodo serve per il with: viene chiamato appena entriamo nel blocco.
+    # qui si apre la connessione, poi alla fine del with ci pensa __exit__ a chiuderla.
+    # vedi approfondimento [a] in fondo al file.
     def __enter__(self):
-        # Recupera la directory del database da Docker Compose.
+        # la directory la prendiamo dalla variabile d'ambiente che abbiamo messo in docker compose.
+        # aggiungiamo il nome del file, quindi il percorso finale è /data/players.sqlite.
         path = Path(os.getenv("DATA_DIR", "/data")) / "players.sqlite"
-        path.parent.mkdir(parents=True, exist_ok=True)
+        path.parent.mkdir(parents=True, exist_ok=True)  # crea la cartella solo se non c'è.
 
-        # Apre il database, attendendo fino a 10 secondi in caso di lock.
+        # apre il file sqlite; se non esiste, lo crea.
+        # i 10 secondi servono se il db è bloccato, non sono un limite di tempo alla query.
         self.connection = sqlite3.connect(path, timeout=10)
 
-        # Permette di leggere le colonne per nome: row["email"].
+        # una select restituisce righe accessibili per nome: row["email"].
         self.connection.row_factory = sqlite3.Row
 
-        # Abilita il controllo delle chiavi esterne.
+        # sqlite verifica le chiavi esterne solo se questa opzione è abilitata.
         self.connection.execute("PRAGMA foreign_keys = ON")
 
-        # Restituisce l'istanza utilizzata nel blocco with.
+        # restituisco questo oggetto, che nel with verrà chiamato db.
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        # Chiamato automaticamente alla fine del blocco with.
+        # python esegue questo metodo quando usciamo dal with, anche in caso di errore.
+        # per commit, rollback e close c'è un esempio in fondo, punto [b].
         try:
             if exc_type is None:
-                self.connection.commit()  # Salva le modifiche.
+                self.connection.commit()  # salva le modifiche fatte nel blocco with. dato che non ci sono errori in exc_type.
             else:
-                self.connection.rollback()  # Annulla le modifiche.
+                self.connection.rollback()  # annulla quelle non ancora salvate. rollback viene chiamato se c'è un errore, ed elimina tutte le modifiche fatte nel blocco with. 
         finally:
-            self.connection.close()  # Chiude sempre la connessione.
+            self.connection.close()  # qui la chiudiamo sempre.
 
     def execute(self, query, parameters=()):
-        # Esegue INSERT, UPDATE o DELETE.
+        # questo lo uso per inserire, modificare o eliminare dei record.
+        # i parametri si passano nei ? invece di attaccarli alla stringa sql.
         cursor = self.connection.execute(query, parameters)
         try:
-            return cursor.rowcount  # Numero di righe interessate.
+            return cursor.rowcount  # numero di righe coinvolte.
         finally:
             cursor.close()
 
     def execute_many(self, query, parameters):
-        # Esegue la stessa query con gruppi di parametri diversi.
+        # stessa istruzione sql, più gruppi di parametri (esempio in [d]).
         cursor = self.connection.executemany(query, parameters)
         try:
             return cursor.rowcount
@@ -53,29 +62,31 @@ class Database:
             cursor.close()
 
     def fetch_one(self, query, parameters=()):
-        # Recupera una sola riga, oppure None.
+        # utile quando mi serve un solo player.
         cursor = self.connection.execute(query, parameters)
         try:
-            return cursor.fetchone()
+            return cursor.fetchone()  # una sqlite3.row, oppure none.
         finally:
             cursor.close()
 
     def fetch_all(self, query, parameters=()):
-        # Recupera tutte le righe, restituendo una lista.
+        # qui invece recupero tutte le righe trovate.
         cursor = self.connection.execute(query, parameters)
         try:
-            return cursor.fetchall()
+            return cursor.fetchall()  # lista di sqlite3.row; [] se non trova nulla.
         finally:
             cursor.close()
 
     @staticmethod
     def initialize_database():
-        # Inizializza il database all'avvio del microservizio.
+        # /player_manager/app.py lo richiama all'avvio, senza creare prima un oggetto database.
         with Database() as db:
-            # Abilita il Write-Ahead Logging.
+            # wal migliora la convivenza tra letture e scritture su sqlite.
+            # non significa che due processi possano scrivere contemporaneamente.
             db.execute("PRAGMA journal_mode = WAL")
 
-            # Crea la tabella players soltanto se non esiste.
+            # crea la tabella soltanto se manca. non aggiorna uno schema già esistente.
+            # unique su email/nickname è importante anche per la registrazione.
             db.execute("""
                 CREATE TABLE IF NOT EXISTS players (
                     player_id TEXT PRIMARY KEY,
@@ -89,79 +100,94 @@ class Database:
             """)
 
 
-# =====================================================
-# ESEMPI DI UTILIZZO
-# =====================================================
-# Le variabili degli esempi sono già state preparate
-# dalle funzioni di authentication.py e player_profile.py.
+# ============================================================================
+# qualche spiegazione in piu e degli esempi
+# gli esempi qui sotto non partono quando avvio il servizio.
+# ============================================================================
 
-
-# 1. REGISTRAZIONE (authentication.py)
-# Inserisce il nuovo player nel database.
-
-# with Database() as db:
-#     db.execute(
-#         """INSERT INTO players
-#            (player_id, email, password_hash, nickname, avatar, bio, created_at)
-#            VALUES (?, ?, ?, ?, ?, ?, ?)""",
-#         (player_id, email, password_hash, nickname, avatar, bio, created_at)
-#     )
-# Terminato il with, __exit__ effettua il commit.
-
-
-# 2. LOGIN (authentication.py)
-# Cerca il player associato all'email.
-
-# with Database() as db:
-#     player = db.fetch_one(
-#         "SELECT * FROM players WHERE email = ?",
-#         (email,)
-#     )
-# player["password_hash"] contiene l'hash da verificare.
-# Se non trova il player, restituisce None.
-
-
-# 3. MODIFICA PROFILO (player_profile.py)
-# Aggiorna il nickname e recupera il profilo aggiornato.
-
-# with Database() as db:
-#     db.execute(
-#         "UPDATE players SET nickname = ? WHERE player_id = ?",
-#         (nickname, player_id)
-#     )
-#     player = db.fetch_one(
-#         "SELECT * FROM players WHERE player_id = ?",
-#         (player_id,)
-#     )
-# Entrambe le query utilizzano la stessa connessione.
-
-
-# 4. ELIMINAZIONE PLAYER (player_profile.py)
-# Elimina il player identificato dal suo ID.
-
-# with Database() as db:
-#     righe_eliminate = db.execute(
-#         "DELETE FROM players WHERE player_id = ?",
-#         (player_id,)
-#     )
-# Restituisce 1 se elimina un record, 0 se non lo trova.
-
-
-# 5. LETTURA MULTIPLA
-# Recupera tutti i player.
-
-# with Database() as db:
-#     players = db.fetch_all("SELECT * FROM players")
+# [a] perché esistono __enter__ e __exit__
+# ad esempio in authentication.py troviamo:
 #
-# players[0]["email"]  -> email del primo player
-# players[1]["email"]  -> email del secondo player
+#   with Database() as db:
+#       db.execute("INSERT INTO ...", (...))
+#
+# il with è di python, non è una funzione propria di sqlite.
+# python crea database(), chiama __enter__ e assegna a "db" il suo return.
+# dentro il blocco facciamo le query; uscendo, python chiama __exit__.
+# cosi non dobbiamo ricordarci ogni volta di aprire, salvare e chiudere la connessione.
+# ogni nuovo "with database()" crea una nuova connessione allo stesso file,
+# non un altro database con dati separati. il file rimane nel volume docker.
 
+# [b] differenza tra commit, rollback e close
+# esempio: vogliamo fare due modifiche che devono riuscire insieme.
+#
+#   with Database() as db:
+#       db.execute("UPDATE players SET avatar = ? WHERE player_id = ?", ("mage", "123"))
+#       db.execute("UPDATE players SET avatar = ? WHERE player_id = ?", ("ranger", "456"))
+#
+# se entrambe terminano senza errori, __exit__ fa commit: le modifiche restano.
+# se la seconda genera un'eccezione, __exit__ fa rollback della transazione.
+# close() invece libera la connessione: non è il comando che salva i dati.
+# il blocco with garantisce qui una transazione per più operazioni sullo stesso db.
 
-# 6. AGGIORNAMENTO MULTIPLO
-# Modifica l'avatar di due player con una sola chiamata.
+# [c] come leggere il risultato di una select
+# con row_factory = sqlite3.row, fetch_one restituisce una riga indicizzabile
+# per nome della colonna; fetch_all restituisce una lista di queste righe.
+#
+#   with Database() as db:
+#       player = db.fetch_one("SELECT player_id, email FROM players WHERE player_id = ?",
+#                             ("123",))
+#   if player is not None:
+#       print(player["email"])
+#
+# invece, con fetch_all:
+#   with Database() as db:
+#       players = db.fetch_all("SELECT player_id, email FROM players")
+#   for player in players:
+#       print(player["player_id"], player["email"])
+#
+# non otteniamo una struttura organizzata per colonne come {"email": [...], "player_id": [...]}:
+# prima selezioniamo la riga, poi la colonna (es. players[0]["email"]).
+# e attenzione: execute() su select non restituisce i record, ma rowcount.
 
-# with Database() as db:
-#     db.execute_many(
-#         "UPDATE players SET avatar = ? WHERE player_id = ?",
-#         [("ranger", "123"), ("mage", "456")]
-#     )
+# [d] esempi delle query usate dal player manager
+# registrazione (authentication.py): email e nickname duplicati sono bloccati
+# dai vincoli unique della tabella; sqlite solleva integrityerror.
+#
+#   with Database() as db:
+#       db.execute(
+#           """INSERT INTO players
+#              (player_id, email, password_hash, nickname, avatar, bio, created_at)
+#              VALUES (?, ?, ?, ?, ?, ?, ?)""",
+#           (player_id, email, password_hash, nickname, avatar, bio, created_at)
+#       )
+# qui le variabili sono già state preparate da register_player().
+#
+# login (authentication.py): ricerco il player e poi verifico la password
+# con check_password_hash, che si trova nella componente di autenticazione.
+#
+#   with Database() as db:
+#       row = db.fetch_one("SELECT * FROM players WHERE email = ?", (email,))
+#
+# modifica profilo (player_profile.py): update e select usano lo stesso with.
+#
+#   with Database() as db:
+#       db.execute("UPDATE players SET nickname = ? WHERE player_id = ?",
+#                  (nickname, player_id))
+#       row = db.fetch_one("SELECT * FROM players WHERE player_id = ?", (player_id,))
+#
+# eliminazione: execute restituisce il numero di righe eliminate (0 oppure 1
+# nel nostro caso, perché player_id è una chiave primaria).
+#
+#   with Database() as db:
+#       deleted = db.execute("DELETE FROM players WHERE player_id = ?", (player_id,))
+#
+# esecuzione multipla: stessa query, parametri diversi.
+#
+#   with Database() as db:
+#       db.execute_many("UPDATE players SET avatar = ? WHERE player_id = ?",
+#                       [("mage", "123"), ("ranger", "456")])
+#
+# occhio alla virgola in ("123",): in python serve per creare una tupla con un solo valore.
+# il ? permette di passare valori separati dal testo sql ed evita di costruire
+# query concatenando direttamente i dati ricevuti nelle richieste http.

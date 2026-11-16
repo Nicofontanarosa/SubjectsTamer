@@ -1,6 +1,6 @@
 # Framework HTTP: endpoint e gestione delle richieste.
 Flask==3.1.1
-# Libreria crittografica della versione precedente del database.
+# Libreria crittografica della versione precedente del database. potrebbe essere anche essere rimossa per questa delivery, ma la lascio per sicurezza.
 cryptography==45.0.5
 # Server WSGI usato dal Dockerfile per eseguire Flask.
 gunicorn==23.0.0

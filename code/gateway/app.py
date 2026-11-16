@@ -21,11 +21,11 @@ CORS_ORIGINS = {
     if origin.strip()
 }
 
-
+# Returns a JSON error response with the specified code, message, and status.
 def json_error(code, message, status):
     return jsonify({"error": code, "message": message}), status
 
-
+# Determines the target service URL based on the request path and method.
 def target_for(path, method):
     if path == "players" and method == "POST":
         return PLAYER_MANAGER_URL
@@ -55,7 +55,7 @@ def target_for(path, method):
         return None
     return None
 
-
+# Adds CORS headers to the response if the request's origin is allowed.
 @app.after_request
 def add_cors_headers(response):
     origin = request.headers.get("Origin")
@@ -69,7 +69,7 @@ def add_cors_headers(response):
     response.headers["Referrer-Policy"] = "no-referrer"
     return response
 
-
+# Dispatches incoming requests to the appropriate backend service based on the request path and method.
 @app.route("/<path:public_path>", methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
 def dispatch(public_path):
     if request.method == "OPTIONS":
@@ -108,12 +108,12 @@ def dispatch(public_path):
         headers={"X-Request-ID": str(uuid.uuid4())},
     )
 
-
+# Health check endpoint to verify the API gateway is operational.
 @app.get("/health")
 def health():
     return jsonify({"status": "ok", "service": "api-gateway"}), 200
 
-
+# Root endpoint providing basic service information.
 @app.get("/")
 def root():
     return jsonify({"service": "monster-tamer-api", "health": "/health"}), 200

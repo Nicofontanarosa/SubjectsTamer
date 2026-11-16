@@ -8,7 +8,9 @@ from routes.helpers import monster_payload, owned_ids, saved_team
 
 collection_bp = Blueprint("collection", __name__)
 
-
+# Handles POST requests to the /internal/players/<player_id>/collection/initialize endpoint.
+# Initializes the player's collection with three random cards from the catalog that have a CFU of 6 or 9.
+# If the player already has a collection, it returns the existing collection without making any changes.
 @collection_bp.post("/internal/players/<player_id>/collection/initialize")
 def initialize_collection(player_id):
     catalog = current_app.config["CATALOG"]
@@ -32,7 +34,8 @@ def initialize_collection(player_id):
         )
     return jsonify({"playerId": player_id, "monsterIds": [monster["id"] for monster in chosen]}), 201
 
-
+# Handles GET requests to the /players/<player_id>/collection endpoint.
+# Returns the player's collection of monsters, their saved team, and progress information.
 @collection_bp.get("/players/<player_id>/collection")
 def get_collection(player_id):
     with connect("collection.sqlite") as db:
@@ -46,7 +49,8 @@ def get_collection(player_id):
         }
     ), 200
 
-
+# Handles POST requests to the /internal/players/<player_id>/collection/monsters endpoint.
+# Adds a new monster to the player's collection if it is valid and not already owned.
 @collection_bp.post("/internal/players/<player_id>/collection/monsters")
 def add_monster(player_id):
     monster_id = request.get_json(silent=True)
@@ -62,7 +66,8 @@ def add_monster(player_id):
         ids = owned_ids(db, player_id)
     return jsonify({"playerId": player_id, "monster": monster_payload(monster_id), "owned": len(ids)}), 200
 
-
+# Handles DELETE requests to the /internal/players/<player_id>/collection endpoint.
+# Deletes the player's collection and team from the database.
 @collection_bp.delete("/internal/players/<player_id>/collection")
 def delete_collection(player_id):
     with connect("collection.sqlite") as db:

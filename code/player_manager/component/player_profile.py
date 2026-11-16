@@ -1,55 +1,37 @@
-"""Player profile lookup, updates, and coordinated account deletion."""
+"""Logica di lettura, modifica e cancellazione dei profili dei giocatori."""
 
-# requests serve per gestire eventuali errori nelle cancellazioni sugli altri servizi.
+import logging
+
 import requests
-from flask import current_app, jsonify
 
-from common.game import error_response
-
-# anche qui il percorso dell'import cambia in base a come si avvia il servizio.
 if __package__ == "component":
     from database import Database
 else:
     from ..database import Database
 
-# qui importiamo gli indirizzi degli altri servizi e il metodo per chiamarli.
+from .exceptions import ConflictError, DependencyError, NotFoundError, StorageError, ValidationError
 from .services import COLLECTOR_URL, ENCOUNTER_URL, GAME_MANAGER_URL, internal_request
 
-
-# la riga letta dal db non è ancora il json che vogliamo mandare al frontend.
-# qui decidiamo quali dati restituire e come chiamare i camipi.
-def player_profile(row):
-    return {
-        "playerId": row["player_id"],
-        "email": row["email"],
-        "nickname": row["nickname"],
-        "avatar": row["avatar"],
-        "bio": row["bio"],
-        "createdAt": row["created_at"],
-    }
+logger = logging.getLogger(__name__)
 
 
-# per leggere un player, il suo id arriva dal percorso dell'url e non dal body.
+# il parametro player_id è già stato estratto dall'URL da app.py.
 def get_player(player_id):
     with Database() as db:
         row = db.fetch_one("SELECT * FROM players WHERE player_id = ?", (player_id,))
-    # fetch_one restituisce una riga (sqlite3.row) oppure none.
     if row is None:
-        return error_response("not_found", "Player not found", 404)
-    return jsonify({"player": player_profile(row)}), 200
+        raise NotFoundError("not_found", "Player not found")
+    # restituiamo un dizionario; la scelta dei campi da mostrare spetta ad app.py.
+    return dict(row)
 
 
-# questa funzione modifica il profilo indicato nell'url.
+# aggiorna i tre campi del profilo e recupera i dati aggiornati.
 def update_player(player_id, body):
-    # app.py ha gia letto il json; se body non è un dizionario torniamo 400.
-    if not isinstance(body, dict):
-        return error_response("invalid_request", "A JSON object is required", 400)
-
-    # per fare la modifica chiediamo tutti e tre i campi, anche se uno non cambia.
     nickname = body.get("nickname")
     avatar = body.get("avatar")
     bio = body.get("bio")
-    # nickname non può essere vuoto; avatar e bio possono esserlo, ma sono limitati.
+
+    # la PUT richiede tutti e tre i campi, anche se un valore non cambia.
     if (
         not isinstance(nickname, str)
         or not nickname.strip()
@@ -59,10 +41,9 @@ def update_player(player_id, body):
         or not isinstance(bio, str)
         or len(bio) > 500
     ):
-        return error_response("invalid_profile", "Profile details are invalid", 400)
+        raise ValidationError("invalid_profile", "Profile details are invalid")
 
-    # update e select vengono eseguite usando la stessa connessione sqlite.
-    # il with salva solo quando entrambe le operazioni terminano senza errori.
+    # update e select usano la stessa transazione: commit solo quando entrambe riescono.
     try:
         with Database() as db:
             db.execute(
@@ -70,32 +51,28 @@ def update_player(player_id, body):
                 (nickname.strip(), avatar, bio.strip(), player_id),
             )
             row = db.fetch_one("SELECT * FROM players WHERE player_id = ?", (player_id,))
-    # il vincolo unique evita che due player abbiano lo stesso nickname.
     except Database.IntegrityError as exc:
         if "UNIQUE constraint failed" in str(exc):
-            return error_response("nickname_taken", "That nickname is already in use", 409)
-        current_app.logger.exception("Could not update player profile")
-        return error_response("storage_error", "The profile could not be saved", 500)
-    except Database.Error:
-        # l'errore viene salvato nei log ma non mandato al client.
-        current_app.logger.exception("Could not update player profile")
-        return error_response("storage_error", "The profile could not be saved", 500)
+            raise ConflictError("nickname_taken", "That nickname is already in use") from exc
+        logger.exception("Could not update player profile")
+        raise StorageError("storage_error", "The profile could not be saved") from exc
+    except Database.Error as exc:
+        logger.exception("Could not update player profile")
+        raise StorageError("storage_error", "The profile could not be saved") from exc
 
-    # se l'id non esiste, update non modifica nulla e anche select trova none.
     if row is None:
-        return error_response("not_found", "Player not found", 404)
-    return jsonify({"player": player_profile(row)}), 200
+        raise NotFoundError("not_found", "Player not found")
+    return dict(row)
 
 
-# quando eliminiamo un player dobbiamo togliere anche i suoi dati dagli altri servizi.
+# per eliminare un player vanno rimossi anche i suoi dati negli altri microservizi.
 def delete_player(player_id):
-    # qui facciamo select 1 perchè ci interessa solo sapere se il player esiste.
+    # select 1 è sufficiente: ci serve soltanto sapere se l'id esiste.
     with Database() as db:
         existing = db.fetch_one("SELECT 1 FROM players WHERE player_id = ?", (player_id,))
     if existing is None:
-        return error_response("not_found", "Player not found", 404)
+        raise NotFoundError("not_found", "Player not found")
 
-    # in questa lista mettiamo i servizi che non hanno cancellato correttamente.
     failures = []
     for service_url, path in (
         (COLLECTOR_URL, f"/internal/players/{player_id}/collection"),
@@ -103,31 +80,26 @@ def delete_player(player_id):
         (GAME_MANAGER_URL, f"/internal/players/{player_id}/battles"),
     ):
         try:
-            # questa è una chiamata http agli altri servizi, non una query al nostro db.
+            # i DELETE vengono inviati direttamente ai servizi, non al nostro database.
             response = internal_request("DELETE", f"{service_url}{path}")
-            # 200/204 = operazione riuscita; 404 = dati già assenti in quel servizio.
+            # anche 404 è accettato: significa che lì i dati erano già assenti.
             if response.status_code not in (200, 204, 404):
-                current_app.logger.error(
-                    "Account cleanup failed for %s: %s", service_url, response.status_code
-                )
+                logger.error("Account cleanup failed for %s: %s", service_url, response.status_code)
                 failures.append(service_url)
         except requests.RequestException:
-            # timeout o servizio non raggiungibile: non sappiamo se abbia eliminato i dati.
-            current_app.logger.exception("Account cleanup request failed for %s", service_url)
+            # un timeout non ci dice con certezza se la cancellazione sia avvenuta.
+            logger.exception("Account cleanup request failed for %s", service_url)
             failures.append(service_url)
 
-    # se almeno un servizio fallisce, per ora non eliminiamo il profilo locale.
-    # in questo modo, dal frontend, il giocatore può inivaire una nuova delete e riprovare a cancellare i dati rimasti negli altri servizi
-    # infatti il profi lo locale non viene eliminato finchè tutti i servizi non confermano la cancellazione. pensato per poter essere ripetuto più volte senza perdere dati.
-    # questo non annulla eventuali delete già riuscite negli altri servizi.
     if failures:
-        return error_response(
+        # se almeno un servizio fallisce, non eliminiamo il player locale.
+        # il client può riprovare la DELETE; i servizi già puliti accettano anche il 404.
+        raise DependencyError(
             "cleanup_incomplete",
             "Some game data could not be removed. Retry account deletion to finish cleanup.",
-            502,
         )
-    # se siamo arrivati qui, tutte le risposte remote sono state accettate.
+
+    # tutti i servizi hanno confermato: ora possiamo eliminare il player locale.
     with Database() as db:
         db.execute("DELETE FROM players WHERE player_id = ?", (player_id,))
-    # stesso return della funzione logout: 204 = nessun contenuto, ma la richiesta è stata completata con successo.
-    return "", 204
+    # non prepariamo la risposta http: app.py restituirà 204 senza contenuto.

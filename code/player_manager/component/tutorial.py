@@ -1,34 +1,24 @@
-"""Tutorial content loading."""
+"""Caricamento dei dati del tutorial, senza costruire risposte HTTP."""
 
-# json legge il file del tutorial; Path gestisce il suo percorso.
 import json
+import logging
 import os
 from pathlib import Path
 
-from flask import current_app, jsonify
+from .exceptions import StorageError
 
-from common.game import error_response
+logger = logging.getLogger(__name__)
 
-
-# Legge TUTORIAL_PATH dall’ambiente; per default usa /app/tutorial.json.
+# il percorso è configurabile da docker; per default il file è in /app/tutorial.json.
 TUTORIAL_PATH = Path(os.environ.get("TUTORIAL_PATH", "/app/tutorial.json"))
 
 
-# Carica il tutorial da file e lo restituisce come JSON HTTP.
+# la funzione restituisce i dati python letti dal file (dizionario o lista).
+# sarà app.py a serializzarli nella risposta json.
 def tutorial():
     try:
-        # Il with chiude il file automaticamente; json.load lo converte in dati Python.
         with TUTORIAL_PATH.open(encoding="utf-8") as tutorial_file:
-            return jsonify(json.load(tutorial_file)), 200
-    # File assente/non leggibile o JSON non valido: log e risposta 500.
-    except (OSError, json.JSONDecodeError):
-        current_app.logger.exception("Tutorial file could not be read")
-        return error_response("tutorial_unavailable", "The field guide is unavailable", 500)
-
-# ======================================================================
-# ESEMPIO DI CHIAMATA HTTP
-# ======================================================================
-# GET /tutorial
-# -> apre /app/tutorial.json e restituisce il JSON contenuto nel file.
-# Se il file è mancante o non valido, restituisce errore HTTP 500.
-# Il Dockerfile copia shared/tutorial.json proprio in /app/tutorial.json.
+            return json.load(tutorial_file)
+    except (OSError, json.JSONDecodeError) as exc:
+        logger.exception("Tutorial file could not be read")
+        raise StorageError("tutorial_unavailable", "The field guide is unavailable") from exc

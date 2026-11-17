@@ -1,0 +1,22 @@
+name: collector
+
+services:
+  collector:
+    build:
+      context: ../..
+      dockerfile: collector/Dockerfile
+    environment:
+      - FLASK_APP=app.py
+    ports:
+      - "127.0.0.1:5006:5005"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5005/health', timeout=2)"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+#Cosa fa questo file:
+# Avvia il container del servizio collector usando il Dockerfile dentro la cartella ./collector.
+# Mappa la porta interna 5005 del container sulla porta locale 5006 (127.0.0.1:5006:5005), così non andrà in conflitto con altri servizi.
+# Include un healthcheck periodico sull'endpoint /health del servizio per permettere a Docker di capire quando è pronto (fondamentale se usi il flag --wait).

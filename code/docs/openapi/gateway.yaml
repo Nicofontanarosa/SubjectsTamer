@@ -2,10 +2,15 @@ openapi: 3.1.0
 info:
   title: Monster Tamer Public API
   version: 1.0.0
-  description: Unauthenticated local HTTP API. The frontend uses the API Gateway only.
+  description: Unauthenticated local HTTP API. The frontend uses the API Gateway only; login verifies credentials but does not create an authenticated server session.
 servers:
   - url: http://localhost:5000
 paths:
+  /:
+    get:
+      summary: Identify the API service and health endpoint
+      responses:
+        "200": { description: API Gateway service information }
   /health:
     get:
       responses:
@@ -30,6 +35,7 @@ paths:
         "201": { description: Created player profile }
         "400": { description: Invalid account details }
         "409": { description: Email or nickname already used }
+        "502": { description: Starter collection could not be initialized }
   /auth/login:
     post:
       summary: Verify credentials and return a player profile
@@ -48,9 +54,9 @@ paths:
         "401": { description: Invalid credentials }
   /auth/logout:
     post:
-      summary: End the local client session
+      summary: Acknowledge client-side logout; no server session is invalidated
       responses:
-        "204": { description: Completed }
+        "204": { description: No content }
   /players/{playerId}:
     parameters:
       - $ref: "#/components/parameters/playerId"
@@ -75,10 +81,13 @@ paths:
       responses:
         "200": { description: Updated profile }
         "400": { description: Invalid profile }
+        "404": { description: Player not found }
         "409": { description: Nickname already used }
+        "500": { description: Profile could not be saved }
     delete:
       summary: Delete account and coordinate removal of collection and history
       responses:
+        "404": { description: Player not found }
         "204": { description: Account and associated data deleted }
         "502": { description: Distributed cleanup is incomplete; retry }
   /tutorial:
@@ -86,6 +95,7 @@ paths:
       summary: Read the game rules
       responses:
         "200": { description: Tutorial guide }
+        "500": { description: Tutorial file is unavailable }
   /monsters:
     get:
       parameters:
@@ -107,6 +117,7 @@ paths:
             image/jpeg:
               schema: { type: string, format: binary }
         "404": { description: Unknown card }
+        "500": { description: Card artwork is unavailable }
   /players/{playerId}/collection:
     get:
       parameters:
@@ -135,7 +146,7 @@ paths:
                   items: { type: string }
       responses:
         "200": { description: Saved active team }
-        "400": { description: Team size, duplicate, or ownership validation failed }
+        "400": { description: Invalid team, unknown card, or card not owned }
   /battles:
     post:
       summary: Begin or resume a player's encounter
@@ -151,44 +162,38 @@ paths:
       responses:
         "201": { description: New battle, boss, team, and coin-toss initiative }
         "200": { description: Existing active battle resumed }
+        "400": { description: Player ID is required }
         "409": { description: Invalid team or all cards collected }
+        "502": { description: Collector is unavailable or returned an invalid response }
   /battles/{battleId}/actions:
     post:
       parameters:
         - $ref: "#/components/parameters/battleId"
-      summary: Perform a player attack and resolve the boss response
+      summary: Perform an attack or abandon an encounter
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              required: [actionType, moveId, playerId]
-              properties:
-                actionType: { const: attack }
-                moveId: { type: string }
-                playerId: { type: string }
+              oneOf:
+                - type: object
+                  required: [actionType, moveId, playerId]
+                  properties:
+                    actionType: { const: attack }
+                    moveId: { type: string }
+                    playerId: { type: string }
+                - type: object
+                  required: [actionType, playerId]
+                  properties:
+                    actionType: { const: abandon }
+                    playerId: { type: string }
       responses:
-        "200": { description: Updated battle state and final result, if concluded }
+        "200": { description: Updated battle state and final result, if concluded or abandoned }
         "400": { description: Invalid action or unavailable attacker }
+        "403": { description: Battle belongs to another player }
+        "404": { description: Battle is missing or expired }
         "409": { description: Wrong turn }
-  /battles/{battleId}:
-    post:
-      parameters:
-        - $ref: "#/components/parameters/battleId"
-      summary: Withdraw from an active encounter
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [playerId]
-              properties:
-                playerId: { type: string }
-      responses:
-        "200": { description: Abandoned encounter and restored team }
-        "404": { description: Battle is unknown or expired }
+        "502": { description: Reward or history persistence is pending; retry safely }
   /players/{playerId}/encounters:
     get:
       parameters:
@@ -202,6 +207,7 @@ paths:
       summary: Read encounter history
       responses:
         "200": { description: Paginated encounter records }
+        "400": { description: Invalid pagination }
 components:
   parameters:
     playerId:

@@ -29,6 +29,7 @@ paths:
             image/jpeg:
               schema: { type: string, format: binary }
         "404": { description: Unknown card }
+        "500": { description: Catalog artwork is missing }
   /players/{playerId}/collection:
     get:
       parameters:
@@ -55,7 +56,7 @@ paths:
                   items: { type: string }
       responses:
         "200": { description: Team saved }
-        "400": { description: Invalid team or unowned card }
+        "400": { description: Invalid team size, duplicate, unknown card, or unowned card }
   /internal/players/{playerId}/collection/initialize:
     post:
       parameters:
@@ -63,6 +64,8 @@ paths:
       summary: Assign three distinct random 6/9-CFU cards and create the initial team
       responses:
         "201": { description: Starter collection created }
+        "200": { description: Existing collection returned without reassignment }
+        "500": { description: Catalog does not contain enough eligible cards }
   /internal/players/{playerId}/team:
     get:
       parameters:
@@ -76,6 +79,15 @@ paths:
       parameters:
         - $ref: "#/components/parameters/playerId"
       summary: Add a captured catalog card (idempotent)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [monsterId]
+              properties:
+                monsterId: { type: string }
       responses:
         "200": { description: Card belongs to player's collection }
         "400": { description: Unknown card }
@@ -86,6 +98,10 @@ paths:
       summary: Delete collection and team
       responses:
         "204": { description: Player collection removed }
+  /health:
+    get:
+      responses:
+        "200": { description: Collector service health }
 components:
   parameters:
     playerId:

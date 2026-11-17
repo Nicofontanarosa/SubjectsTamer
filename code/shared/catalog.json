@@ -144,6 +144,83 @@
     "baseStats": { "hp": 137, "attack": 21, "defense": 15 }
   },
   {
+    "id": "chimica-ingegneria-informatica",
+    "name": "Chimica",
+    "cfu": 6,
+    "department": "Engineering",
+    "image": "Ingegneria/Chimica.jpeg"
+  },
+  {
+    "id": "analisi-matematica-ii-ingegneria-informatica",
+    "name": "Analisi Matematica II",
+    "cfu": 6,
+    "department": "Engineering",
+    "image": "Ingegneria/AnalisiMatematicaII.jpeg"
+  },
+  {
+    "id": "fisica-generale-ii",
+    "name": "Fisica Generale II",
+    "cfu": 6,
+    "department": "Engineering",
+    "image": "Ingegneria/FisicaGeneraleII.jpeg"
+  },
+  {
+    "id": "elettrotecnica",
+    "name": "Elettrotecnica",
+    "cfu": 9,
+    "department": "Engineering",
+    "image": "Ingegneria/Elettrotecnica.jpeg"
+  },
+  {
+    "id": "algoritmi-e-strutture-dati",
+    "name": "Algoritmi e Strutture Dati",
+    "cfu": 9,
+    "department": "Engineering",
+    "image": "Ingegneria/Algoritmi e Strutture Dati.jpeg"
+  },
+  {
+    "id": "calcolatori-elettronici",
+    "name": "Calcolatori Elettronici",
+    "cfu": 9,
+    "department": "Engineering",
+    "image": "Ingegneria/Calcolatori Elettronici.jpeg"
+  },
+  {
+    "id": "teoria-dei-sistemi-e-del-controllo",
+    "name": "Teoria dei Sistemi e del Controllo",
+    "cfu": 6,
+    "department": "Engineering",
+    "image": "Ingegneria/TeoriadeiSistemidelControllo.jpeg"
+  },
+  {
+    "id": "segnali-e-sistemi",
+    "name": "Segnali e Sistemi",
+    "cfu": 6,
+    "department": "Engineering",
+    "image": "Ingegneria/SegnaliSistemi.jpeg"
+  },
+  {
+    "id": "elettronica-digitale",
+    "name": "Elettronica Digitale",
+    "cfu": 9,
+    "department": "Engineering",
+    "image": "Ingegneria/ElettronicaDigitale.jpeg"
+  },
+  {
+    "id": "telecomunicazioni",
+    "name": "Telecomunicazioni",
+    "cfu": 6,
+    "department": "Engineering",
+    "image": "Ingegneria/Telecomunicazioni.jpeg"
+  },
+  {
+    "id": "misure-elettroniche",
+    "name": "Misure Elettroniche",
+    "cfu": 6,
+    "department": "Engineering",
+    "image": "Ingegneria/MisureElettroniche.jpeg"
+  },
+  {
     "id": "chimiche-della-vita",
     "name": "Chimiche della Vita",
     "cfu": 12,

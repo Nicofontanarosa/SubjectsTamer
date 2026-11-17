@@ -7,7 +7,7 @@ from flask import jsonify
 
 CATALOG_PATH = Path(os.environ.get("CATALOG_PATH", "/app/shared/catalog.json"))
 
-# legge il catalogo JSON e crea anche una mappa per trovare le materie tramite ID
+# read the JSON catalog and also create a map to find subjects by ID
 def load_catalog():
     with CATALOG_PATH.open(encoding="utf-8") as catalog_file:
         catalog = json.load(catalog_file)
@@ -50,5 +50,6 @@ def rarity(cfu):
         return "Uncommon"
     return "Common"
 
+# returns a JSON object with an error message and the specified HTTP status. It is used to respond to invalid requests or when errors occur.
 def error_response(code, message, status):
     return jsonify({"error": code, "message": message}), status

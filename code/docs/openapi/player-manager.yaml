@@ -2,27 +2,54 @@ openapi: 3.1.0
 info:
   title: Player Manager API
   version: 1.0.0
-  description: Player profiles, password login, account cleanup, and tutorial content.
+  description: Player profiles, password verification, account cleanup, and tutorial content. Login does not create a server-side session.
 servers:
   - url: http://player-manager:5005
 paths:
   /players:
     post:
       summary: Register a player and initialize the collection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, nickname]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, minLength: 10 }
+                nickname: { type: string, minLength: 1, maxLength: 32 }
+                avatar: { type: string, maxLength: 40, default: ranger }
+                bio: { type: string, maxLength: 500, default: "" }
       responses:
         "201": { description: Player profile created }
+        "400": { description: Invalid account details }
         "409": { description: Email or nickname already used }
+        "500": { description: Account could not be created }
+        "502": { description: Starter collection initialization failed }
   /auth/login:
     post:
       summary: Verify password and return the player profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string }
       responses:
         "200": { description: Player profile }
+        "400": { description: Invalid request body }
         "401": { description: Invalid credentials }
   /auth/logout:
     post:
-      summary: Complete client-side logout
+      summary: Acknowledge logout; no server session exists to invalidate
       responses:
-        "204": { description: Completed }
+        "204": { description: No content }
   /players/{playerId}:
     parameters:
       - name: playerId
@@ -35,18 +62,34 @@ paths:
         "404": { description: Player not found }
     put:
       summary: Update nickname, avatar, and biography
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [nickname, avatar, bio]
+              properties:
+                nickname: { type: string, minLength: 1, maxLength: 32 }
+                avatar: { type: string, maxLength: 40 }
+                bio: { type: string, maxLength: 500 }
       responses:
         "200": { description: Updated player profile }
         "400": { description: Invalid profile }
+        "404": { description: Player not found }
+        "409": { description: Nickname already used }
+        "500": { description: Profile could not be saved }
     delete:
       summary: Delete a player and coordinate game-data cleanup
       responses:
         "204": { description: Player and game data deleted }
+        "404": { description: Player not found }
         "502": { description: Service cleanup incomplete }
   /tutorial:
     get:
       responses:
         "200": { description: Static field guide }
+        "500": { description: Tutorial file is unavailable }
   /health:
     get:
       responses:

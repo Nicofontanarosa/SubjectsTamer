@@ -1,8 +1,15 @@
 {
-  "name": "encounter-component",
+  "name": "components-environments",
   "variables": [
     {
       "name": "encounterUrl",
+      "value": "http://localhost:5006",
+      "type": "text",
+      "enabled": true,
+      "secret": false
+    },
+    {
+      "name": "collectorUrl",
       "value": "http://localhost:5006",
       "type": "text",
       "enabled": true,
@@ -11,7 +18,7 @@
   ],
   "info": {
     "type": "bruno-environment",
-    "exportedAt": "2026-11-17T16:00:47.360Z",
+    "exportedAt": "2026-11-17T16:48:53.049Z",
     "exportedUsing": "Bruno/v4.3.0"
   }
 }

@@ -1,0 +1,41 @@
+info:
+  name: "[Encounter - Test 10] Reject encounter with invalid result value"
+  type: http
+  seq: 10
+
+http:
+  method: POST
+  url: "{{encounterUrl}}/internal/encounters"
+  body:
+    type: json
+    data: |-
+      {
+        "battleId": "battle-test-10",
+        "playerId": "player-123",
+        "bossId": "computer-science-foundations",
+        "teamUsed": ["linear-algebra", "computer-science-lab-ii", "operations-research"],
+        "result": "draw",
+        "outcome": "Tie game",
+        "turns": 5,
+        "timestamp": "2026-11-17T12:00:00Z"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "400"
+    - expression: res.body.error
+      operator: eq
+      value: invalid_result
+    - expression: res.body.message
+      operator: eq
+      value: Result must be win or loss
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

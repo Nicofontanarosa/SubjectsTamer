@@ -1,0 +1,41 @@
+info:
+  name: "[Encounter - Test 1] Record Encounter Success"
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{encounterUrl}}/internal/encounters"
+  body:
+    type: json
+    data: |-
+      {
+        "battleId": "battle-test-01",
+        "playerId": "player-123",
+        "bossId": "computer-science-foundations",
+        "teamUsed": ["linear-algebra", "computer-science-lab-ii", "operations-research"],
+        "result": "win",
+        "outcome": "Victory by knockout",
+        "turns": 5,
+        "timestamp": "2026-11-17T12:00:00Z"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "201"
+    - expression: res.body.duplicate
+      operator: eq
+      value: "false"
+    - expression: res.body.encounter.battleId
+      operator: eq
+      value: battle-test-01
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

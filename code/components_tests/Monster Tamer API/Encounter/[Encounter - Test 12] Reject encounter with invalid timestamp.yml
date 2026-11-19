@@ -1,7 +1,7 @@
 info:
-  name: Record Encounter Success
+  name: "[Encounter - Test 12] Reject encounter with invalid timestamp"
   type: http
-  seq: 2
+  seq: 12
 
 http:
   method: POST
@@ -10,14 +10,14 @@ http:
     type: json
     data: |-
       {
-        "battleId": "battle-test-02",
+        "battleId": "battle-test-12",
         "playerId": "player-123",
         "bossId": "computer-science-foundations",
         "teamUsed": ["linear-algebra", "computer-science-lab-ii", "operations-research"],
         "result": "win",
         "outcome": "Victory by knockout",
         "turns": 5,
-        "timestamp": "2026-11-17T12:00:00Z"
+        "timestamp": "not-a-timestamp"
       }
   auth: inherit
 
@@ -25,13 +25,13 @@ runtime:
   assertions:
     - expression: res.status
       operator: eq
-      value: "201"
-    - expression: res.body.duplicate
+      value: "400"
+    - expression: res.body.error
       operator: eq
-      value: "false"
-    - expression: res.body.encounter.battleId
+      value: invalid_timestamp
+    - expression: res.body.message
       operator: eq
-      value: battle-test-01
+      value: Valid start and completion timestamps are required
 
 settings:
   encodeUrl: true

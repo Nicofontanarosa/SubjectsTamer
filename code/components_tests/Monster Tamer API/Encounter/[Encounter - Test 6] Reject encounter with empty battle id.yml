@@ -1,0 +1,41 @@
+info:
+  name: "[Encounter - Test 6] Reject encounter with empty battle id"
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{encounterUrl}}/internal/encounters"
+  body:
+    type: json
+    data: |-
+      {
+        "battleId": "",
+        "playerId": "player-123",
+        "bossId": "computer-science-foundations",
+        "teamUsed": ["linear-algebra", "computer-science-lab-ii", "operations-research"],
+        "result": "win",
+        "outcome": "Victory by knockout",
+        "turns": 5,
+        "timestamp": "2026-11-17T12:00:00Z"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "400"
+    - expression: res.body.error
+      operator: eq
+      value: invalid_battle
+    - expression: res.body.message
+      operator: eq
+      value: A battle identifier is required
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

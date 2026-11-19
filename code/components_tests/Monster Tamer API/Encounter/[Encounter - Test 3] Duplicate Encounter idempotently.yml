@@ -1,0 +1,50 @@
+info:
+  name: "[Encounter - Test 3] Duplicate Encounter idempotently"
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{encounterUrl}}/internal/encounters"
+  body:
+    type: json
+    data: |-
+      {
+        "battleId": "battle-test-01",
+        "playerId": "player-123",
+        "bossId": "computer-science-foundations",
+        "teamUsed": ["linear-algebra", "computer-science-lab-ii", "operations-research"],
+        "result": "win",
+        "outcome": "Victory by knockout",
+        "turns": 5,
+        "timestamp": "2026-11-17T12:00:00Z"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+    - expression: res.body.duplicate
+      operator: eq
+      value: "true"
+    - expression: res.body.encounter.battleId
+      operator: eq
+      value: battle-test-01
+    - expression: res.body.encounter.result
+      operator: eq
+      value: win
+    - expression: res.body.encounter.outcome
+      operator: eq
+      value: Victory by knockout
+    - expression: res.body.encounter.turns
+      operator: eq
+      value: "5"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

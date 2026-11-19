@@ -1,0 +1,41 @@
+info:
+  name: "[Encounter - Test 4] Reject conflicting battle id with different data"
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{encounterUrl}}/internal/encounters"
+  body:
+    type: json
+    data: |-
+      {
+        "battleId": "battle-test-01",
+        "playerId": "player-123",
+        "bossId": "computer-science-foundations",
+        "teamUsed": ["linear-algebra", "computer-science-lab-ii", "operations-research"],
+        "result": "loss",
+        "outcome": "Victory by knockout",
+        "turns": 5,
+        "timestamp": "2026-11-17T12:00:00Z"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "409"
+    - expression: res.body.error
+      operator: eq
+      value: battle_id_conflict
+    - expression: res.body.message
+      operator: eq
+      value: This battle ID belongs to another result
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

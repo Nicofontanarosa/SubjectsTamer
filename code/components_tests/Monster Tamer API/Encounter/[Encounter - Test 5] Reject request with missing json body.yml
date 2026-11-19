@@ -1,0 +1,28 @@
+info:
+  name: "[Encounter - Test 5] Reject request with missing json body"
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: "{{encounterUrl}}/internal/encounters"
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "400"
+    - expression: res.body.error
+      operator: eq
+      value: invalid_request
+    - expression: res.body.message
+      operator: eq
+      value: A JSON object is required
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

@@ -1,0 +1,41 @@
+info:
+  name: "[Encounter - Test 8] Reject encounter with unknown boss id"
+  type: http
+  seq: 8
+
+http:
+  method: POST
+  url: "{{encounterUrl}}/internal/encounters"
+  body:
+    type: json
+    data: |-
+      {
+        "battleId": "battle-test-08",
+        "playerId": "player-123",
+        "bossId": "non-existent-boss",
+        "teamUsed": ["linear-algebra", "computer-science-lab-ii", "operations-research"],
+        "result": "win",
+        "outcome": "Victory by knockout",
+        "turns": 5,
+        "timestamp": "2026-11-17T12:00:00Z"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "400"
+    - expression: res.body.error
+      operator: eq
+      value: invalid_boss
+    - expression: res.body.message
+      operator: eq
+      value: The boss must belong to the card catalog
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

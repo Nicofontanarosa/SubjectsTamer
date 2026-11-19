@@ -1,0 +1,55 @@
+info:
+  name: "[Encounter - Test 2] Default values for optional fields"
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{encounterUrl}}/internal/encounters"
+  body:
+    type: json
+    data: |-
+      {
+        "battleId": "battle-test-02",
+        "playerId": "player-123",
+        "bossId": "computer-science-foundations",
+        "teamUsed": ["linear-algebra", "computer-science-lab-ii", "operations-research"],
+        "result": "loss",
+        "turns": 3,
+        "timestamp": "2026-11-17T13:00:00Z"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "201"
+    - expression: res.body.duplicate
+      operator: eq
+      value: "false"
+    - expression: res.body.encounter.battleId
+      operator: eq
+      value: battle-test-02
+    - expression: res.body.encounter.result
+      operator: eq
+      value: loss
+    - expression: res.body.encounter.outcome
+      operator: eq
+      value: loss
+    - expression: res.body.encounter.turns
+      operator: eq
+      value: "3"
+    - expression: res.body.encounter.startedAt
+      operator: eq
+      value: 2026-11-17T13:00:00Z
+    - expression: res.body.encounter.completedAt
+      operator: eq
+      value: 2026-11-17T13:00:00Z
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

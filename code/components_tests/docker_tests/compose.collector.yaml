@@ -7,6 +7,9 @@ services:
       dockerfile: collector/Dockerfile
     environment:
       - FLASK_APP=app.py
+      - CATALOG_PATH=/app/shared/catalog-test.json
+    volumes:
+      - ../../shared/catalog-test.json:/app/shared/catalog-test.json:ro
     ports:
       - "127.0.0.1:5006:5005"
     healthcheck:

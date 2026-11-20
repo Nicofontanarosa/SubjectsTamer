@@ -2,7 +2,7 @@ from flask import Blueprint, current_app, jsonify, request, send_file
 
 from common.game import error_response
 from common.storage import connect
-from routes.helpers import monster_payload, owned_ids
+from routes.helpers import owned_ids
 
 # Creates a Flask Blueprint called monsters_bp to group the monster routes defined in monsters.py.
 # "monsters" is the blueprint's internal name, used by Flask to identify it.
@@ -11,15 +11,15 @@ from routes.helpers import monster_payload, owned_ids
 monsters_bp = Blueprint("monsters", __name__)
 
 # Handles GET requests to the /monsters endpoint.
-# Returns a JSON list of catalog monsters and indicates which ones are owned by the player specified by playerId.
+# Returns a JSON list of catalog monsters and indicates which ones are owned by the player specified by playerId (optional).
 @monsters_bp.get("/monsters")
 def get_catalog():
     catalog = current_app.config["CATALOG"]
     player_id = request.args.get("playerId")
     with connect("collection.sqlite") as db:
         owned = set(owned_ids(db, player_id)) if player_id else set()
-    monsters = [{**monster_payload(monster["id"]), "owned": monster["id"] in owned} for monster in catalog]
-    return jsonify({"monsters": monsters, "progress": {"owned": len(owned), "total": len(catalog)}}), 200
+    monsters = [{**monster, "owned": monster["id"] in owned} for monster in catalog]
+    return jsonify({"monsters": monsters}), 200
 
 # Handles GET requests to the /monsters/<monster_id>/image endpoint.
 # Returns the image for the monster specified by monster_id, if it exists.

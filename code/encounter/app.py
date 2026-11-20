@@ -5,7 +5,6 @@ from datetime import datetime
 from flask import Flask, jsonify, request
 
 from common.game import (
-    add_stats,
     error_response,
     load_catalog,
 )
@@ -55,8 +54,8 @@ def encounter_payload(row):
     team_ids = json.loads(row["team_json"])
     return {
         "battleId": row["battle_id"],
-        "boss": add_stats(MONSTERS[row["boss_id"]]),
-        "teamUsed": [add_stats(MONSTERS[monster_id]) for monster_id in team_ids],
+        "boss": dict(MONSTERS[row["boss_id"]]),
+        "teamUsed": [dict(MONSTERS[monster_id]) for monster_id in team_ids],
         "result": row["result"],
         "outcome": row["outcome"],
         "turns": row["turns"],

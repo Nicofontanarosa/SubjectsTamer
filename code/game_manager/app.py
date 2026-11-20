@@ -11,7 +11,6 @@ import requests
 from flask import Flask, jsonify, request
 
 from common.game import (
-    add_stats,
     error_response,
     load_catalog,
 )
@@ -195,7 +194,7 @@ def finalize_battle(battle):
         if collector_response.status_code not in (200, 201):
             app.logger.error("Collector rejected the encounter reward: %s", collector_response.status_code)
             return error_response("reward_unavailable", "The reward could not be saved; retry the action", 502)
-        battle["reward"] = add_stats(MONSTERS[battle["boss"]["id"]])
+        battle["reward"] = dict(MONSTERS[battle["boss"]["id"]])
 
     # Prepara il riepilogo da inviare al servizio Encounter (che conserva la cronologia degli incontri).
     record = {
@@ -244,7 +243,7 @@ def finalize_battle(battle):
 
 def make_boss(monster):
     # Copia le statistiche del mostro e le potenzia per adattarlo al ruolo di boss.
-    boss = add_stats(monster)
+    boss = dict(monster)
     base_stats = boss["stats"]
     boss["normalStats"] = dict(base_stats)
     boss["battleStats"] = {

@@ -4,7 +4,7 @@ from flask import Blueprint, current_app, jsonify, request
 
 from common.game import error_response
 from common.storage import connect
-from routes.helpers import monster_payload, owned_ids, saved_team
+from routes.helpers import owned_ids, saved_team
 
 collection_bp = Blueprint("collection", __name__)
 
@@ -43,7 +43,7 @@ def get_collection(player_id):
         team_ids = saved_team(db, player_id)
     return jsonify(
         {
-            "monsters": [monster_payload(monster_id) for monster_id in ids],
+            "monsters": [current_app.config["MONSTERS"][monster_id] for monster_id in ids],
             "team": team_ids or [],
             "progress": {"owned": len(ids), "total": len(current_app.config["CATALOG"])},
         }
@@ -64,7 +64,7 @@ def add_monster(player_id):
             (player_id, monster_id),
         )
         ids = owned_ids(db, player_id)
-    return jsonify({"playerId": player_id, "monster": monster_payload(monster_id), "owned": len(ids)}), 200
+    return jsonify({"playerId": player_id, "monster": monsters[monster_id], "owned": len(ids)}), 200
 
 # Handles DELETE requests to the /internal/players/<player_id>/collection endpoint.
 # Deletes the player's collection and team from the database.

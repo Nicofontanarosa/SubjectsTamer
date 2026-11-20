@@ -2,7 +2,7 @@ from flask import Blueprint, current_app, jsonify, request
 
 from common.game import error_response
 from common.storage import connect
-from routes.helpers import monster_payload, owned_ids, saved_team
+from routes.helpers import owned_ids, saved_team
 
 team_bp = Blueprint("team", __name__)
 
@@ -48,7 +48,7 @@ def get_validated_team(player_id):
     return jsonify(
         {
             "playerId": player_id,
-            "team": [monster_payload(monster_id) for monster_id in team_ids],
+            "team": [current_app.config["MONSTERS"][monster_id] for monster_id in team_ids],
             "ownedIds": ids,
         }
     ), 200

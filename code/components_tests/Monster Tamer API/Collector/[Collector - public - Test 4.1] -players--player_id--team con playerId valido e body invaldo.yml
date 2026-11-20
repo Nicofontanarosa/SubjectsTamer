@@ -1,0 +1,16 @@
+info:
+  name: "[Collector - public - Test 4.1] /players/<player_id>/team con playerId valido e body invaldo"
+  type: http
+  seq: 9
+
+http:
+  method: PUT
+  url: "{{collectorUrl}}/monsters/{{monster_id_no_image}}/image"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

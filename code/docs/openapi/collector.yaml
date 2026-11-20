@@ -14,7 +14,7 @@ paths:
           schema: { type: string }
       summary: Return catalog cards with optional ownership state
       responses:
-        "200": { description: Image-backed subject catalog }
+        "200": { description: Catalog cards with ownership flags when playerId is supplied }
   /monsters/{monsterId}/image:
     get:
       parameters:
@@ -22,10 +22,11 @@ paths:
           in: path
           required: true
           schema: { type: string }
+      summary: Return JPEG art for a specific monster
       responses:
         "200":
           description: Supplied JPEG art
-          content:
+          content: 
             image/jpeg:
               schema: { type: string, format: binary }
         "404": { description: Unknown card }
@@ -35,7 +36,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/playerId"
       responses:
-        "200": { description: Owned card details, active team, and progress }
+        "200": { description: Owned card details with active team and progress }
   /players/{playerId}/team:
     put:
       parameters:
@@ -44,6 +45,11 @@ paths:
         required: true
         content:
           application/json:
+            example:
+              monsterIds:
+                - linear-algebra
+                - computer-science-lab-ii
+                - operations-research
             schema:
               type: object
               required: [monsterIds]
@@ -56,7 +62,7 @@ paths:
                   items: { type: string }
       responses:
         "200": { description: Team saved }
-        "400": { description: Invalid team size, duplicate, unknown card, or unowned card }
+        "400": { description: Invalid team size or duplicate or unknown card }
   /internal/players/{playerId}/collection/initialize:
     post:
       parameters:

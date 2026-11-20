@@ -5,6 +5,9 @@
     "cfu": 15,
     "department": "Computer Science",
     "image": "informatica/ProgrammazioneAlgoritmica.jpeg",
+    "rarity": "Legendary",
+    "stats": {"hp": 198, "attack": 26, "defense": 23},
+    "imageUrl": "/monsters/programming-algorithms/image",
     "baseStats": { "hp": 200, "attack": 34, "defense": 26 }
   },
   {
@@ -13,6 +16,9 @@
     "cfu": 15,
     "department": "Computer Science",
     "image": "informatica/Analisi.jpeg",
+    "rarity": "Legendary",
+    "stats": {"hp": 190, "attack": 28, "defense": 23},
+    "imageUrl": "/monsters/mathematical-analysis/image",
     "baseStats": { "hp": 200, "attack": 34, "defense": 26 }
   },
   {
@@ -21,6 +27,9 @@
     "cfu": 12,
     "department": "Computer Science",
     "image": "informatica/FondamentiInformatica.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 177, "attack": 29, "defense": 14},
+    "imageUrl": "/monsters/computer-science-foundations/image",
     "baseStats": { "hp": 179, "attack": 30, "defense": 22 }
   },
   {
@@ -29,6 +38,9 @@
     "cfu": 12,
     "department": "Computer Science",
     "image": "informatica/LaboratorioI.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 171, "attack": 26, "defense": 12},
+    "imageUrl": "/monsters/computer-science-lab-i/image",
     "baseStats": { "hp": 179, "attack": 30, "defense": 22 }
   },
   {
@@ -37,6 +49,9 @@
     "cfu": 6,
     "department": "Computer Science",
     "image": "informatica/AlgebraLinarea.jpeg",
+    "rarity": "Uncommon",
+    "stats": {"hp": 128, "attack": 17, "defense": 6},
+    "imageUrl": "/monsters/linear-algebra/image",
     "baseStats": { "hp": 137, "attack": 21, "defense": 15 }
   },
   {
@@ -45,6 +60,9 @@
     "cfu": 12,
     "department": "Computer Science",
     "image": "informatica/ArchitetturaSistemiOperativi.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 173, "attack": 30, "defense": 20},
+    "imageUrl": "/monsters/computer-architecture/image",
     "baseStats": { "hp": 179, "attack": 30, "defense": 22 }
   },
   {
@@ -53,6 +71,9 @@
     "cfu": 12,
     "department": "Computer Science",
     "image": "informatica/LaboratorioII.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 177, "attack": 28, "defense": 14},
+    "imageUrl": "/monsters/computer-science-lab-ii/image",
     "baseStats": { "hp": 179, "attack": 30, "defense": 22 }
   },
   {
@@ -61,6 +82,9 @@
     "cfu": 6,
     "department": "Computer Science",
     "image": "informatica/ParadigmiProgrammazione.jpeg",
+    "rarity": "Uncommon",
+    "stats": {"hp": 132, "attack": 20, "defense": 5},
+    "imageUrl": "/monsters/programming-paradigms/image",
     "baseStats": { "hp": 137, "attack": 21, "defense": 15 }
   },
   {
@@ -69,6 +93,9 @@
     "cfu": 6,
     "department": "Computer Science",
     "image": "informatica/RicercaOperativa.jpeg",
+    "rarity": "Uncommon",
+    "stats": {"hp": 134, "attack": 12, "defense": 6},
+    "imageUrl": "/monsters/operations-research/image",
     "baseStats": { "hp": 137, "attack": 21, "defense": 15 }
   },
   {
@@ -77,6 +104,9 @@
     "cfu": 6,
     "department": "Computer Science",
     "image": "informatica/CalcoloNumerico.jpeg",
+    "rarity": "Uncommon",
+    "stats": {"hp": 131, "attack": 14, "defense": 15},
+    "imageUrl": "/monsters/numerical-computing/image",
     "baseStats": { "hp": 137, "attack": 21, "defense": 15 }
   },
   {
@@ -85,6 +115,9 @@
     "cfu": 6,
     "department": "Computer Science",
     "image": "informatica/Statistica.jpeg",
+    "rarity": "Uncommon",
+    "stats": {"hp": 131, "attack": 15, "defense": 7},
+    "imageUrl": "/monsters/statistics/image",
     "baseStats": { "hp": 137, "attack": 21, "defense": 15 }
   },
   {
@@ -93,6 +126,9 @@
     "cfu": 9,
     "department": "Computer Science",
     "image": "informatica/BasiDati.jpeg",
+    "rarity": "Rare",
+    "stats": {"hp": 151, "attack": 18, "defense": 15},
+    "imageUrl": "/monsters/database-systems/image",
     "baseStats": { "hp": 158, "attack": 26, "defense": 19 }
   },
   {
@@ -101,6 +137,9 @@
     "cfu": 9,
     "department": "Computer Science",
     "image": "informatica/IngegneriaSoftware.jpg",
+    "rarity": "Rare",
+    "stats": {"hp": 155, "attack": 24, "defense": 17},
+    "imageUrl": "/monsters/software-engineering/image",
     "baseStats": { "hp": 158, "attack": 26, "defense": 19 }
   },
   {
@@ -109,6 +148,9 @@
     "cfu": 6,
     "department": "Computer Science",
     "image": "informatica/IntelligenzaArtificiale.jpg",
+    "rarity": "Uncommon",
+    "stats": {"hp": 137, "attack": 19, "defense": 13},
+    "imageUrl": "/monsters/artificial-intelligence/image",
     "baseStats": { "hp": 137, "attack": 21, "defense": 15 }
   },
   {
@@ -117,6 +159,9 @@
     "cfu": 3,
     "department": "Computer Science",
     "image": "informatica/IdoneitaLinguaInglese.jpg",
+    "rarity": "Common",
+    "stats": {"hp": 110, "attack": 6, "defense": 8},
+    "imageUrl": "/monsters/english-qualification/image",
     "baseStats": { "hp": 116, "attack": 16, "defense": 12 }
   },
   {
@@ -125,6 +170,9 @@
     "cfu": 12,
     "department": "Engineering",
     "image": "Ingegneria/FisicaGeneraleI.jpg",
+    "rarity": "Epic",
+    "stats": {"hp": 169, "attack": 30, "defense": 21},
+    "imageUrl": "/monsters/general-physics-i/image",
     "baseStats": { "hp": 179, "attack": 30, "defense": 22 }
   },
   {
@@ -133,6 +181,9 @@
     "cfu": 6,
     "department": "Engineering",
     "image": "Ingegneria/Geometria.jpg",
+    "rarity": "Uncommon",
+    "stats": {"hp": 131, "attack": 16, "defense": 12},
+    "imageUrl": "/monsters/geometry/image",
     "baseStats": { "hp": 137, "attack": 21, "defense": 15 }
   },
   {
@@ -141,321 +192,504 @@
     "cfu": 6,
     "department": "Engineering",
     "image": "Ingegneria/EconomiaOrganizzazioneAziendale.jpg",
+    "rarity": "Uncommon",
+    "stats": {"hp": 135, "attack": 17, "defense": 9},
+    "imageUrl": "/monsters/business-economics/image",
     "baseStats": { "hp": 137, "attack": 21, "defense": 15 }
   },
   {
     "id": "chimica-ingegneria-informatica",
-    "name": "Chimica",
+    "name": "Chemistry",
     "cfu": 6,
     "department": "Engineering",
-    "image": "Ingegneria/Chimica.jpeg"
+    "image": "Ingegneria/Chimica.jpeg",
+    "rarity": "Uncommon",
+    "stats": {"hp": 137, "attack": 18, "defense": 6},
+    "imageUrl": "/monsters/chimica-ingegneria-informatica/image",
+    "baseStats": {"hp": 137, "attack": 21, "defense": 15}
   },
   {
     "id": "analisi-matematica-ii-ingegneria-informatica",
-    "name": "Analisi Matematica II",
+    "name": "Mathematical Analysis II",
     "cfu": 6,
     "department": "Engineering",
-    "image": "Ingegneria/AnalisiMatematicaII.jpeg"
+    "image": "Ingegneria/AnalisiMatematicaII.jpeg",
+    "rarity": "Uncommon",
+    "stats": {"hp": 131, "attack": 11, "defense": 8},
+    "imageUrl": "/monsters/analisi-matematica-ii-ingegneria-informatica/image",
+    "baseStats": {"hp": 137, "attack": 21, "defense": 15}
   },
   {
     "id": "fisica-generale-ii",
-    "name": "Fisica Generale II",
+    "name": "General Physics II",
     "cfu": 6,
     "department": "Engineering",
-    "image": "Ingegneria/FisicaGeneraleII.jpeg"
+    "image": "Ingegneria/FisicaGeneraleII.jpeg",
+    "rarity": "Uncommon",
+    "stats": {"hp": 131, "attack": 16, "defense": 9},
+    "imageUrl": "/monsters/fisica-generale-ii/image",
+    "baseStats": {"hp": 137, "attack": 21, "defense": 15}
   },
   {
     "id": "elettrotecnica",
-    "name": "Elettrotecnica",
+    "name": "Electrical Engineering",
     "cfu": 9,
     "department": "Engineering",
-    "image": "Ingegneria/Elettrotecnica.jpeg"
+    "image": "Ingegneria/Elettrotecnica.jpeg",
+    "rarity": "Rare",
+    "stats": {"hp": 148, "attack": 23, "defense": 16},
+    "imageUrl": "/monsters/elettrotecnica/image",
+    "baseStats": {"hp": 158, "attack": 26, "defense": 19}
   },
   {
     "id": "algoritmi-e-strutture-dati",
-    "name": "Algoritmi e Strutture Dati",
+    "name": "Algorithms and Data Structures",
     "cfu": 9,
     "department": "Engineering",
-    "image": "Ingegneria/Algoritmi e Strutture Dati.jpeg"
+    "image": "Ingegneria/Algoritmi e Strutture Dati.jpeg",
+    "rarity": "Rare",
+    "stats": {"hp": 154, "attack": 19, "defense": 10},
+    "imageUrl": "/monsters/algoritmi-e-strutture-dati/image",
+    "baseStats": {"hp": 158, "attack": 26, "defense": 19}
   },
   {
     "id": "calcolatori-elettronici",
-    "name": "Calcolatori Elettronici",
+    "name": "Computer Systems",
     "cfu": 9,
     "department": "Engineering",
-    "image": "Ingegneria/Calcolatori Elettronici.jpeg"
+    "image": "Ingegneria/Calcolatori Elettronici.jpeg",
+    "rarity": "Rare",
+    "stats": {"hp": 149, "attack": 16, "defense": 19},
+    "imageUrl": "/monsters/calcolatori-elettronici/image",
+    "baseStats": {"hp": 158, "attack": 26, "defense": 19}
   },
   {
     "id": "teoria-dei-sistemi-e-del-controllo",
-    "name": "Teoria dei Sistemi e del Controllo",
+    "name": "Systems and Control Theory",
     "cfu": 6,
     "department": "Engineering",
-    "image": "Ingegneria/TeoriadeiSistemidelControllo.jpeg"
+    "image": "Ingegneria/TeoriadeiSistemidelControllo.jpeg",
+    "rarity": "Uncommon",
+    "stats": {"hp": 133, "attack": 20, "defense": 11},
+    "imageUrl": "/monsters/teoria-dei-sistemi-e-del-controllo/image",
+    "baseStats": {"hp": 137, "attack": 21, "defense": 15}
   },
   {
     "id": "segnali-e-sistemi",
-    "name": "Segnali e Sistemi",
+    "name": "Signals and Systems",
     "cfu": 6,
     "department": "Engineering",
-    "image": "Ingegneria/SegnaliSistemi.jpeg"
+    "image": "Ingegneria/SegnaliSistemi.jpeg",
+    "rarity": "Uncommon",
+    "stats": {"hp": 129, "attack": 17, "defense": 6},
+    "imageUrl": "/monsters/segnali-e-sistemi/image",
+    "baseStats": {"hp": 137, "attack": 21, "defense": 15}
   },
   {
     "id": "elettronica-digitale",
-    "name": "Elettronica Digitale",
+    "name": "Digital Electronics",
     "cfu": 9,
     "department": "Engineering",
-    "image": "Ingegneria/ElettronicaDigitale.jpeg"
+    "image": "Ingegneria/ElettronicaDigitale.jpeg",
+    "rarity": "Rare",
+    "stats": {"hp": 154, "attack": 20, "defense": 10},
+    "imageUrl": "/monsters/elettronica-digitale/image",
+    "baseStats": {"hp": 158, "attack": 26, "defense": 19}
   },
   {
     "id": "telecomunicazioni",
-    "name": "Telecomunicazioni",
+    "name": "Telecommunications",
     "cfu": 6,
     "department": "Engineering",
-    "image": "Ingegneria/Telecomunicazioni.jpeg"
+    "image": "Ingegneria/Telecomunicazioni.jpeg",
+    "rarity": "Uncommon",
+    "stats": {"hp": 132, "attack": 16, "defense": 12},
+    "imageUrl": "/monsters/telecomunicazioni/image",
+    "baseStats": {"hp": 137, "attack": 21, "defense": 15}
   },
   {
     "id": "misure-elettroniche",
-    "name": "Misure Elettroniche",
+    "name": "Electronic Measurements",
     "cfu": 6,
     "department": "Engineering",
-    "image": "Ingegneria/MisureElettroniche.jpeg"
+    "image": "Ingegneria/MisureElettroniche.jpeg",
+    "rarity": "Uncommon",
+    "stats": {"hp": 131, "attack": 19, "defense": 7},
+    "imageUrl": "/monsters/misure-elettroniche/image",
+    "baseStats": {"hp": 137, "attack": 21, "defense": 15}
   },
   {
     "id": "chimiche-della-vita",
-    "name": "Chimiche della Vita",
+    "name": "Chemistry of Life",
     "cfu": 12,
     "department": "Medicina e Chirurgia",
-    "image": "medicina/ChimichedellaVita.jpeg"
+    "image": "medicina/ChimichedellaVita.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 177, "attack": 24, "defense": 14},
+    "imageUrl": "/monsters/chimiche-della-vita/image",
+    "baseStats": {"hp": 179, "attack": 30, "defense": 22}
   },
   {
     "id": "biologia-molecolare",
-    "name": "Biologia Molecolare",
+    "name": "Molecular Biology",
     "cfu": 12,
     "department": "Medicina e Chirurgia",
-    "image": "medicina/BiologiaMolecolare.jpeg"
+    "image": "medicina/BiologiaMolecolare.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 173, "attack": 30, "defense": 18},
+    "imageUrl": "/monsters/biologia-molecolare/image",
+    "baseStats": {"hp": 179, "attack": 30, "defense": 22}
   },
   {
     "id": "istologia-ed-embriologia",
-    "name": "Istologia ed Embriologia",
+    "name": "Histology and Embryology",
     "cfu": 9,
     "department": "Medicina e Chirurgia",
-    "image": "medicina/IstologiaEmbriologia.jpeg"
+    "image": "medicina/IstologiaEmbriologia.jpeg",
+    "rarity": "Rare",
+    "stats": {"hp": 153, "attack": 20, "defense": 11},
+    "imageUrl": "/monsters/istologia-ed-embriologia/image",
+    "baseStats": {"hp": 158, "attack": 26, "defense": 19}
   },
   {
     "id": "anatomia-umana-i",
-    "name": "Anatomia Umana I",
+    "name": "Human Anatomy I",
     "cfu": 12,
     "department": "Medicina e Chirurgia",
-    "image": "medicina/AnatomiaUmanaI.jpeg"
+    "image": "medicina/AnatomiaUmanaI.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 179, "attack": 27, "defense": 17},
+    "imageUrl": "/monsters/anatomia-umana-i/image",
+    "baseStats": {"hp": 179, "attack": 30, "defense": 22}
   },
   {
     "id": "biochimica-clinica",
-    "name": "Biochimica Clinica",
+    "name": "Clinical Biochemistry",
     "cfu": 12,
     "department": "Medicina e Chirurgia",
-    "image": "medicina/BiochimicaClinica.jpeg"
+    "image": "medicina/BiochimicaClinica.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 174, "attack": 29, "defense": 15},
+    "imageUrl": "/monsters/biochimica-clinica/image",
+    "baseStats": {"hp": 179, "attack": 30, "defense": 22}
   },
   {
     "id": "inglese-scientifico",
-    "name": "Inglese Scientifico",
+    "name": "Scientific English",
     "cfu": 3,
     "department": "Medicina e Chirurgia",
-    "image": "medicina/IngleseScientifico.jpeg"
+    "image": "medicina/IngleseScientifico.jpeg",
+    "rarity": "Common",
+    "stats": {"hp": 114, "attack": 14, "defense": 11},
+    "imageUrl": "/monsters/inglese-scientifico/image",
+    "baseStats": {"hp": 116, "attack": 16, "defense": 12}
   },
   {
     "id": "anatomia-umana-ii",
-    "name": "Anatomia Umana II",
+    "name": "Human Anatomy II",
     "cfu": 9,
     "department": "Medicina e Chirurgia",
-    "image": "medicina/AnatomiaUmanaII.jpeg"
+    "image": "medicina/AnatomiaUmanaII.jpeg",
+    "rarity": "Rare",
+    "stats": {"hp": 151, "attack": 19, "defense": 17},
+    "imageUrl": "/monsters/anatomia-umana-ii/image",
+    "baseStats": {"hp": 158, "attack": 26, "defense": 19}
   },
   {
     "id": "fisiologia-umana",
-    "name": "Fisiologia Umana",
+    "name": "Human Physiology",
     "cfu": 15,
     "department": "Medicina e Chirurgia",
-    "image": "medicina/FisiologiaUmana.jpeg"
+    "image": "medicina/FisiologiaUmana.jpeg",
+    "rarity": "Legendary",
+    "stats": {"hp": 198, "attack": 32, "defense": 19},
+    "imageUrl": "/monsters/fisiologia-umana/image",
+    "baseStats": {"hp": 200, "attack": 34, "defense": 26}
   },
   {
     "id": "patologia-generale-e-immunologia",
-    "name": "Patologia Generale e Immunologia",
+    "name": "General Pathology and Immunology",
     "cfu": 12,
     "department": "Medicina e Chirurgia",
-    "image": "medicina/PatologiaGeneraleImmunologia.jpeg"
+    "image": "medicina/PatologiaGeneraleImmunologia.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 173, "attack": 28, "defense": 21},
+    "imageUrl": "/monsters/patologia-generale-e-immunologia/image",
+    "baseStats": {"hp": 179, "attack": 30, "defense": 22}
   },
   {
     "id": "microbiologia",
-    "name": "Microbiologia",
+    "name": "Microbiology",
     "cfu": 9,
     "department": "Medicina e Chirurgia",
-    "image": "medicina/Microbiologia.jpeg"
+    "image": "medicina/Microbiologia.jpeg",
+    "rarity": "Rare",
+    "stats": {"hp": 157, "attack": 20, "defense": 9},
+    "imageUrl": "/monsters/microbiologia/image",
+    "baseStats": {"hp": 158, "attack": 26, "defense": 19}
   },
   {
     "id": "fisiopatologia-generale",
-    "name": "Fisiopatologia Generale",
+    "name": "General Pathophysiology",
     "cfu": 9,
     "department": "Medicina e Chirurgia",
-    "image": "medicina/FisiopatologiaGenerale.jpeg"
+    "image": "medicina/FisiopatologiaGenerale.jpeg",
+    "rarity": "Rare",
+    "stats": {"hp": 151, "attack": 21, "defense": 15},
+    "imageUrl": "/monsters/fisiopatologia-generale/image",
+    "baseStats": {"hp": 158, "attack": 26, "defense": 19}
   },
   {
     "id": "farmacologia-e-tossicologia",
-    "name": "Farmacologia e Tossicologia",
+    "name": "Pharmacology and Toxicology",
     "cfu": 12,
     "department": "Medicina e Chirurgia",
-    "image": "medicina/FarmacologiaTossicologia.jpeg"
+    "image": "medicina/FarmacologiaTossicologia.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 174, "attack": 22, "defense": 20},
+    "imageUrl": "/monsters/farmacologia-e-tossicologia/image",
+    "baseStats": {"hp": 179, "attack": 30, "defense": 22}
   },
   {
     "id": "anatomia-patologica",
-    "name": "Anatomia Patologica",
+    "name": "Anatomical Pathology",
     "cfu": 12,
     "department": "Medicina e Chirurgia",
-    "image": "medicina/AnatomiaPatologica.jpeg"
+    "image": "medicina/AnatomiaPatologica.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 172, "attack": 30, "defense": 19},
+    "imageUrl": "/monsters/anatomia-patologica/image",
+    "baseStats": {"hp": 179, "attack": 30, "defense": 22}
   },
   {
     "id": "semiotica-e-metodologia-clinica",
-    "name": "Semiotica e Metodologia Clinica",
+    "name": "Clinical Semiology and Methodology",
     "cfu": 12,
     "department": "Medicina e Chirurgia",
-    "image": "medicina/SemioticaMetodologiaClinica.jpeg"
+    "image": "medicina/SemioticaMetodologiaClinica.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 169, "attack": 28, "defense": 22},
+    "imageUrl": "/monsters/semiotica-e-metodologia-clinica/image",
+    "baseStats": {"hp": 179, "attack": 30, "defense": 22}
   },
   {
     "id": "medicina-di-laboratorio-e-diagnostica",
-    "name": "Medicina di Laboratorio e Diagnostica",
+    "name": "Laboratory Medicine and Diagnostics",
     "cfu": 9,
     "department": "Medicina e Chirurgia",
-    "image": "medicina/MedicinaLaboratorioDiagnostica.jpeg"
+    "image": "medicina/MedicinaLaboratorioDiagnostica.jpeg",
+    "rarity": "Rare",
+    "stats": {"hp": 156, "attack": 20, "defense": 16},
+    "imageUrl": "/monsters/medicina-di-laboratorio-e-diagnostica/image",
+    "baseStats": {"hp": 158, "attack": 26, "defense": 19}
   },
   {
     "id": "malattie-infettive-e-dermatologia",
-    "name": "Malattie Infettive e Dermatologia",
+    "name": "Infectious Diseases and Dermatology",
     "cfu": 9,
     "department": "Medicina e Chirurgia",
-    "image": "medicina/MalattieInfettiveDermatologia.jpeg"
+    "image": "medicina/MalattieInfettiveDermatologia.jpeg",
+    "rarity": "Rare",
+    "stats": {"hp": 158, "attack": 25, "defense": 19},
+    "imageUrl": "/monsters/malattie-infettive-e-dermatologia/image",
+    "baseStats": {"hp": 158, "attack": 26, "defense": 19}
   },
   {
     "id": "diritto-costituzionale",
-    "name": "Diritto Costituzionale",
+    "name": "Constitutional Law",
     "cfu": 15,
     "department": "Giurisprudenza",
-    "image": "giurisprudenza/DirittoCostituzionale.jpeg"
+    "image": "giurisprudenza/DirittoCostituzionale.jpeg",
+    "rarity": "Legendary",
+    "stats": {"hp": 199, "attack": 25, "defense": 19},
+    "imageUrl": "/monsters/diritto-costituzionale/image",
+    "baseStats": {"hp": 200, "attack": 34, "defense": 26}
   },
   {
     "id": "diritto-privato-i",
-    "name": "Diritto Privato I",
+    "name": "Private Law I",
     "cfu": 15,
     "department": "Giurisprudenza",
-    "image": "giurisprudenza/DirittoPrivatoI.jpeg"
+    "image": "giurisprudenza/DirittoPrivatoI.jpeg",
+    "rarity": "Legendary",
+    "stats": {"hp": 190, "attack": 31, "defense": 20},
+    "imageUrl": "/monsters/diritto-privato-i/image",
+    "baseStats": {"hp": 200, "attack": 34, "defense": 26}
   },
   {
     "id": "diritto-romano",
-    "name": "Diritto Romano",
+    "name": "Roman Law",
     "cfu": 12,
     "department": "Giurisprudenza",
-    "image": "giurisprudenza/DirittoRomano.jpeg"
+    "image": "giurisprudenza/DirittoRomano.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 176, "attack": 23, "defense": 15},
+    "imageUrl": "/monsters/diritto-romano/image",
+    "baseStats": {"hp": 179, "attack": 30, "defense": 22}
   },
   {
     "id": "filosofia-del-diritto",
-    "name": "Filosofia del Diritto",
+    "name": "Philosophy of Law",
     "cfu": 9,
     "department": "Giurisprudenza",
-    "image": "giurisprudenza/FilosofiadelDiritto.jpeg"
+    "image": "giurisprudenza/FilosofiadelDiritto.jpeg",
+    "rarity": "Rare",
+    "stats": {"hp": 151, "attack": 21, "defense": 12},
+    "imageUrl": "/monsters/filosofia-del-diritto/image",
+    "baseStats": {"hp": 158, "attack": 26, "defense": 19}
   },
   {
     "id": "economia-politica",
-    "name": "Economia Politica",
+    "name": "Political Economy",
     "cfu": 9,
     "department": "Giurisprudenza",
-    "image": "giurisprudenza/EconomiaPolitica.jpeg"
+    "image": "giurisprudenza/EconomiaPolitica.jpeg",
+    "rarity": "Rare",
+    "stats": {"hp": 149, "attack": 23, "defense": 12},
+    "imageUrl": "/monsters/economia-politica/image",
+    "baseStats": {"hp": 158, "attack": 26, "defense": 19}
   },
   {
     "id": "diritto-civile",
-    "name": "Diritto Civile",
+    "name": "Civil Law",
     "cfu": 15,
     "department": "Giurisprudenza",
-    "image": "giurisprudenza/DirittoCivile.jpeg"
+    "image": "giurisprudenza/DirittoCivile.jpeg",
+    "rarity": "Legendary",
+    "stats": {"hp": 199, "attack": 32, "defense": 20},
+    "imageUrl": "/monsters/diritto-civile/image",
+    "baseStats": {"hp": 200, "attack": 34, "defense": 26}
   },
   {
     "id": "diritto-penale-i",
-    "name": "Diritto Penale I",
+    "name": "Criminal Law I",
     "cfu": 9,
     "department": "Giurisprudenza",
-    "image": "giurisprudenza/DirittoPenaleI.jpeg"
+    "image": "giurisprudenza/DirittoPenaleI.jpeg",
+    "rarity": "Rare",
+    "stats": {"hp": 155, "attack": 25, "defense": 10},
+    "imageUrl": "/monsters/diritto-penale-i/image",
+    "baseStats": {"hp": 158, "attack": 26, "defense": 19}
   },
   {
     "id": "diritto-commerciale",
-    "name": "Diritto Commerciale",
+    "name": "Commercial Law",
     "cfu": 12,
     "department": "Giurisprudenza",
-    "image": "giurisprudenza/DirittoCommerciale.jpeg"
+    "image": "giurisprudenza/DirittoCommerciale.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 171, "attack": 20, "defense": 20},
+    "imageUrl": "/monsters/diritto-commerciale/image",
+    "baseStats": {"hp": 179, "attack": 30, "defense": 22}
   },
   {
     "id": "diritto-dell-unione-europea",
-    "name": "Diritto dell'Unione Europea",
+    "name": "European Union Law",
     "cfu": 9,
     "department": "Giurisprudenza",
-    "image": "giurisprudenza/DirittoUnioneEuropea.jpeg"
+    "image": "giurisprudenza/DirittoUnioneEuropea.jpeg",
+    "rarity": "Rare",
+    "stats": {"hp": 156, "attack": 18, "defense": 10},
+    "imageUrl": "/monsters/diritto-dell-unione-europea/image",
+    "baseStats": {"hp": 158, "attack": 26, "defense": 19}
   },
   {
     "id": "storia-del-diritto-medievale-e-moderno",
-    "name": "Storia del Diritto Medioevale e Moderno",
+    "name": "History of Medieval and Modern Law",
     "cfu": 9,
     "department": "Giurisprudenza",
-    "image": "giurisprudenza/StoriaDirittoMedioevaleModerno.jpeg"
+    "image": "giurisprudenza/StoriaDirittoMedioevaleModerno.jpeg",
+    "rarity": "Rare",
+    "stats": {"hp": 158, "attack": 25, "defense": 13},
+    "imageUrl": "/monsters/storia-del-diritto-medievale-e-moderno/image",
+    "baseStats": {"hp": 158, "attack": 26, "defense": 19}
   },
   {
     "id": "inglese-giuridico",
-    "name": "Inglese Giuridico",
+    "name": "Legal English",
     "cfu": 6,
     "department": "Giurisprudenza",
-    "image": "giurisprudenza/IngleseGiuridico.jpeg"
+    "image": "giurisprudenza/IngleseGiuridico.jpeg",
+    "rarity": "Uncommon",
+    "stats": {"hp": 128, "attack": 18, "defense": 12},
+    "imageUrl": "/monsters/inglese-giuridico/image",
+    "baseStats": {"hp": 137, "attack": 21, "defense": 15}
   },
   {
     "id": "diritto-processuale-civile",
-    "name": "Diritto Processuale Civile",
+    "name": "Civil Procedure",
     "cfu": 15,
     "department": "Giurisprudenza",
-    "image": "giurisprudenza/DirittoProcessualeCivile.jpeg"
+    "image": "giurisprudenza/DirittoProcessualeCivile.jpeg",
+    "rarity": "Legendary",
+    "stats": {"hp": 198, "attack": 31, "defense": 18},
+    "imageUrl": "/monsters/diritto-processuale-civile/image",
+    "baseStats": {"hp": 200, "attack": 34, "defense": 26}
   },
   {
     "id": "diritto-processuale-penale",
-    "name": "Diritto Processuale Penale",
+    "name": "Criminal Procedure",
     "cfu": 15,
     "department": "Giurisprudenza",
-    "image": "giurisprudenza/DirittoProcessualePenale.jpeg"
+    "image": "giurisprudenza/DirittoProcessualePenale.jpeg",
+    "rarity": "Legendary",
+    "stats": {"hp": 200, "attack": 30, "defense": 25},
+    "imageUrl": "/monsters/diritto-processuale-penale/image",
+    "baseStats": {"hp": 200, "attack": 34, "defense": 26}
   },
   {
     "id": "diritto-amministrativo-i",
-    "name": "Diritto Amministrativo I",
+    "name": "Administrative Law I",
     "cfu": 12,
     "department": "Giurisprudenza",
-    "image": "giurisprudenza/DirittoAmministrativoI.jpeg"
+    "image": "giurisprudenza/DirittoAmministrativoI.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 176, "attack": 29, "defense": 17},
+    "imageUrl": "/monsters/diritto-amministrativo-i/image",
+    "baseStats": {"hp": 179, "attack": 30, "defense": 22}
   },
   {
     "id": "diritto-internazionale",
-    "name": "Diritto Internazionale",
+    "name": "International Law",
     "cfu": 9,
     "department": "Giurisprudenza",
-    "image": "giurisprudenza/DirittoInternazionale.jpeg"
+    "image": "giurisprudenza/DirittoInternazionale.jpeg",
+    "rarity": "Rare",
+    "stats": {"hp": 152, "attack": 17, "defense": 17},
+    "imageUrl": "/monsters/diritto-internazionale/image",
+    "baseStats": {"hp": 158, "attack": 26, "defense": 19}
   },
   {
     "id": "diritto-del-lavoro",
-    "name": "Diritto del Lavoro",
+    "name": "Labor Law",
     "cfu": 9,
     "department": "Giurisprudenza",
-    "image": "giurisprudenza/DirittodelLavoro.jpeg"
+    "image": "giurisprudenza/DirittodelLavoro.jpeg",
+    "rarity": "Rare",
+    "stats": {"hp": 153, "attack": 20, "defense": 16},
+    "imageUrl": "/monsters/diritto-del-lavoro/image",
+    "baseStats": {"hp": 158, "attack": 26, "defense": 19}
   },
   {
     "id": "diritto-penale-ii",
-    "name": "Diritto Penale II",
+    "name": "Criminal Law II",
     "cfu": 9,
     "department": "Giurisprudenza",
-    "image": "giurisprudenza/DirittoPenaleII.jpeg"
+    "image": "giurisprudenza/DirittoPenaleII.jpeg",
+    "rarity": "Rare",
+    "stats": {"hp": 151, "attack": 26, "defense": 11},
+    "imageUrl": "/monsters/diritto-penale-ii/image",
+    "baseStats": {"hp": 158, "attack": 26, "defense": 19}
   },
   {
     "id": "diritto-amministrativo-ii",
-    "name": "Diritto Amministrativo II",
+    "name": "Administrative Law II",
     "cfu": 9,
     "department": "Giurisprudenza",
-    "image": "giurisprudenza/DirittoAmministrativoII.jpeg"
+    "image": "giurisprudenza/DirittoAmministrativoII.jpeg",
+    "rarity": "Rare",
+    "stats": {"hp": 150, "attack": 16, "defense": 10},
+    "imageUrl": "/monsters/diritto-amministrativo-ii/image",
+    "baseStats": {"hp": 158, "attack": 26, "defense": 19}
   }
 ]

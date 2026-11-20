@@ -1,0 +1,178 @@
+[
+  {
+    "id": "programming-algorithms",
+    "name": "Programming and Algorithms",
+    "cfu": 15,
+    "department": "Computer Science",
+    "image": "informatica/ProgrammazioneAlgoritmica.jpeg",
+    "rarity": "Legendary",
+    "stats": {"hp": 198, "attack": 26, "defense": 23},
+    "imageUrl": "/monsters/programming-algorithms/image",
+    "baseStats": { "hp": 200, "attack": 34, "defense": 26 }
+  },
+  {
+    "id": "mathematical-analysis",
+    "name": "Mathematical Analysis",
+    "cfu": 15,
+    "department": "Computer Science",
+    "image": "",
+    "rarity": "Legendary",
+    "stats": {"hp": 190, "attack": 28, "defense": 23},
+    "imageUrl": "/monsters/mathematical-analysis/image",
+    "baseStats": { "hp": 200, "attack": 34, "defense": 26 }
+  },
+  {
+    "id": "misure-elettroniche",
+    "name": "Electronic Measurements",
+    "cfu": 6,
+    "department": "Engineering",
+    "image": "Ingegneria/MisureElettroniche.jpeg",
+    "rarity": "Uncommon",
+    "stats": {"hp": 131, "attack": 19, "defense": 7},
+    "imageUrl": "/monsters/misure-elettroniche/image",
+    "baseStats": {"hp": 137, "attack": 21, "defense": 15}
+  },
+  {
+    "id": "chimiche-della-vita",
+    "name": "Chemistry of Life",
+    "cfu": 12,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/ChimichedellaVita.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 177, "attack": 24, "defense": 14},
+    "imageUrl": "/monsters/chimiche-della-vita/image",
+    "baseStats": {"hp": 179, "attack": 30, "defense": 22}
+  },
+  {
+    "id": "biologia-molecolare",
+    "name": "Molecular Biology",
+    "cfu": 12,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/BiologiaMolecolare.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 173, "attack": 30, "defense": 18},
+    "imageUrl": "/monsters/biologia-molecolare/image",
+    "baseStats": {"hp": 179, "attack": 30, "defense": 22}
+  },
+  {
+    "id": "istologia-ed-embriologia",
+    "name": "Histology and Embryology",
+    "cfu": 9,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/IstologiaEmbriologia.jpeg",
+    "rarity": "Rare",
+    "stats": {"hp": 153, "attack": 20, "defense": 11},
+    "imageUrl": "/monsters/istologia-ed-embriologia/image",
+    "baseStats": {"hp": 158, "attack": 26, "defense": 19}
+  },
+  {
+    "id": "anatomia-umana-i",
+    "name": "Human Anatomy I",
+    "cfu": 12,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/AnatomiaUmanaI.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 179, "attack": 27, "defense": 17},
+    "imageUrl": "/monsters/anatomia-umana-i/image",
+    "baseStats": {"hp": 179, "attack": 30, "defense": 22}
+  },
+  {
+    "id": "biochimica-clinica",
+    "name": "Clinical Biochemistry",
+    "cfu": 12,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/BiochimicaClinica.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 174, "attack": 29, "defense": 15},
+    "imageUrl": "/monsters/biochimica-clinica/image",
+    "baseStats": {"hp": 179, "attack": 30, "defense": 22}
+  },
+  {
+    "id": "inglese-scientifico",
+    "name": "Scientific English",
+    "cfu": 3,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/IngleseScientifico.jpeg",
+    "rarity": "Common",
+    "stats": {"hp": 114, "attack": 14, "defense": 11},
+    "imageUrl": "/monsters/inglese-scientifico/image",
+    "baseStats": {"hp": 116, "attack": 16, "defense": 12}
+  },
+  {
+    "id": "fisiologia-umana",
+    "name": "Human Physiology",
+    "cfu": 15,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/FisiologiaUmana.jpeg",
+    "rarity": "Legendary",
+    "stats": {"hp": 198, "attack": 32, "defense": 19},
+    "imageUrl": "/monsters/fisiologia-umana/image",
+    "baseStats": {"hp": 200, "attack": 34, "defense": 26}
+  },
+  {
+    "id": "patologia-generale-e-immunologia",
+    "name": "General Pathology and Immunology",
+    "cfu": 12,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/PatologiaGeneraleImmunologia.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 173, "attack": 28, "defense": 21},
+    "imageUrl": "/monsters/patologia-generale-e-immunologia/image",
+    "baseStats": {"hp": 179, "attack": 30, "defense": 22}
+  },
+  {
+    "id": "microbiologia",
+    "name": "Microbiology",
+    "cfu": 9,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/Microbiologia.jpeg",
+    "rarity": "Rare",
+    "stats": {"hp": 157, "attack": 20, "defense": 9},
+    "imageUrl": "/monsters/microbiologia/image",
+    "baseStats": {"hp": 158, "attack": 26, "defense": 19}
+  },
+  {
+    "id": "fisiopatologia-generale",
+    "name": "General Pathophysiology",
+    "cfu": 9,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/FisiopatologiaGenerale.jpeg",
+    "rarity": "Rare",
+    "stats": {"hp": 151, "attack": 21, "defense": 15},
+    "imageUrl": "/monsters/fisiopatologia-generale/image",
+    "baseStats": {"hp": 158, "attack": 26, "defense": 19}
+  },
+  {
+    "id": "farmacologia-e-tossicologia",
+    "name": "Pharmacology and Toxicology",
+    "cfu": 12,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/FarmacologiaTossicologia.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 174, "attack": 22, "defense": 20},
+    "imageUrl": "/monsters/farmacologia-e-tossicologia/image",
+    "baseStats": {"hp": 179, "attack": 30, "defense": 22}
+  },
+  {
+    "id": "anatomia-patologica",
+    "name": "Anatomical Pathology",
+    "cfu": 12,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/AnatomiaPatologica.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 172, "attack": 30, "defense": 19},
+    "imageUrl": "/monsters/anatomia-patologica/image",
+    "baseStats": {"hp": 179, "attack": 30, "defense": 22}
+  },
+  {
+    "id": "semiotica-e-metodologia-clinica",
+    "name": "Clinical Semiology and Methodology",
+    "cfu": 12,
+    "department": "Medicina e Chirurgia",
+    "image": "medicina/SemioticaMetodologiaClinica.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 169, "attack": 28, "defense": 22},
+    "imageUrl": "/monsters/semiotica-e-metodologia-clinica/image",
+    "baseStats": {"hp": 179, "attack": 30, "defense": 22}
+  }
+]

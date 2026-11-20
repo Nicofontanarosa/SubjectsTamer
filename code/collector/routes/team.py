@@ -42,13 +42,16 @@ def get_validated_team(player_id):
         ids = owned_ids(db, player_id)
         team_ids = saved_team(db, player_id)
     if team_ids is None or len(team_ids) != 3 or len(set(team_ids)) != 3:
-        return error_response("team_unavailable", "A valid three-card team is required", 409)
+        return error_response("team_unavailable", "A valid three-card team is required", 400)
+    monsters = current_app.config["MONSTERS"]
+    if any(monster_id not in monsters for monster_id in team_ids):
+        return error_response("team_invalid", "The saved team contains a card not in the catalog", 400)
     if not set(team_ids).issubset(set(ids)):
-        return error_response("team_invalid", "The saved team contains a card not owned by the player", 409)
+        return error_response("team_invalid", "The saved team contains a card not owned by the player", 400)
     return jsonify(
         {
             "playerId": player_id,
-            "team": [current_app.config["MONSTERS"][monster_id] for monster_id in team_ids],
+            "team": [monsters[monster_id] for monster_id in team_ids],
             "ownedIds": ids,
         }
     ), 200

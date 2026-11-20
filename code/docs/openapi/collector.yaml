@@ -47,9 +47,9 @@ paths:
           application/json:
             example:
               monsterIds:
-                - linear-algebra
-                - computer-science-lab-ii
-                - operations-research
+                - string
+                - string
+                - string
             schema:
               type: object
               required: [monsterIds]
@@ -79,7 +79,7 @@ paths:
       summary: Return the validated team and owned card IDs to Game Manager
       responses:
         "200": { description: Validated team }
-        "409": { description: Team is missing or invalid }
+        "400": { description: Team is missing or malformed or contains unknown cards or includes cards not owned by the player }
   /internal/players/{playerId}/collection/monsters:
     post:
       parameters:

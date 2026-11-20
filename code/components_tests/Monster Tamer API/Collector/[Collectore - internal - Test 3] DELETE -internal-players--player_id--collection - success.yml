@@ -1,0 +1,16 @@
+info:
+  name: "[Collectore - internal - Test 3] DELETE /internal/players/<player_id>/collection - success"
+  type: http
+  seq: 18
+
+http:
+  method: DELETE
+  url: "{{collectorUrl}}/internal/players/{{test-player-Id}}/collection"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

@@ -8,16 +8,38 @@ services:
     environment:
       - FLASK_APP=app.py
       - CATALOG_PATH=/app/shared/catalog-test.json
+      - DATA_DIR=/data
     volumes:
+      - collector-test-data:/data
       - ../../shared/catalog-test.json:/app/shared/catalog-test.json:ro
     ports:
       - "127.0.0.1:5006:5005"
+    depends_on:
+      seed:
+        condition: service_completed_successfully
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5005/health', timeout=2)"]
       interval: 5s
       timeout: 3s
       retries: 10
       start_period: 5s
+
+  seed:
+    build:
+      context: ../..
+      dockerfile: collector/Dockerfile
+    command: ["python", "/app/seed_test_db_collector.py"]
+    environment:
+      - CATALOG_PATH=/app/shared/catalog-test.json
+      - DATA_DIR=/data
+    volumes:
+      - collector-test-data:/data
+      - ../../shared/catalog-test.json:/app/shared/catalog-test.json:ro
+      - ./seed_test_db_collector.py:/app/seed_test_db_collector.py:ro
+    restart: "no"
+
+volumes:
+  collector-test-data:
 
 #Cosa fa questo file:
 # Avvia il container del servizio collector usando il Dockerfile dentro la cartella ./collector.

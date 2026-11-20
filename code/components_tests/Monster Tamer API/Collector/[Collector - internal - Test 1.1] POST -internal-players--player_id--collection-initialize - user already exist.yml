@@ -1,0 +1,16 @@
+info:
+  name: "[Collector - internal - Test 1.1] POST /internal/players/<player_id>/collection/initialize - user already exist"
+  type: http
+  seq: 14
+
+http:
+  method: POST
+  url: "{{collectorUrl}}/internal/players/{{test-player-Id}}/collection/initialize"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

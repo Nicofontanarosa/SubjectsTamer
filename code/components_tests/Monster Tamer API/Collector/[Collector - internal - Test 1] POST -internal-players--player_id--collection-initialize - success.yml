@@ -1,0 +1,16 @@
+info:
+  name: "[Collector - internal - Test 1] POST /internal/players/<player_id>/collection/initialize - success"
+  type: http
+  seq: 13
+
+http:
+  method: POST
+  url: "{{collectorUrl}}/internal/players/{{test-player-Id-new}}/collection/initialize"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

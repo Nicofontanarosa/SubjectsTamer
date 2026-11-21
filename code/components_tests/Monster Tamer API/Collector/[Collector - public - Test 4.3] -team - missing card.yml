@@ -1,12 +1,25 @@
 info:
   name: "[Collector - public - Test 4.3] /team - missing card"
   type: http
-  seq: 12
+  seq: 13
 
 http:
   method: PUT
-  url: "{{collectorUrl}}/monsters/{{monster_id_no_image}}/image"
+  url: "{{collectorUrl}}/players/{{test-player-Id}}/team"
+  body:
+    type: json
+    data: '{ "monsterIds": ["algorithms", "mathematical-analysis", "chimiche-della-vita"] }'
   auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "400"
+      description: Unknown card
+    - expression: res.body.error
+      operator: eq
+      value: unknown_card
 
 settings:
   encodeUrl: true

@@ -28,7 +28,7 @@ def get_catalog():
 def get_monster_image(monster_id):
     monster = current_app.config["MONSTERS"].get(monster_id)
     if monster is None:
-        return error_response("not_found", "Card artwork not found", 404)
+        return error_response("not_found", "Card not found", 404)
     image_path = current_app.config["ASSET_DIR"] / monster["image"]
     if not image_path.is_file():
         current_app.logger.error("Catalog image is missing for %s", monster_id)

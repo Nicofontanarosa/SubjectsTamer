@@ -1,12 +1,25 @@
 info:
   name: "[Collector - public - Test 4.1] /team - invalid body"
   type: http
-  seq: 10
+  seq: 11
 
 http:
   method: PUT
-  url: "{{collectorUrl}}/monsters/{{monster_id_no_image}}/image"
+  url: "{{collectorUrl}}/players/{{test-player-Id}}/team"
+  body:
+    type: json
+    data: '{ "monsIds": ["algorithms", "mathematical-analysis", "chimiche-della-vita"] }'
   auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "400"
+      description: Invalid body
+    - expression: res.body.error
+      operator: eq
+      value: invalid_team
 
 settings:
   encodeUrl: true

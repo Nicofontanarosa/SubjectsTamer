@@ -1,12 +1,22 @@
 info:
   name: "[Collector - public - Test 2.2] /image - missing artwork"
   type: http
-  seq: 6
+  seq: 7
 
 http:
   method: GET
   url: "{{collectorUrl}}/monsters/{{monster_id_no_image}}/image"
   auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "500"
+      description: Missing artwork
+    - expression: res.body.error
+      operator: eq
+      value: image_unavailable
 
 settings:
   encodeUrl: true

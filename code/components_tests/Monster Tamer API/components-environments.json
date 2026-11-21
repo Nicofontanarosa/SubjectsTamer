@@ -3,7 +3,7 @@
   "variables": [
     {
       "name": "encounterUrl",
-      "value": "http://localhost:5006",
+      "value": "http://localhost:5007",
       "type": "text",
       "enabled": true,
       "secret": false
@@ -14,11 +14,53 @@
       "type": "text",
       "enabled": true,
       "secret": false
+    },
+    {
+      "name": "monster_id",
+      "value": "misure-elettroniche",
+      "type": "text",
+      "enabled": true,
+      "secret": false
+    },
+    {
+      "name": "monster_id_err",
+      "value": "misureelettroniche",
+      "type": "text",
+      "enabled": true,
+      "secret": false
+    },
+    {
+      "name": "monster_id_no_image",
+      "value": "mathematical-analysis",
+      "type": "text",
+      "enabled": true,
+      "secret": false
+    },
+    {
+      "name": "test-player-Id",
+      "value": "test-player-123",
+      "type": "text",
+      "enabled": true,
+      "secret": false
+    },
+    {
+      "name": "test-player-Id-err",
+      "value": "test-player-err",
+      "type": "text",
+      "enabled": true,
+      "secret": false
+    },
+    {
+      "name": "test-player-Id-new",
+      "value": "test-player-new",
+      "type": "text",
+      "enabled": true,
+      "secret": false
     }
   ],
   "info": {
     "type": "bruno-environment",
-    "exportedAt": "2026-11-17T16:48:53.049Z",
+    "exportedAt": "2026-11-21T12:38:58.101Z",
     "exportedUsing": "Bruno/v4.3.0"
   }
 }

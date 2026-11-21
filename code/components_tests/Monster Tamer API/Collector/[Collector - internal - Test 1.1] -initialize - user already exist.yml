@@ -1,12 +1,19 @@
 info:
   name: "[Collector - internal - Test 1.1] /initialize - user already exist"
   type: http
-  seq: 15
+  seq: 16
 
 http:
   method: POST
   url: "{{collectorUrl}}/internal/players/{{test-player-Id}}/collection/initialize"
   auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+      description: User exist
 
 settings:
   encodeUrl: true

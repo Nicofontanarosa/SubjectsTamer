@@ -1,11 +1,14 @@
 info:
   name: "[Collectore - internal - Test 3] /team - success"
   type: http
-  seq: 20
+  seq: 21
 
 http:
   method: GET
   url: "{{collectorUrl}}/internal/players/{{test-player-Id}}/team"
+  body:
+    type: json
+    data: '{ "monsterIds": ["test"] }'
   auth: inherit
 
 runtime:

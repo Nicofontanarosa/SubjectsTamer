@@ -1,12 +1,18 @@
 info:
   name: "[Collectore - internal - Test 4] /collection - success"
   type: http
-  seq: 21
+  seq: 22
 
 http:
   method: DELETE
-  url: "{{collectorUrl}}/internal/players/{{test-player-Id}}/collection"
+  url: "{{collectorUrl}}/internal/players/{{test-player-Id-new}}/collection"
   auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "204"
 
 settings:
   encodeUrl: true

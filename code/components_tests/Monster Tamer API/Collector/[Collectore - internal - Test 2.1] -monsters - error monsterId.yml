@@ -1,7 +1,7 @@
 info:
   name: "[Collectore - internal - Test 2.1] /monsters - error monsterId"
   type: http
-  seq: 17
+  seq: 18
 
 http:
   method: POST
@@ -13,6 +13,16 @@ http:
         "monsterId": "{{monster_id_err}}"
       }
   auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "400"
+      description: Missing card
+    - expression: res.body.error
+      operator: eq
+      value: unknown_card
 
 settings:
   encodeUrl: true

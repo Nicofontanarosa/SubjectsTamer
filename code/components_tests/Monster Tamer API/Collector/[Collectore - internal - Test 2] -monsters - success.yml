@@ -1,7 +1,7 @@
 info:
   name: "[Collectore - internal - Test 2] /monsters - success"
   type: http
-  seq: 16
+  seq: 17
 
 http:
   method: POST
@@ -13,6 +13,13 @@ http:
         "monsterId": "{{monster_id}}"
       }
   auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+      description: Card added
 
 settings:
   encodeUrl: true

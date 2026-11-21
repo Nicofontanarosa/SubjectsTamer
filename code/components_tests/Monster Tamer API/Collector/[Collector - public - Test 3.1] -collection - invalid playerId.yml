@@ -1,7 +1,7 @@
 info:
   name: "[Collector - public - Test 3.1] /collection - invalid playerId"
   type: http
-  seq: 8
+  seq: 9
 
 http:
   method: GET

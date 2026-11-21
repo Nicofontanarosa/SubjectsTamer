@@ -1,12 +1,25 @@
 info:
   name: "[Collector - public - Test 4.4] /team - card not in collection"
   type: http
-  seq: 13
+  seq: 14
 
 http:
   method: PUT
-  url: "{{collectorUrl}}/monsters/{{monster_id_no_image}}/image"
+  url: "{{collectorUrl}}/players/{{test-player-Id}}/team"
+  body:
+    type: json
+    data: '{ "monsterIds": ["anatomia-umana-i", "mathematical-analysis", "chimiche-della-vita"] }'
   auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "400"
+      description: Not owned
+    - expression: res.body.error
+      operator: eq
+      value: not_owned
 
 settings:
   encodeUrl: true

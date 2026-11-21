@@ -1,7 +1,7 @@
 info:
   name: "[Collectore - internal - Test 2.2] /monsters - error body"
   type: http
-  seq: 18
+  seq: 19
 
 http:
   method: POST
@@ -10,9 +10,19 @@ http:
     type: json
     data: |-
       {
-        "monster": "{{monster_id}}"
+        "monstertest": "{{monster_id}}"
       }
   auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "400"
+      description: Wrong body
+    - expression: res.body.error
+      operator: eq
+      value: unknown_card
 
 settings:
   encodeUrl: true

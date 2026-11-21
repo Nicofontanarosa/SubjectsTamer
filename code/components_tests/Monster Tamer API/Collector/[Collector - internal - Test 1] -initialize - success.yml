@@ -1,12 +1,19 @@
 info:
   name: "[Collector - internal - Test 1] /initialize - success"
   type: http
-  seq: 14
+  seq: 15
 
 http:
   method: POST
   url: "{{collectorUrl}}/internal/players/{{test-player-Id-new}}/collection/initialize"
   auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "201"
+      description: OK initialize
 
 settings:
   encodeUrl: true

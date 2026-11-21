@@ -1,7 +1,7 @@
 info:
   name: "[Collectore - internal - Test 2.3] /monsters - invalid playerId"
   type: http
-  seq: 19
+  seq: 20
 
 http:
   method: POST
@@ -13,6 +13,16 @@ http:
         "monsterId": "{{monster_id}}"
       }
   auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "400"
+      description: Invalid playerId
+    - expression: res.body.error
+      operator: eq
+      value: invalid_player
 
 settings:
   encodeUrl: true

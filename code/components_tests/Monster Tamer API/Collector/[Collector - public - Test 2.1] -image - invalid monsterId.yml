@@ -1,12 +1,22 @@
 info:
   name: "[Collector - public - Test 2.1] /image - invalid monsterId"
   type: http
-  seq: 5
+  seq: 6
 
 http:
   method: GET
   url: "{{collectorUrl}}/monsters/{{monster_id_err}}/image"
   auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "404"
+      description: Missing card
+    - expression: res.body.error
+      operator: eq
+      value: not_found
 
 settings:
   encodeUrl: true

@@ -1,12 +1,22 @@
 info:
   name: "[Collector - public - Test 4] /team - success"
   type: http
-  seq: 9
+  seq: 10
 
 http:
   method: PUT
-  url: "{{collectorUrl}}/monsters/{{monster_id_no_image}}/image"
+  url: "{{collectorUrl}}/players/{{test-player-Id}}/team"
+  body:
+    type: json
+    data: '{ "monsterIds": ["programming-algorithms", "mathematical-analysis", "chimiche-della-vita"] }'
   auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+      description: Team updated
 
 settings:
   encodeUrl: true

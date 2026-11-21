@@ -1,0 +1,22 @@
+info:
+  name: "[Encounter - Test 16] Delete all encounters for a player"
+  type: http
+  seq: 16
+
+http:
+  method: DELETE
+  url: "{{encounterUrl}}/internal/players/{{test-player-Id}}/encounters"
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "204"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

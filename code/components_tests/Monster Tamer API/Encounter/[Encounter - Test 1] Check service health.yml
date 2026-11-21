@@ -1,0 +1,28 @@
+info:
+  name: "[Encounter - Test 1] Check service health"
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{encounterUrl}}/health"
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+    - expression: res.body.status
+      operator: eq
+      value: ok
+    - expression: res.body.service
+      operator: eq
+      value: encounter
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

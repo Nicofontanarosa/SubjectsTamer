@@ -1,7 +1,7 @@
 info:
-  name: "[Encounter - Test 1] Record Encounter Success"
+  name: "[Encounter - Test 4] Duplicate Encounter idempotently"
   type: http
-  seq: 1
+  seq: 4
 
 http:
   method: POST
@@ -10,13 +10,14 @@ http:
     type: json
     data: |-
       {
-        "battleId": "battle-test-01",
-        "playerId": "player-123",
+        "battleId": "seed-battle-01",
+        "playerId": "{{test-player-Id}}",
         "bossId": "computer-science-foundations",
         "teamUsed": ["linear-algebra", "computer-science-lab-ii", "operations-research"],
         "result": "win",
         "outcome": "Victory by knockout",
         "turns": 5,
+        "startedAt": "2026-11-17T11:55:00Z",
         "timestamp": "2026-11-17T12:00:00Z"
       }
   auth: inherit
@@ -25,13 +26,22 @@ runtime:
   assertions:
     - expression: res.status
       operator: eq
-      value: "201"
+      value: "200"
     - expression: res.body.duplicate
       operator: eq
-      value: "false"
+      value: "true"
     - expression: res.body.encounter.battleId
       operator: eq
-      value: battle-test-01
+      value: seed-battle-01
+    - expression: res.body.encounter.result
+      operator: eq
+      value: win
+    - expression: res.body.encounter.outcome
+      operator: eq
+      value: Victory by knockout
+    - expression: res.body.encounter.turns
+      operator: eq
+      value: "5"
 
 settings:
   encodeUrl: true

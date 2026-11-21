@@ -7,8 +7,16 @@ services:
       dockerfile: encounter/Dockerfile
     environment:
       - FLASK_APP=app.py
+      - CATALOG_PATH=/app/shared/catalog-test.json
+      - DATA_DIR=/data
+    volumes:
+      - encounter-test-data:/data
+      - ../../shared/catalog-test.json:/app/shared/catalog-test.json:ro
     ports:
-      - "127.0.0.1:5006:5005"
+      - "127.0.0.1:5007:5005"
+    depends_on:
+      seed:
+        condition: service_completed_successfully
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5005/health', timeout=2)"]
       interval: 5s
@@ -16,7 +24,26 @@ services:
       retries: 10
       start_period: 5s
 
-#Cosa fa questo file:
+  seed:
+    build:
+      context: ../..
+      dockerfile: encounter/Dockerfile
+    command: ["python", "/app/seed_test_db_encounter.py"]
+    environment:
+      - CATALOG_PATH=/app/shared/catalog-test.json
+      - DATA_DIR=/data
+    volumes:
+      - encounter-test-data:/data
+      - ../../shared/catalog-test.json:/app/shared/catalog-test.json:ro
+      - ./seed_test_db_encounter.py:/app/seed_test_db_encounter.py:ro
+    restart: "no"
+
+volumes:
+  encounter-test-data:
+
+# Cosa fa questo file:
 # Avvia il container del servizio encounter usando il Dockerfile dentro la cartella ./encounter.
-# Mappa la porta interna 5005 del container sulla porta locale 5006 (127.0.0.1:5006:5005), così non andrà in conflitto con altri servizi.
+# Esegue prima il container "seed" per popolare il database di test nel volume "encounter-test-data" usando il catalogo di test.
+# Monta "catalog-test.json" in sola lettura e usa il volume "encounter-test-data" per isolare i dati di test.
+# Mappa la porta interna 5005 del container sulla porta locale 5007 (127.0.0.1:5007:5005), così non andrà in conflitto con altri servizi.
 # Include un healthcheck periodico sull'endpoint /health del servizio per permettere a Docker di capire quando è pronto (fondamentale se usi il flag --wait).

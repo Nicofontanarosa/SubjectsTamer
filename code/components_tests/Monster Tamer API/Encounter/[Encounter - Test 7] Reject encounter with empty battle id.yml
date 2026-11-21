@@ -1,7 +1,7 @@
 info:
-  name: "[Encounter - Test 6] Reject encounter with empty battle id"
+  name: "[Encounter - Test 7] Reject encounter with empty battle id"
   type: http
-  seq: 6
+  seq: 7
 
 http:
   method: POST
@@ -11,7 +11,7 @@ http:
     data: |-
       {
         "battleId": "",
-        "playerId": "player-123",
+        "playerId": "{{test-player-Id}}",
         "bossId": "computer-science-foundations",
         "teamUsed": ["linear-algebra", "computer-science-lab-ii", "operations-research"],
         "result": "win",

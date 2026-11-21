@@ -1,11 +1,15 @@
 info:
-  name: "[Encounter - Test 5] Reject request with missing json body"
+  name: "[Encounter - Test 15] Reject invalid pagination - limit below minimum"
   type: http
-  seq: 5
+  seq: 15
 
 http:
-  method: POST
-  url: "{{encounterUrl}}/internal/encounters"
+  method: GET
+  url: "{{encounterUrl}}/players/{{test-player-Id}}/encounters?limit=0"
+  params:
+    - name: limit
+      value: "0"
+      type: query
   auth: inherit
 
 runtime:
@@ -15,10 +19,10 @@ runtime:
       value: "400"
     - expression: res.body.error
       operator: eq
-      value: invalid_request
+      value: invalid_pagination
     - expression: res.body.message
       operator: eq
-      value: A JSON object is required
+      value: Limit must be 1-100 and offset cannot be negative
 
 settings:
   encodeUrl: true

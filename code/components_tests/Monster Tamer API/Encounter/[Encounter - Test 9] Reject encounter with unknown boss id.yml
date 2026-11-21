@@ -1,7 +1,7 @@
 info:
-  name: "[Encounter - Test 12] Reject encounter with invalid timestamp"
+  name: "[Encounter - Test 9] Reject encounter with unknown boss id"
   type: http
-  seq: 12
+  seq: 9
 
 http:
   method: POST
@@ -10,14 +10,14 @@ http:
     type: json
     data: |-
       {
-        "battleId": "battle-test-12",
-        "playerId": "player-123",
-        "bossId": "computer-science-foundations",
+        "battleId": "battle-test-08",
+        "playerId": "{{test-player-Id}}",
+        "bossId": "non-existent-boss",
         "teamUsed": ["linear-algebra", "computer-science-lab-ii", "operations-research"],
         "result": "win",
         "outcome": "Victory by knockout",
         "turns": 5,
-        "timestamp": "not-a-timestamp"
+        "timestamp": "2026-11-17T12:00:00Z"
       }
   auth: inherit
 
@@ -28,10 +28,10 @@ runtime:
       value: "400"
     - expression: res.body.error
       operator: eq
-      value: invalid_timestamp
+      value: invalid_boss
     - expression: res.body.message
       operator: eq
-      value: Valid start and completion timestamps are required
+      value: The boss must belong to the card catalog
 
 settings:
   encodeUrl: true

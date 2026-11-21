@@ -1,5 +1,5 @@
 info:
-  name: "[Encounter - Test 3] Duplicate Encounter idempotently"
+  name: "[Encounter - Test 3] Default values for optional fields"
   type: http
   seq: 3
 
@@ -10,14 +10,13 @@ http:
     type: json
     data: |-
       {
-        "battleId": "battle-test-01",
-        "playerId": "player-123",
+        "battleId": "battle-test-02",
+        "playerId": "{{test-player-Id}}",
         "bossId": "computer-science-foundations",
         "teamUsed": ["linear-algebra", "computer-science-lab-ii", "operations-research"],
-        "result": "win",
-        "outcome": "Victory by knockout",
-        "turns": 5,
-        "timestamp": "2026-11-17T12:00:00Z"
+        "result": "loss",
+        "turns": 3,
+        "timestamp": "2026-11-17T11:00:00Z"
       }
   auth: inherit
 
@@ -25,22 +24,28 @@ runtime:
   assertions:
     - expression: res.status
       operator: eq
-      value: "200"
+      value: "201"
     - expression: res.body.duplicate
       operator: eq
-      value: "true"
+      value: "false"
     - expression: res.body.encounter.battleId
       operator: eq
-      value: battle-test-01
+      value: battle-test-02
     - expression: res.body.encounter.result
       operator: eq
-      value: win
+      value: loss
     - expression: res.body.encounter.outcome
       operator: eq
-      value: Victory by knockout
+      value: loss
     - expression: res.body.encounter.turns
       operator: eq
-      value: "5"
+      value: "3"
+    - expression: res.body.encounter.startedAt
+      operator: eq
+      value: 2026-11-17T11:00:00Z
+    - expression: res.body.encounter.completedAt
+      operator: eq
+      value: 2026-11-17T11:00:00Z
 
 settings:
   encodeUrl: true

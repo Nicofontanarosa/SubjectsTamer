@@ -1,7 +1,7 @@
 info:
-  name: "[Encounter - Test 4] Reject conflicting battle id with different data"
+  name: "[Encounter - Test 8] Reject encounter with missing player id"
   type: http
-  seq: 4
+  seq: 8
 
 http:
   method: POST
@@ -10,11 +10,11 @@ http:
     type: json
     data: |-
       {
-        "battleId": "battle-test-01",
-        "playerId": "player-123",
+        "battleId": "battle-test-07",
+        "playerId": "",
         "bossId": "computer-science-foundations",
         "teamUsed": ["linear-algebra", "computer-science-lab-ii", "operations-research"],
-        "result": "loss",
+        "result": "win",
         "outcome": "Victory by knockout",
         "turns": 5,
         "timestamp": "2026-11-17T12:00:00Z"
@@ -25,13 +25,13 @@ runtime:
   assertions:
     - expression: res.status
       operator: eq
-      value: "409"
+      value: "400"
     - expression: res.body.error
       operator: eq
-      value: battle_id_conflict
+      value: invalid_player
     - expression: res.body.message
       operator: eq
-      value: This battle ID belongs to another result
+      value: A player identifier is required
 
 settings:
   encodeUrl: true

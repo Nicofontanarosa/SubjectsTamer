@@ -1,7 +1,7 @@
 info:
-  name: "[Encounter - Test 7] Reject encounter with missing player id"
+  name: "[Encounter - Test 11] Reject encounter with invalid result value"
   type: http
-  seq: 7
+  seq: 11
 
 http:
   method: POST
@@ -10,12 +10,12 @@ http:
     type: json
     data: |-
       {
-        "battleId": "battle-test-07",
-        "playerId": "",
+        "battleId": "battle-test-10",
+        "playerId": "{{test-player-Id}}",
         "bossId": "computer-science-foundations",
         "teamUsed": ["linear-algebra", "computer-science-lab-ii", "operations-research"],
-        "result": "win",
-        "outcome": "Victory by knockout",
+        "result": "draw",
+        "outcome": "Tie game",
         "turns": 5,
         "timestamp": "2026-11-17T12:00:00Z"
       }
@@ -28,10 +28,10 @@ runtime:
       value: "400"
     - expression: res.body.error
       operator: eq
-      value: invalid_player
+      value: invalid_result
     - expression: res.body.message
       operator: eq
-      value: A player identifier is required
+      value: Result must be win or loss
 
 settings:
   encodeUrl: true

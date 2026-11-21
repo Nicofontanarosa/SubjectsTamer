@@ -1,7 +1,7 @@
 info:
-  name: "[Encounter - Test 8] Reject encounter with unknown boss id"
+  name: "[Encounter - Test 2] Record Encounter Success"
   type: http
-  seq: 8
+  seq: 2
 
 http:
   method: POST
@@ -10,14 +10,14 @@ http:
     type: json
     data: |-
       {
-        "battleId": "battle-test-08",
-        "playerId": "player-123",
-        "bossId": "non-existent-boss",
+        "battleId": "battle-test-01",
+        "playerId": "{{test-player-Id}}",
+        "bossId": "computer-science-foundations",
         "teamUsed": ["linear-algebra", "computer-science-lab-ii", "operations-research"],
         "result": "win",
         "outcome": "Victory by knockout",
         "turns": 5,
-        "timestamp": "2026-11-17T12:00:00Z"
+        "timestamp": "2026-11-17T10:00:00Z"
       }
   auth: inherit
 
@@ -25,13 +25,13 @@ runtime:
   assertions:
     - expression: res.status
       operator: eq
-      value: "400"
-    - expression: res.body.error
+      value: "201"
+    - expression: res.body.duplicate
       operator: eq
-      value: invalid_boss
-    - expression: res.body.message
+      value: "false"
+    - expression: res.body.encounter.battleId
       operator: eq
-      value: The boss must belong to the card catalog
+      value: battle-test-01
 
 settings:
   encodeUrl: true

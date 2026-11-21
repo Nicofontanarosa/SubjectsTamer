@@ -1,7 +1,7 @@
 info:
-  name: "[Encounter - Test 9] Reject encounter with duplicate cards in team"
+  name: "[Encounter - Test 10] Reject encounter with duplicate cards in team"
   type: http
-  seq: 9
+  seq: 10
 
 http:
   method: POST
@@ -11,7 +11,7 @@ http:
     data: |-
       {
         "battleId": "battle-test-09",
-        "playerId": "player-123",
+        "playerId": "{{test-player-Id}}",
         "bossId": "computer-science-foundations",
         "teamUsed": ["linear-algebra", "linear-algebra", "operations-research"],
         "result": "win",

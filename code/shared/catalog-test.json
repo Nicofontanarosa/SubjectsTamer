@@ -174,5 +174,49 @@
     "stats": {"hp": 169, "attack": 28, "defense": 22},
     "imageUrl": "/monsters/semiotica-e-metodologia-clinica/image",
     "baseStats": {"hp": 179, "attack": 30, "defense": 22}
+  },
+    {
+    "id": "computer-science-foundations",
+    "name": "Foundations of Computer Science",
+    "cfu": 12,
+    "department": "Computer Science",
+    "image": "informatica/FondamentiInformatica.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 177, "attack": 29, "defense": 14},
+    "imageUrl": "/monsters/computer-science-foundations/image",
+    "baseStats": { "hp": 179, "attack": 30, "defense": 22 }
+  },
+  {
+    "id": "linear-algebra",
+    "name": "Linear Algebra",
+    "cfu": 6,
+    "department": "Computer Science",
+    "image": "informatica/AlgebraLinarea.jpeg",
+    "rarity": "Uncommon",
+    "stats": {"hp": 128, "attack": 17, "defense": 6},
+    "imageUrl": "/monsters/linear-algebra/image",
+    "baseStats": { "hp": 137, "attack": 21, "defense": 15 }
+  },
+  {
+    "id": "computer-science-lab-ii",
+    "name": "Computer Science Laboratory II",
+    "cfu": 12,
+    "department": "Computer Science",
+    "image": "informatica/LaboratorioII.jpeg",
+    "rarity": "Epic",
+    "stats": {"hp": 177, "attack": 28, "defense": 14},
+    "imageUrl": "/monsters/computer-science-lab-ii/image",
+    "baseStats": { "hp": 179, "attack": 30, "defense": 22 }
+  },
+  {
+    "id": "operations-research",
+    "name": "Operations Research",
+    "cfu": 6,
+    "department": "Computer Science",
+    "image": "informatica/RicercaOperativa.jpeg",
+    "rarity": "Uncommon",
+    "stats": {"hp": 134, "attack": 12, "defense": 6},
+    "imageUrl": "/monsters/operations-research/image",
+    "baseStats": { "hp": 137, "attack": 21, "defense": 15 }
   }
 ]

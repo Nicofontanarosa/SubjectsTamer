@@ -1,7 +1,7 @@
 info:
-  name: "[Collectore - internal - Test 3] DELETE /internal/players/<player_id>/collection - success"
+  name: "[Collectore - internal - Test 4] /collection - success"
   type: http
-  seq: 18
+  seq: 21
 
 http:
   method: DELETE

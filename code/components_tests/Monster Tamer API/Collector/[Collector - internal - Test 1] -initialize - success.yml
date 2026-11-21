@@ -1,7 +1,7 @@
 info:
-  name: "[Collector - internal - Test 1] POST /internal/players/<player_id>/collection/initialize - success"
+  name: "[Collector - internal - Test 1] /initialize - success"
   type: http
-  seq: 13
+  seq: 14
 
 http:
   method: POST

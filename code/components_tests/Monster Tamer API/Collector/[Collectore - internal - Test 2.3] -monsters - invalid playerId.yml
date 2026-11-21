@@ -1,0 +1,22 @@
+info:
+  name: "[Collectore - internal - Test 2.3] /monsters - invalid playerId"
+  type: http
+  seq: 19
+
+http:
+  method: POST
+  url: "{{collectorUrl}}/internal/players/{{test-player-Id-err}}/collection/monsters"
+  body:
+    type: json
+    data: |-
+      {
+        "monsterId": "{{monster_id}}"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

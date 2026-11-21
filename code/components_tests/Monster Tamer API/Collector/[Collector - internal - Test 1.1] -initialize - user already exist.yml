@@ -1,7 +1,7 @@
 info:
-  name: "[Collector - internal - Test 1.1] POST /internal/players/<player_id>/collection/initialize - user already exist"
+  name: "[Collector - internal - Test 1.1] /initialize - user already exist"
   type: http
-  seq: 14
+  seq: 15
 
 http:
   method: POST

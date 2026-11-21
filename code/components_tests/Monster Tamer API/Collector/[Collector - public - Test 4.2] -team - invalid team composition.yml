@@ -1,10 +1,10 @@
 info:
-  name: "[Collector - public - Test 2.2] /monsters/<monster_id>/image con monster_id senza immagine"
+  name: "[Collector - public - Test 4.2] /team - invalid team composition"
   type: http
-  seq: 5
+  seq: 11
 
 http:
-  method: GET
+  method: PUT
   url: "{{collectorUrl}}/monsters/{{monster_id_no_image}}/image"
   auth: inherit
 

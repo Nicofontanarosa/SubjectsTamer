@@ -1,11 +1,11 @@
 info:
-  name: "[Collector - public - Test 2.1] /monsters/<monster_id>/image con monster_id inesistente / errato"
+  name: "[Collector - public - Test 2.2] /image - missing artwork"
   type: http
-  seq: 4
+  seq: 6
 
 http:
   method: GET
-  url: "{{collectorUrl}}/monsters/{{monster_id_err}}/image"
+  url: "{{collectorUrl}}/monsters/{{monster_id_no_image}}/image"
   auth: inherit
 
 settings:

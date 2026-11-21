@@ -1,10 +1,10 @@
 info:
-  name: "[Collector - public - Test 3.1] /players/{playerId}/collection con playerId invalido"
+  name: "[Collector - public - Test 4] /team - success"
   type: http
-  seq: 7
+  seq: 9
 
 http:
-  method: GET
+  method: PUT
   url: "{{collectorUrl}}/monsters/{{monster_id_no_image}}/image"
   auth: inherit
 

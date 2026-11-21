@@ -1,11 +1,11 @@
 info:
-  name: "[Collector - public - Test 2] /monsters/<monster_id>/image con successo"
+  name: "[Collector - public - Test 4.4] /team - card not in collection"
   type: http
-  seq: 3
+  seq: 13
 
 http:
-  method: GET
-  url: "{{collectorUrl}}/monsters/{{monster_id}}/image"
+  method: PUT
+  url: "{{collectorUrl}}/monsters/{{monster_id_no_image}}/image"
   auth: inherit
 
 settings:

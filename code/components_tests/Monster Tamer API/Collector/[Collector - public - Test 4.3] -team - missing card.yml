@@ -1,7 +1,7 @@
 info:
-  name: "[Collector - public - Test 4] /players/<player_id>/team con playerId valido e body valido"
+  name: "[Collector - public - Test 4.3] /team - missing card"
   type: http
-  seq: 8
+  seq: 12
 
 http:
   method: PUT

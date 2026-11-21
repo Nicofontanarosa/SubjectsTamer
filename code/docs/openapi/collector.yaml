@@ -96,7 +96,7 @@ paths:
                 monsterId: { type: string }
       responses:
         "200": { description: Card belongs to player's collection }
-        "400": { description: Unknown card }
+        "400": { description: Player has no collection or the card is unknown }
   /internal/players/{playerId}/collection:
     delete:
       parameters:

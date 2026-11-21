@@ -57,6 +57,12 @@ def add_monster(player_id):
     if not isinstance(monster_id, str) or monster_id not in monsters:
         return error_response("unknown_card", "A valid catalog card is required", 400)
     with connect("collection.sqlite") as db:
+        collection_count = db.execute(
+            "SELECT COUNT(*) AS count FROM collection WHERE player_id = ?",
+            (player_id,),
+        ).fetchone()["count"]
+        if collection_count == 0:
+            return error_response("invalid_player", "No collection exists for this player ID", 400)
         db.execute(
             "INSERT OR IGNORE INTO collection(player_id, monster_id) VALUES (?, ?)",
             (player_id, monster_id),

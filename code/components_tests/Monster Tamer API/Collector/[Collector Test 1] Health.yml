@@ -1,0 +1,27 @@
+info:
+  name: "[Collector Test 1] Health"
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{collectorUrl}}/health"
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+      description: OK
+    - expression: res.body.status
+      operator: eq
+      value: ok
+      description: OK
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

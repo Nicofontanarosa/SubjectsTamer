@@ -40,8 +40,3 @@ services:
 
 volumes:
   collector-test-data:
-
-#Cosa fa questo file:
-# Avvia il container del servizio collector usando il Dockerfile dentro la cartella ./collector.
-# Mappa la porta interna 5005 del container sulla porta locale 5006 (127.0.0.1:5006:5005), così non andrà in conflitto con altri servizi.
-# Include un healthcheck periodico sull'endpoint /health del servizio per permettere a Docker di capire quando è pronto (fondamentale se usi il flag --wait).

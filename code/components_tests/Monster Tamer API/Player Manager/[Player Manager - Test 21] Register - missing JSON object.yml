@@ -1,0 +1,25 @@
+info:
+  name: '[Player Manager - Test 21] Register - missing JSON object'
+  type: http
+  seq: 21
+http:
+  method: POST
+  url: '{{playerManagerUrl}}/players'
+  auth: inherit
+runtime:
+  assertions:
+  - expression: res.status
+    operator: eq
+    value: '400'
+  - expression: res.body.error
+    operator: eq
+    value: invalid_request
+  - expression: res.body.message
+    operator: eq
+    value: A JSON object is required
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

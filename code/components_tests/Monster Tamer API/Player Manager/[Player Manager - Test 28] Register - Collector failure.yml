@@ -1,0 +1,28 @@
+info:
+  name: '[Player Manager - Test 28] Register - Collector failure'
+  type: http
+  seq: 28
+http:
+  method: POST
+  url: '{{playerManagerUrl}}/players'
+  body:
+    type: json
+    data: "{\n  \"email\": \"rollback@example.com\",\n  \"password\": \"{{player-test-password}}\",\n  \"nickname\": \"RollbackPlayer\"\n}"
+  auth: inherit
+runtime:
+  assertions:
+  - expression: res.status
+    operator: eq
+    value: '502'
+  - expression: res.body.error
+    operator: eq
+    value: initialization_failed
+  - expression: res.body.message
+    operator: eq
+    value: The starting collection could not be created
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

@@ -1,0 +1,76 @@
+info:
+  name: '[Player Manager - Test 44] Stub - verify retry called all three dependencies'
+  type: http
+  seq: 44
+http:
+  method: GET
+  url: '{{playerStubUrl}}/__calls'
+  auth: inherit
+runtime:
+  assertions:
+  - expression: res.status
+    operator: eq
+    value: '200'
+  - expression: res.body.count
+    operator: eq
+    value: '3'
+  - expression: res.body.collectorDeleteCount
+    operator: eq
+    value: '1'
+  - expression: res.body.encounterDeleteCount
+    operator: eq
+    value: '1'
+  - expression: res.body.gameManagerDeleteCount
+    operator: eq
+    value: '1'
+  - expression: res.body.calls[0].operation
+    operator: eq
+    value: collector_delete
+  - expression: res.body.calls[0].method
+    operator: eq
+    value: DELETE
+  - expression: res.body.calls[0].path
+    operator: eq
+    value: /internal/players/{{player-failed-delete-id}}/collection
+  - expression: res.body.calls[0].playerId
+    operator: eq
+    value: '{{player-failed-delete-id}}'
+  - expression: res.body.calls[0].status
+    operator: eq
+    value: '404'
+  - expression: res.body.calls[1].operation
+    operator: eq
+    value: encounter_delete
+  - expression: res.body.calls[1].method
+    operator: eq
+    value: DELETE
+  - expression: res.body.calls[1].path
+    operator: eq
+    value: /internal/players/{{player-failed-delete-id}}/encounters
+  - expression: res.body.calls[1].playerId
+    operator: eq
+    value: '{{player-failed-delete-id}}'
+  - expression: res.body.calls[1].status
+    operator: eq
+    value: '204'
+  - expression: res.body.calls[2].operation
+    operator: eq
+    value: game_manager_delete
+  - expression: res.body.calls[2].method
+    operator: eq
+    value: DELETE
+  - expression: res.body.calls[2].path
+    operator: eq
+    value: /internal/players/{{player-failed-delete-id}}/battles
+  - expression: res.body.calls[2].playerId
+    operator: eq
+    value: '{{player-failed-delete-id}}'
+  - expression: res.body.calls[2].status
+    operator: eq
+    value: '204'
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

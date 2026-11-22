@@ -1,0 +1,38 @@
+info:
+  name: '[Player Manager - Test 23] Register - success and default profile'
+  type: http
+  seq: 23
+http:
+  method: POST
+  url: '{{playerManagerUrl}}/players'
+  body:
+    type: json
+    data: "{\n  \"email\": \"new.registered@example.com\",\n  \"password\": \"{{player-test-password}}\",\n  \"nickname\": \"RegisteredPlayer\"\n}"
+  auth: inherit
+runtime:
+  assertions:
+  - expression: res.status
+    operator: eq
+    value: '201'
+  - expression: res.body.player.email
+    operator: eq
+    value: new.registered@example.com
+  - expression: res.body.player.nickname
+    operator: eq
+    value: RegisteredPlayer
+  - expression: res.body.player.avatar
+    operator: eq
+    value: ranger
+  - expression: res.body.player.bio
+    operator: eq
+    value: ''
+  - expression: res.body.player.playerId
+    operator: isNotEmpty
+  - expression: res.body.player.createdAt
+    operator: isNotEmpty
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

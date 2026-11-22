@@ -1,0 +1,31 @@
+info:
+  name: '[Player Manager - Test 19] Register - duplicate email'
+  type: http
+  seq: 19
+  
+http:
+  method: POST
+  url: '{{playerManagerUrl}}/players'
+  body:
+    type: json
+    data: "{\n  \"email\": \"{{player-test-email}}\",\n  \"password\": \"{{player-test-password}}\",\n  \"nickname\": \"DifferentNickname\"\n}"
+  auth: inherit
+
+runtime:
+  assertions:
+  - expression: res.status
+    operator: eq
+    value: '409'
+  - expression: res.body.error
+    operator: eq
+    value: account_exists
+  - expression: res.body.message
+    operator: eq
+    value: Email or nickname is already in use
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

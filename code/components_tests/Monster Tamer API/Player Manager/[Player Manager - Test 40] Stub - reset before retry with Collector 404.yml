@@ -1,0 +1,25 @@
+info:
+  name: '[Player Manager - Test 40] Stub - reset before retry with Collector 404'
+  type: http
+  seq: 40
+http:
+  method: POST
+  url: '{{playerStubUrl}}/__reset'
+  auth: inherit
+runtime:
+  assertions:
+  - expression: res.status
+    operator: eq
+    value: '200'
+  - expression: res.body.status
+    operator: eq
+    value: ok
+  - expression: res.body.count
+    operator: eq
+    value: '0'
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

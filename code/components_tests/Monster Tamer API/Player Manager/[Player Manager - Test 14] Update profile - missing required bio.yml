@@ -1,0 +1,28 @@
+info:
+  name: '[Player Manager - Test 14] Update profile - missing required bio'
+  type: http
+  seq: 14
+http:
+  method: PUT
+  url: '{{playerManagerUrl}}/players/{{test-player-Id}}'
+  body:
+    type: json
+    data: "{\n  \"nickname\": \"TempPlayer\",\n  \"avatar\": \"mage\"\n}"
+  auth: inherit
+runtime:
+  assertions:
+  - expression: res.status
+    operator: eq
+    value: '400'
+  - expression: res.body.error
+    operator: eq
+    value: invalid_profile
+  - expression: res.body.message
+    operator: eq
+    value: Profile details are invalid
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

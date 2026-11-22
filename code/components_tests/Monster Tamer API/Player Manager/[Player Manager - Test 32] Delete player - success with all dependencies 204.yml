@@ -1,0 +1,19 @@
+info:
+  name: '[Player Manager - Test 32] Delete player - success with all dependencies 204'
+  type: http
+  seq: 32
+http:
+  method: DELETE
+  url: '{{playerManagerUrl}}/players/{{player-delete-id}}'
+  auth: inherit
+runtime:
+  assertions:
+  - expression: res.status
+    operator: eq
+    value: '204'
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

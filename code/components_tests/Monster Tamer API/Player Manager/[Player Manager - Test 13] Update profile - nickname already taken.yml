@@ -1,0 +1,28 @@
+info:
+  name: '[Player Manager - Test 13] Update profile - nickname already taken'
+  type: http
+  seq: 13
+http:
+  method: PUT
+  url: '{{playerManagerUrl}}/players/{{test-player-Id}}'
+  body:
+    type: json
+    data: "{\n  \"nickname\": \"ExistingPlayer\",\n  \"avatar\": \"mage\",\n  \"bio\": \"Conflict case\"\n}"
+  auth: inherit
+runtime:
+  assertions:
+  - expression: res.status
+    operator: eq
+    value: '409'
+  - expression: res.body.error
+    operator: eq
+    value: nickname_taken
+  - expression: res.body.message
+    operator: eq
+    value: That nickname is already in use
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

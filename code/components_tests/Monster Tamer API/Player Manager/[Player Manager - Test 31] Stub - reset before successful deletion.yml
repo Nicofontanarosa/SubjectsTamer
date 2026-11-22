@@ -1,0 +1,22 @@
+info:
+  name: '[Player Manager - Test 31] Stub - reset before successful deletion'
+  type: http
+  seq: 31
+http:
+  method: POST
+  url: '{{playerStubUrl}}/__reset'
+  auth: inherit
+runtime:
+  assertions:
+  - expression: res.status
+    operator: eq
+    value: '200'
+  - expression: res.body.count
+    operator: eq
+    value: '0'
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

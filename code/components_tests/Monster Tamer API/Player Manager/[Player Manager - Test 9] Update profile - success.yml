@@ -1,0 +1,34 @@
+info:
+  name: '[Player Manager - Test 9] Update profile - success'
+  type: http
+  seq: 9
+http:
+  method: PUT
+  url: '{{playerManagerUrl}}/players/{{test-player-Id}}'
+  body:
+    type: json
+    data: "{\n  \"nickname\": \"UpdatedPlayer\",\n  \"avatar\": \"mage\",\n  \"bio\": \"Profile changed by Bruno\"\n}"
+  auth: inherit
+runtime:
+  assertions:
+  - expression: res.status
+    operator: eq
+    value: '200'
+  - expression: res.body.player.playerId
+    operator: eq
+    value: '{{test-player-Id}}'
+  - expression: res.body.player.nickname
+    operator: eq
+    value: UpdatedPlayer
+  - expression: res.body.player.avatar
+    operator: eq
+    value: mage
+  - expression: res.body.player.bio
+    operator: eq
+    value: Profile changed by Bruno
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

@@ -1,0 +1,28 @@
+info:
+  name: '[Player Manager - Test 27] Stub - simulate Collector 503'
+  type: http
+  seq: 27
+http:
+  method: POST
+  url: '{{playerStubUrl}}/__configure'
+  body:
+    type: json
+    data: "{\n  \"operation\": \"initialize\",\n  \"status\": 503\n}"
+  auth: inherit
+runtime:
+  assertions:
+  - expression: res.status
+    operator: eq
+    value: '200'
+  - expression: res.body.operation
+    operator: eq
+    value: initialize
+  - expression: res.body.responseStatus
+    operator: eq
+    value: '503'
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

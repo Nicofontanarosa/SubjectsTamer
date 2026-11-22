@@ -1,0 +1,31 @@
+info:
+  name: '[Player Manager - Test 25] Login - newly created account'
+  type: http
+  seq: 25
+http:
+  method: POST
+  url: '{{playerManagerUrl}}/auth/login'
+  body:
+    type: json
+    data: "{\n  \"email\": \"new.registered@example.com\",\n  \"password\": \"{{player-test-password}}\"\n}"
+  auth: inherit
+runtime:
+  assertions:
+  - expression: res.status
+    operator: eq
+    value: '200'
+  - expression: res.body.player.email
+    operator: eq
+    value: new.registered@example.com
+  - expression: res.body.player.nickname
+    operator: eq
+    value: RegisteredPlayer
+  - expression: res.body.player.avatar
+    operator: eq
+    value: ranger
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

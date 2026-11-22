@@ -1,0 +1,25 @@
+info:
+  name: '[Player Manager - Test 37] Delete player - dependency failed'
+  type: http
+  seq: 37
+http:
+  method: DELETE
+  url: '{{playerManagerUrl}}/players/{{player-failed-delete-id}}'
+  auth: inherit
+runtime:
+  assertions:
+  - expression: res.status
+    operator: eq
+    value: '502'
+  - expression: res.body.error
+    operator: eq
+    value: cleanup_incomplete
+  - expression: res.body.message
+    operator: eq
+    value: Some game data could not be removed. Retry account deletion to finish cleanup.
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

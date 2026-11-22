@@ -1,0 +1,54 @@
+name: player-manager-component
+
+services:
+  player-manager:
+    build:
+      context: ../..
+      dockerfile: player_manager/Dockerfile
+    environment:
+      DATA_DIR: /data
+      COLLECTOR_URL: http://dependencies:5005
+      ENCOUNTER_URL: http://dependencies:5005
+      GAME_MANAGER_URL: http://dependencies:5005
+    volumes:
+      - player-manager-test-data:/data
+    ports:
+      - "127.0.0.1:5008:5005"
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+      dependencies:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5005/health', timeout=2)"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+  seed:
+    build:
+      context: ../..
+      dockerfile: player_manager/Dockerfile
+    command: ["python", "/app/seed_test_db_player_manager.py"]
+    environment:
+      DATA_DIR: /data
+    volumes:
+      - player-manager-test-data:/data
+      - ./seed_test_db_player_manager.py:/app/seed_test_db_player_manager.py:ro
+    restart: "no"
+
+  dependencies:
+    build:
+      context: ./player_manager_stub
+    ports:
+      - "127.0.0.1:5009:5005"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5005/health', timeout=2)"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+volumes:
+  player-manager-test-data:

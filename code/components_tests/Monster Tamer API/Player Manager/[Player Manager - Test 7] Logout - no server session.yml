@@ -1,0 +1,19 @@
+info:
+  name: '[Player Manager - Test 7] Logout - no server session'
+  type: http
+  seq: 7
+http:
+  method: POST
+  url: '{{playerManagerUrl}}/auth/logout'
+  auth: inherit
+runtime:
+  assertions:
+  - expression: res.status
+    operator: eq
+    value: '204'
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

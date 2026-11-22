@@ -1,0 +1,28 @@
+info:
+  name: '[Player Manager - Test 18] Register - whitespace-only nickname'
+  type: http
+  seq: 18
+http:
+  method: POST
+  url: '{{playerManagerUrl}}/players'
+  body:
+    type: json
+    data: "{\n  \"email\": \"invalid.nickname@example.com\",\n  \"password\": \"{{player-test-password}}\",\n  \"nickname\": \"   \"\n}"
+  auth: inherit
+runtime:
+  assertions:
+  - expression: res.status
+    operator: eq
+    value: '400'
+  - expression: res.body.error
+    operator: eq
+    value: invalid_nickname
+  - expression: res.body.message
+    operator: eq
+    value: Nickname must contain 1 to 32 characters
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

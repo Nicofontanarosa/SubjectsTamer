@@ -56,6 +56,55 @@
       "type": "text",
       "enabled": true,
       "secret": false
+    },
+    {
+      "name": "playerManagerUrl",
+      "value": "http://localhost:5008",
+      "type": "text",
+      "enabled": true,
+      "secret": false
+    },
+    {
+      "name": "playerStubUrl",
+      "value": "http://localhost:5009",
+      "type": "text",
+      "enabled": true,
+      "secret": false
+    },
+    {
+      "name": "player-test-email",
+      "value": "player.test@example.com",
+      "type": "text",
+      "enabled": true,
+      "secret": false
+    },
+    {
+      "name": "player-test-password",
+      "value": "TestPassword123!",
+      "type": "text",
+      "enabled": true,
+      "secret": false
+    },
+    {
+      "name": "player-second-id",
+      "value": "test-player-secondary",
+      "type": "text",
+      "enabled": true,
+      "secret": false
+    },
+    {
+      "name": "player-delete-id",
+      "value": "test-player-delete",
+      "type": "text",
+      "enabled": true,
+      "secret": false
+    },
+    {
+      "name": "player-failed-delete-id",
+      "value": "test-player-failed-delete",
+      "type": "text",
+      "enabled": true,
+      "secret": false
     }
   ],
   "info": {

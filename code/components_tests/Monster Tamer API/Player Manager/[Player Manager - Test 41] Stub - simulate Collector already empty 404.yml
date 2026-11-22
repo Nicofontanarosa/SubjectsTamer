@@ -1,0 +1,31 @@
+info:
+  name: '[Player Manager - Test 41] Stub - simulate Collector already empty 404'
+  type: http
+  seq: 41
+http:
+  method: POST
+  url: '{{playerStubUrl}}/__configure'
+  body:
+    type: json
+    data: "{\n  \"operation\": \"collector_delete\",\n  \"status\": 404\n}"
+  auth: inherit
+runtime:
+  assertions:
+  - expression: res.status
+    operator: eq
+    value: '200'
+  - expression: res.body.status
+    operator: eq
+    value: ok
+  - expression: res.body.operation
+    operator: eq
+    value: collector_delete
+  - expression: res.body.responseStatus
+    operator: eq
+    value: '404'
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

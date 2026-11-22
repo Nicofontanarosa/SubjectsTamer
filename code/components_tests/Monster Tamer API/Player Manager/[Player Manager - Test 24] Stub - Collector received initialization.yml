@@ -1,0 +1,42 @@
+info:
+  name: '[Player Manager - Test 24] Stub - Collector received initialization'
+  type: http
+  seq: 24
+http:
+  method: GET
+  url: '{{playerStubUrl}}/__calls'
+  auth: inherit
+runtime:
+  assertions:
+  - expression: res.status
+    operator: eq
+    value: '200'
+  - expression: res.body.count
+    operator: eq
+    value: '1'
+  - expression: res.body.initializeCount
+    operator: eq
+    value: '1'
+  - expression: res.body.calls[0].method
+    operator: eq
+    value: POST
+  - expression: res.body.calls[0].operation
+    operator: eq
+    value: initialize
+  - expression: res.body.calls[0].path
+    operator: contains
+    value: /internal/players/
+  - expression: res.body.calls[0].path
+    operator: contains
+    value: /collection/initialize
+  - expression: res.body.calls[0].playerId
+    operator: isNotEmpty
+  - expression: res.body.calls[0].status
+    operator: eq
+    value: '201'
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

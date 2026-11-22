@@ -1,0 +1,28 @@
+info:
+  name: '[Player Manager - Test 16] Register - invalid email'
+  type: http
+  seq: 16
+http:
+  method: POST
+  url: '{{playerManagerUrl}}/players'
+  body:
+    type: json
+    data: "{\n  \"email\": \"not-an-email\",\n  \"password\": \"{{player-test-password}}\",\n  \"nickname\": \"InvalidEmailPlayer\"\n}"
+  auth: inherit
+runtime:
+  assertions:
+  - expression: res.status
+    operator: eq
+    value: '400'
+  - expression: res.body.error
+    operator: eq
+    value: invalid_email
+  - expression: res.body.message
+    operator: eq
+    value: Enter a valid email address
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

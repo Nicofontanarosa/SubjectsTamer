@@ -1,0 +1,28 @@
+info:
+  name: '[Player Manager - Test 15] Update profile - unknown player'
+  type: http
+  seq: 15
+http:
+  method: PUT
+  url: '{{playerManagerUrl}}/players/{{test-player-Id-err}}'
+  body:
+    type: json
+    data: "{\n  \"nickname\": \"OtherPlayer\",\n  \"avatar\": \"ranger\",\n  \"bio\": \"\"\n}"
+  auth: inherit
+runtime:
+  assertions:
+  - expression: res.status
+    operator: eq
+    value: '404'
+  - expression: res.body.error
+    operator: eq
+    value: not_found
+  - expression: res.body.message
+    operator: eq
+    value: Player not found
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

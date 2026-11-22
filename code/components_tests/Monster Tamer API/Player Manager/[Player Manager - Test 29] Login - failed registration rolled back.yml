@@ -1,0 +1,28 @@
+info:
+  name: '[Player Manager - Test 29] Login - failed registration rolled back'
+  type: http
+  seq: 29
+http:
+  method: POST
+  url: '{{playerManagerUrl}}/auth/login'
+  body:
+    type: json
+    data: "{\n  \"email\": \"rollback@example.com\",\n  \"password\": \"{{player-test-password}}\"\n}"
+  auth: inherit
+runtime:
+  assertions:
+  - expression: res.status
+    operator: eq
+    value: '401'
+  - expression: res.body.error
+    operator: eq
+    value: invalid_credentials
+  - expression: res.body.message
+    operator: eq
+    value: Email or password is incorrect
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

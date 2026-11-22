@@ -1,0 +1,32 @@
+name: components-environments
+variables:
+  - name: encounterUrl
+    value: http://localhost:5007
+  - name: collectorUrl
+    value: http://localhost:5006
+  - name: monster_id
+    value: misure-elettroniche
+  - name: monster_id_err
+    value: misureelettroniche
+  - name: monster_id_no_image
+    value: mathematical-analysis
+  - name: test-player-Id
+    value: test-player-123
+  - name: test-player-Id-err
+    value: test-player-err
+  - name: test-player-Id-new
+    value: test-player-new
+  - name: playerManagerUrl
+    value: http://localhost:5008
+  - name: playerStubUrl
+    value: http://localhost:5009
+  - name: player-test-email
+    value: player.test@example.com
+  - name: player-test-password
+    value: TestPassword123!
+  - name: player-second-id
+    value: test-player-secondary
+  - name: player-delete-id
+    value: test-player-delete
+  - name: player-failed-delete-id
+    value: test-player-failed-delete

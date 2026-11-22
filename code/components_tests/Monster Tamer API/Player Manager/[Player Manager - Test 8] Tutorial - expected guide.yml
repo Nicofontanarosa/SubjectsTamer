@@ -1,0 +1,28 @@
+info:
+  name: '[Player Manager - Test 8] Tutorial - expected guide'
+  type: http
+  seq: 8
+http:
+  method: GET
+  url: '{{playerManagerUrl}}/tutorial'
+  auth: inherit
+runtime:
+  assertions:
+  - expression: res.status
+    operator: eq
+    value: '200'
+  - expression: res.body.title
+    operator: eq
+    value: The Tamer's Field Guide
+  - expression: res.body.objective
+    operator: eq
+    value: Collect every subject and earn your Graduation.
+  - expression: res.body.rules.length
+    operator: eq
+    value: '8'
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

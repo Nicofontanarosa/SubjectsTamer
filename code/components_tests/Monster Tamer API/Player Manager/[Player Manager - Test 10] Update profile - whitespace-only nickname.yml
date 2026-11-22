@@ -1,0 +1,28 @@
+info:
+  name: '[Player Manager - Test 10] Update profile - whitespace-only nickname'
+  type: http
+  seq: 10
+http:
+  method: PUT
+  url: '{{playerManagerUrl}}/players/{{test-player-Id}}'
+  body:
+    type: json
+    data: "{\n  \"nickname\": \"   \",\n  \"avatar\": \"mage\",\n  \"bio\": \"Should not be saved\"\n}"
+  auth: inherit
+runtime:
+  assertions:
+  - expression: res.status
+    operator: eq
+    value: '400'
+  - expression: res.body.error
+    operator: eq
+    value: invalid_profile
+  - expression: res.body.message
+    operator: eq
+    value: Profile details are invalid
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

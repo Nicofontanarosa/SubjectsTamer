@@ -1,0 +1,34 @@
+# Scopo: verifica che un attacco includa moveId.
+# Come: invia actionType attack senza moveId; atteso 400 / invalid_action.
+# Collegato: scenario 2; usa la battaglia di GM 13 e insieme a GM 17 copre moveId non validi.
+info:
+  name: GM 16 - POST /battles/{battleId}/actions - scenario 2 - 400 attack missing moveId
+  type: http
+  seq: 16
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles/{{gmActionBattleId}}/actions"
+  body:
+    type: json
+    data: |-
+      {
+        "actionType": "attack",
+        "playerId": "action-player"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "400"
+    - expression: res.body.error
+      operator: eq
+      value: invalid_action
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

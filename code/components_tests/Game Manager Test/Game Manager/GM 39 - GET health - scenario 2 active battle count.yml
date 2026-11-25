@@ -1,0 +1,29 @@
+# Scopo: verifica che restino tre battaglie non finalizzate dopo i test con stato.
+# Come: invia GET /health su ambiente pulito e controlla che activeBattles sia 3.
+# Collegato: segue i flussi di stato GM 09-38; GM 01 è il controllo iniziale.
+info:
+  name: GM 39 - GET /health - scenario 2 - 200 active battle count
+  type: http
+  seq: 39
+
+http:
+  method: GET
+  url: "{{gameManagerUrl}}/health"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("returns three unfinalized battles after scenarios", function () {
+          expect(res.status).to.equal(200);
+          expect(res.body.service).to.equal("game-manager");
+          expect(res.body.activeBattles).to.be.a("number");
+          expect(res.body.activeBattles).to.equal(3);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

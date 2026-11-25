@@ -1,0 +1,35 @@
+# Scopo: scenario 5; verifica il timeout durante la persistenza Encounter.
+# Come: conclude la battaglia di GM 30; Encounter risponde oltre i 5 secondi del GM.
+# Collegato: variante 2 dello scenario 5; dipende dalla battaglia preparata da GM 30.
+info:
+  name: GM 31 - POST /battles/{battleId}/actions - scenario 5 - 502 history timeout
+  type: http
+  seq: 31
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles/{{gmHistoryTimeoutBattleId}}/actions"
+  body:
+    type: json
+    data: |-
+      {
+        "actionType": "attack",
+        "moveId": "programming-algorithms",
+        "playerId": "history-timeout"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "502"
+    - expression: res.body.error
+      operator: eq
+      value: history_unavailable
+
+settings:
+  encodeUrl: true
+  timeout: 10000
+  followRedirects: true
+  maxRedirects: 5

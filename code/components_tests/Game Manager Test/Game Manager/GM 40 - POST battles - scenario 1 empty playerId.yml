@@ -1,0 +1,33 @@
+# Scopo: verifica il rifiuto di playerId come stringa vuota.
+# Come: invia playerId vuoto e controlla HTTP 400 / invalid_player.
+# Collegato: variante 3 dello scenario 1; GM 02 e GM 03 coprono valore mancante e tipo errato.
+info:
+  name: GM 40 - POST /battles - scenario 1 - 400 empty playerId
+  type: http
+  seq: 40
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles"
+  body:
+    type: json
+    data: |-
+      {
+        "playerId": ""
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "400"
+    - expression: res.body.error
+      operator: eq
+      value: invalid_player
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

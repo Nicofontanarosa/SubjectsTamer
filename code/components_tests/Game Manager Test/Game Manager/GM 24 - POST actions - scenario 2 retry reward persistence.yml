@@ -1,0 +1,37 @@
+# Scopo: verifica che il retry completi una vittoria dopo il fallimento della ricompensa.
+# Come: ripete l'azione della battaglia di GM 22; lo stub accetta il secondo tentativo.
+# Collegato: variante 3 dello scenario 2; dipende dal 502 verificato in GM 23.
+info:
+  name: GM 24 - POST /battles/{battleId}/actions - scenario 2 - 200 reward retry finalized
+  type: http
+  seq: 24
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles/{{gmRewardRetryBattleId}}/actions"
+  body:
+    type: json
+    data: |-
+      {
+        "actionType": "attack",
+        "moveId": "programming-algorithms",
+        "playerId": "reward-retry"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("retry completes the previously won battle", function () {
+          expect(res.status).to.equal(200);
+          expect(res.body.status).to.equal("won");
+          expect(res.body.finalized).to.equal(true);
+          expect(res.body.reward.id).to.equal(bru.getVar("gmRewardRetryBossId"));
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

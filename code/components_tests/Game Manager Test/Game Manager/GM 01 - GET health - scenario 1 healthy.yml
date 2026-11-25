@@ -1,0 +1,30 @@
+# Scopo: controlla lo stato e il conteggio delle battaglie attive del Game Manager.
+# Come: invia GET /health e verifica status, service e che activeBattles sia il numero 0.
+# Collegato: GM 39 ripete il controllo dopo le prove con stato.
+info:
+  name: GM 01 - GET /health - scenario 1 - 200 healthy
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{gameManagerUrl}}/health"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("returns Game Manager health and zero active battles", function () {
+          expect(res.status).to.equal(200);
+          expect(res.body.status).to.equal("ok");
+          expect(res.body.service).to.equal("game-manager");
+          expect(res.body.activeBattles).to.be.a("number");
+          expect(res.body.activeBattles).to.equal(0);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

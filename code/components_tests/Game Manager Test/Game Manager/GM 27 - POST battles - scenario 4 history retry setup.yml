@@ -1,0 +1,37 @@
+# Scopo: prepara una vittoria per testare il retry della cronologia Encounter.
+# Come: crea una battaglia per history-retry e salva battleId e bossId.
+# Collegato: variante 1 dello scenario 4; GM 28 provoca l'errore Encounter e GM 29 ritenta la finalizzazione.
+info:
+  name: GM 27 - POST /battles - scenario 4 - 201 history retry setup
+  type: http
+  seq: 27
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles"
+  body:
+    type: json
+    data: |-
+      {
+        "playerId": "history-retry"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        bru.setVar("gmHistoryRetryBattleId", res.body.battleId);
+        bru.setVar("gmHistoryRetryBossId", res.body.boss.id);
+    - type: tests
+      code: |-
+        test("creates the history retry battle", function () {
+          expect(res.status).to.equal(201);
+          expect(res.body.status).to.equal("in_progress");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,35 @@
+# Scopo: verifica la gestione del timeout durante il salvataggio della ricompensa.
+# Come: conclude la battaglia di GM 25; il Collector supera il timeout di 5 secondi del GM.
+# Collegato: variante 2 dello scenario 3; dipende dalla battaglia preparata da GM 25.
+info:
+  name: GM 26 - POST /battles/{battleId}/actions - scenario 3 - 502 reward timeout
+  type: http
+  seq: 26
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles/{{gmRewardTimeoutBattleId}}/actions"
+  body:
+    type: json
+    data: |-
+      {
+        "actionType": "attack",
+        "moveId": "programming-algorithms",
+        "playerId": "reward-timeout"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "502"
+    - expression: res.body.error
+      operator: eq
+      value: reward_unavailable
+
+settings:
+  encodeUrl: true
+  timeout: 10000
+  followRedirects: true
+  maxRedirects: 5

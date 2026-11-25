@@ -1,0 +1,49 @@
+name: game-manager-component-tests
+
+services:
+  game-manager:
+    build:
+      context: ../..
+      dockerfile: game_manager/Dockerfile
+    environment:
+      CATALOG_PATH: /app/shared/catalog-test.json
+      COLLECTOR_URL: http://collector-stub:5005
+      ENCOUNTER_URL: http://encounter-stub:5005
+      BATTLE_TTL_MINUTES: "30"
+    ports:
+      - "127.0.0.1:5010:5005"
+    depends_on:
+      collector-stub:
+        condition: service_healthy
+      encounter-stub:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5005/health', timeout=2)"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+  collector-stub:
+    build:
+      context: ./collector_stub
+    environment:
+      CATALOG_PATH: /app/catalog-test.json
+    volumes:
+      - ../../shared/catalog-test.json:/app/catalog-test.json:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5005/health', timeout=2)"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+  encounter-stub:
+    build:
+      context: ./encounter_stub
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5005/health', timeout=2)"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s

@@ -1,0 +1,38 @@
+# Scopo: prepara una battaglia che può essere vinta con un singolo attacco.
+# Come: crea un team di test valido e salva battleId e bossId restituiti dal GM.
+# Collegato: variante 1 dello scenario 1; prerequisito di GM 21, che verifica vittoria e ricompensa.
+info:
+  name: GM 20 - POST /battles - scenario 1 - 201 win battle created
+  type: http
+  seq: 20
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles"
+  body:
+    type: json
+    data: |-
+      {
+        "playerId": "win-player"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        bru.setVar("gmWinBattleId", res.body.battleId);
+        bru.setVar("gmWinningBossId", res.body.boss.id);
+    - type: tests
+      code: |-
+        test("creates an in-progress battle for the win scenario", function () {
+          expect(res.status).to.equal(201);
+          expect(res.body.status).to.equal("in_progress");
+          expect(res.body.team).to.have.length(3);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

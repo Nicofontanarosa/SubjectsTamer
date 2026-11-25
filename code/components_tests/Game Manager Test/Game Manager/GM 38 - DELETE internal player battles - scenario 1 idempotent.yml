@@ -1,0 +1,24 @@
+# Scopo: verifica che cancellare uno stato già rimosso resti idempotente.
+# Come: ripete DELETE dopo la ricreazione di GM 37; atteso sempre 204.
+# Collegato: scenario 1; completa la sequenza GM 35-37.
+info:
+  name: GM 38 - DELETE /internal/players/{playerId}/battles - scenario 1 - 204 repeated delete
+  type: http
+  seq: 38
+
+http:
+  method: DELETE
+  url: "{{gameManagerUrl}}/internal/players/delete-player/battles"
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "204"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

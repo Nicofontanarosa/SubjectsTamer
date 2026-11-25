@@ -1,0 +1,33 @@
+# Scopo: verifica che ogni azione richieda playerId.
+# Come: invia abandon senza playerId sulla battaglia di GM 13; atteso 400 / invalid_player.
+# Collegato: scenario 2; usa la battaglia preparata da GM 13, condivisa con GM 14 e GM 16-19.
+info:
+  name: GM 15 - POST /battles/{battleId}/actions - scenario 2 - 400 missing playerId
+  type: http
+  seq: 15
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles/{{gmActionBattleId}}/actions"
+  body:
+    type: json
+    data: |-
+      {
+        "actionType": "abandon"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "400"
+    - expression: res.body.error
+      operator: eq
+      value: invalid_player
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

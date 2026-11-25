@@ -1,0 +1,34 @@
+# Scopo: impedisce a un altro player di agire sulla battaglia.
+# Come: usa il battleId preparato da GM 13 ma invia un playerId diverso; atteso 403.
+# Collegato: dipende da GM 13; GM 15-19 continuano con il proprietario corretto.
+info:
+  name: GM 14 - POST /battles/{battleId}/actions - scenario 3 - 403 wrong owner
+  type: http
+  seq: 14
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles/{{gmActionBattleId}}/actions"
+  body:
+    type: json
+    data: |-
+      {
+        "actionType": "abandon",
+        "playerId": "another-player"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "403"
+    - expression: res.body.error
+      operator: eq
+      value: forbidden
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

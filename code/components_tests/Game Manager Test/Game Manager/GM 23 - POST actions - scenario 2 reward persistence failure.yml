@@ -1,0 +1,35 @@
+# Scopo: verifica il 502 quando il Collector rifiuta la ricompensa.
+# Come: vince la battaglia di GM 22; lo stub rifiuta la prima persistenza per quel playerId.
+# Collegato: variante 2 dello scenario 2; GM 24 ripete l'azione dopo il fallimento.
+info:
+  name: GM 23 - POST /battles/{battleId}/actions - scenario 2 - 502 reward persistence failure
+  type: http
+  seq: 23
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles/{{gmRewardRetryBattleId}}/actions"
+  body:
+    type: json
+    data: |-
+      {
+        "actionType": "attack",
+        "moveId": "programming-algorithms",
+        "playerId": "reward-retry"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "502"
+    - expression: res.body.error
+      operator: eq
+      value: reward_unavailable
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

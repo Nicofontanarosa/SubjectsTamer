@@ -1,0 +1,38 @@
+# Scopo: verifica la creazione di una battaglia con team valido.
+# Come: invia un playerId sintetico, controlla HTTP 201 e salva il battleId runtime.
+# Collegato: variante 1 dello scenario 4; GM 10 riprende la stessa battaglia.
+info:
+  name: GM 09 - POST /battles - scenario 4 - 201 created
+  type: http
+  seq: 9
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles"
+  body:
+    type: json
+    data: |-
+      {
+        "playerId": "resume-player"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        bru.setVar("gmResumeBattleId", res.body.battleId);
+    - type: tests
+      code: |-
+        test("creates an active battle", function () {
+          expect(res.status).to.equal(201);
+          expect(res.body.battleId).to.be.a("string").and.not.empty;
+          expect(res.body.status).to.equal("in_progress");
+          expect(res.body.playerId).to.equal("resume-player");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

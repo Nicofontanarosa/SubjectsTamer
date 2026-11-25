@@ -1,0 +1,36 @@
+# Scopo: prepara una vittoria destinata a incontrare il timeout del Collector.
+# Come: crea una battaglia per il profilo reward-timeout e conserva battleId.
+# Collegato: variante 1 dello scenario 3; GM 26 provoca il timeout e verifica reward_unavailable.
+info:
+  name: GM 25 - POST /battles - scenario 3 - 201 reward timeout setup
+  type: http
+  seq: 25
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles"
+  body:
+    type: json
+    data: |-
+      {
+        "playerId": "reward-timeout"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        bru.setVar("gmRewardTimeoutBattleId", res.body.battleId);
+    - type: tests
+      code: |-
+        test("creates the reward timeout battle", function () {
+          expect(res.status).to.equal(201);
+          expect(res.body.status).to.equal("in_progress");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

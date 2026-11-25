@@ -1,0 +1,33 @@
+# Scopo: verifica la validazione della forma della risposta Collector.
+# Come: lo stub restituisce team non-list; il GM deve rispondere 502 / team_unavailable.
+# Collegato: variante 4 dello scenario 2; GM 06 prova JSON malformato. GM 08 copre lo scenario 3.
+info:
+  name: GM 07 - POST /battles - scenario 2 - 502 invalid Collector shape
+  type: http
+  seq: 7
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles"
+  body:
+    type: json
+    data: |-
+      {
+        "playerId": "collector-team-invalid-shape"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "502"
+    - expression: res.body.error
+      operator: eq
+      value: team_unavailable
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

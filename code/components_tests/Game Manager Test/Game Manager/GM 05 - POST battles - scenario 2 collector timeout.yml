@@ -1,0 +1,33 @@
+# Scopo: verifica la gestione del timeout durante il caricamento del team.
+# Come: il playerId fa ritardare la risposta dello stub oltre il timeout del GM; atteso 502.
+# Collegato: variante 2 dello scenario 2; GM 04, GM 06 e GM 07 verificano altri esiti del Collector.
+info:
+  name: GM 05 - POST /battles - scenario 2 - 502 Collector timeout
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles"
+  body:
+    type: json
+    data: |-
+      {
+        "playerId": "collector-team-timeout"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "502"
+    - expression: res.body.error
+      operator: eq
+      value: team_unavailable
+
+settings:
+  encodeUrl: true
+  timeout: 10000
+  followRedirects: true
+  maxRedirects: 5

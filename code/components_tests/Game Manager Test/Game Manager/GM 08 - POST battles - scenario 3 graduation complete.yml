@@ -1,0 +1,33 @@
+# Scopo: verifica il rifiuto quando il giocatore possiede tutte le carte.
+# Come: il playerId induce lo stub a restituire tutti gli ID catalogo; atteso 409 / graduated.
+# Collegato: scenario 3; GM 04-07 coprono gli errori e le risposte non valide del Collector nello scenario 2.
+info:
+  name: GM 08 - POST /battles - scenario 3 - 409 graduation complete
+  type: http
+  seq: 8
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles"
+  body:
+    type: json
+    data: |-
+      {
+        "playerId": "collector-graduated"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "409"
+    - expression: res.body.error
+      operator: eq
+      value: graduated
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

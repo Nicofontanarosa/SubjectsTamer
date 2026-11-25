@@ -1,0 +1,34 @@
+# Scopo: verifica il rifiuto di un actionType non supportato.
+# Come: invia actionType dance e controlla HTTP 400 / invalid_action.
+# Collegato: indipendente; GM 15-17 verificano campi e attaccante non validi.
+info:
+  name: GM 12 - POST /battles/{battleId}/actions - scenario 2 - 400 invalid action
+  type: http
+  seq: 12
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles/no-such-battle/actions"
+  body:
+    type: json
+    data: |-
+      {
+        "actionType": "dance",
+        "playerId": "action-player"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "400"
+    - expression: res.body.error
+      operator: eq
+      value: invalid_action
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

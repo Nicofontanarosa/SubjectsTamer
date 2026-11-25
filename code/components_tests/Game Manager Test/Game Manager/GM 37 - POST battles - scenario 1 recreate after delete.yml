@@ -1,0 +1,37 @@
+# Scopo: verifica che DELETE abbia rimosso l'associazione alla battaglia attiva.
+# Come: ripete POST /battles per delete-player e controlla 201 e un battleId nuovo.
+# Collegato: scenario 1; usa la battaglia di GM 35 cancellata da GM 36; GM 38 elimina anche questa nuova battaglia.
+info:
+  name: GM 37 - POST /battles - scenario 1 - 201 new battle after deletion
+  type: http
+  seq: 37
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles"
+  body:
+    type: json
+    data: |-
+      {
+        "playerId": "delete-player"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        bru.setVar("gmRecreatedBattleId", res.body.battleId);
+    - type: tests
+      code: |-
+        test("deletion removed the previous active battle", function () {
+          expect(res.status).to.equal(201);
+          expect(res.body.status).to.equal("in_progress");
+          expect(res.body.battleId).not.to.equal(bru.getVar("gmDeleteBattleId"));
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

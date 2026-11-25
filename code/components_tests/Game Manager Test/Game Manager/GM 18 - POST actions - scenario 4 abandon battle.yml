@@ -1,0 +1,38 @@
+# Scopo: verifica abbandono, perdita e finalizzazione della battaglia.
+# Come: invia abandon con il proprietario corretto e controlla result, outcome e finalized.
+# Collegato: variante 1 dello scenario 4; conclude la battaglia di GM 13 e GM 19 ripete l'azione.
+info:
+  name: GM 18 - POST /battles/{battleId}/actions - scenario 4 - 200 abandoned and finalized
+  type: http
+  seq: 18
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles/{{gmActionBattleId}}/actions"
+  body:
+    type: json
+    data: |-
+      {
+        "actionType": "abandon",
+        "playerId": "action-player"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("abandons and finalizes the battle", function () {
+          expect(res.status).to.equal(200);
+          expect(res.body.status).to.equal("lost");
+          expect(res.body.result).to.equal("loss");
+          expect(res.body.outcome).to.equal("abandoned");
+          expect(res.body.finalized).to.equal(true);
+          expect(res.body.activeTurn).to.equal("complete");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

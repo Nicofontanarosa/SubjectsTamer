@@ -1,0 +1,33 @@
+# Scopo: verifica la traduzione di una risposta negativa del Collector.
+# Come: il playerId seleziona nello stub una risposta team 503; il GM deve restituire 409.
+# Collegato: variante 1 dello scenario 2; GM 05-07 verificano timeout e risposte Collector non valide.
+info:
+  name: GM 04 - POST /battles - scenario 2 - 409 Collector rejects team
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles"
+  body:
+    type: json
+    data: |-
+      {
+        "playerId": "collector-team-unavailable"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "409"
+    - expression: res.body.error
+      operator: eq
+      value: team_unavailable
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

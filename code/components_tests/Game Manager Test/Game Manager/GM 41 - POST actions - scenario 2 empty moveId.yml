@@ -1,0 +1,35 @@
+# Scopo: verifica che moveId vuoto non selezioni un attaccante valido.
+# Come: usa la battaglia attiva di resume-player e controlla HTTP 400 / invalid_attacker.
+# Collegato: scenario 2; usa la battaglia attiva di GM 09-10. GM 16-17 coprono moveId mancante e attaccante non valido.
+info:
+  name: GM 41 - POST /battles/{battleId}/actions - scenario 2 - 400 empty moveId
+  type: http
+  seq: 41
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles/{{gmResumeBattleId}}/actions"
+  body:
+    type: json
+    data: |-
+      {
+        "actionType": "attack",
+        "moveId": "",
+        "playerId": "resume-player"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "400"
+    - expression: res.body.error
+      operator: eq
+      value: invalid_attacker
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,35 @@
+# Scopo: verifica la risposta idempotente per un'azione ripetuta su battaglia finalizzata.
+# Come: ripete abandon sulla battaglia già conclusa in GM 18; risultato atteso invariato.
+# Collegato: variante 2 dello scenario 4; dipende da GM 13 e GM 18.
+info:
+  name: GM 19 - POST /battles/{battleId}/actions - scenario 4 - 200 finalized action is idempotent
+  type: http
+  seq: 19
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles/{{gmActionBattleId}}/actions"
+  body:
+    type: json
+    data: |-
+      {
+        "actionType": "abandon",
+        "playerId": "action-player"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("keeps the finalized result on a repeated action", function () {
+          expect(res.status).to.equal(200);
+          expect(res.body.finalized).to.equal(true);
+          expect(res.body.outcome).to.equal("abandoned");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

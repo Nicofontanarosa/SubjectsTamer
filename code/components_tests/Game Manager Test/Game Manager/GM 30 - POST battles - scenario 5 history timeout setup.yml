@@ -1,0 +1,36 @@
+# Scopo: prepara una vittoria destinata al timeout della cronologia.
+# Come: crea una battaglia per history-timeout e conserva il battleId.
+# Collegato: variante 1 dello scenario 5; GM 31 provoca il timeout e verifica history_unavailable.
+info:
+  name: GM 30 - POST /battles - scenario 5 - 201 history timeout setup
+  type: http
+  seq: 30
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles"
+  body:
+    type: json
+    data: |-
+      {
+        "playerId": "history-timeout"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        bru.setVar("gmHistoryTimeoutBattleId", res.body.battleId);
+    - type: tests
+      code: |-
+        test("creates the history timeout battle", function () {
+          expect(res.status).to.equal(201);
+          expect(res.body.status).to.equal("in_progress");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

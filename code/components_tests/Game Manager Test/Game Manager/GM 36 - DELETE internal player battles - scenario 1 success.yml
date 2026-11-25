@@ -1,0 +1,24 @@
+# Scopo: verifica la cancellazione delle battaglie temporanee del player.
+# Come: invia DELETE per delete-player dopo la creazione eseguita da GM 35; atteso 204.
+# Collegato: scenario 1; GM 37 verifica la rimozione indirettamente e GM 38 ripete la cancellazione.
+info:
+  name: GM 36 - DELETE /internal/players/{playerId}/battles - scenario 1 - 204 deleted
+  type: http
+  seq: 36
+
+http:
+  method: DELETE
+  url: "{{gameManagerUrl}}/internal/players/delete-player/battles"
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "204"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

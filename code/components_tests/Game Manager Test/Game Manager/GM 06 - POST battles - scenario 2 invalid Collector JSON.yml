@@ -1,0 +1,33 @@
+# Scopo: verifica una risposta Collector 200 con JSON non decodificabile.
+# Come: il playerId seleziona il corpo malformato dello stub; il GM deve restituire 502.
+# Collegato: variante 3 dello scenario 2; GM 07 controlla una struttura JSON decodificabile ma non valida.
+info:
+  name: GM 06 - POST /battles - scenario 2 - 502 invalid Collector JSON
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles"
+  body:
+    type: json
+    data: |-
+      {
+        "playerId": "collector-team-invalid-json"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "502"
+    - expression: res.body.error
+      operator: eq
+      value: team_unavailable
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,34 @@
+# Scopo: verifica che un errore Encounter renda 502 anche l'abbandono.
+# Come: invia abandon sulla battaglia di GM 32; il primo salvataggio history fallisce.
+# Collegato: variante 2 dello scenario 6; GM 34 ripete abandon e verifica la finalizzazione.
+info:
+  name: GM 33 - POST /battles/{battleId}/actions - scenario 6 - 502 abandon history failure
+  type: http
+  seq: 33
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles/{{gmAbandonRetryBattleId}}/actions"
+  body:
+    type: json
+    data: |-
+      {
+        "actionType": "abandon",
+        "playerId": "history-abandon-retry"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "502"
+    - expression: res.body.error
+      operator: eq
+      value: history_unavailable
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

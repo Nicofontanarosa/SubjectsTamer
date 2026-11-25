@@ -1,0 +1,31 @@
+# Scopo: verifica il rifiuto della creazione se playerId manca.
+# Come: invia un oggetto JSON vuoto e controlla HTTP 400 / invalid_player.
+# Collegato: variante 1 dello scenario 1; GM 03 verifica il tipo errato e GM 40 il valore vuoto.
+info:
+  name: GM 02 - POST /battles - scenario 1 - 400 missing playerId
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles"
+  body:
+    type: json
+    data: |-
+      {}
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "400"
+    - expression: res.body.error
+      operator: eq
+      value: invalid_player
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

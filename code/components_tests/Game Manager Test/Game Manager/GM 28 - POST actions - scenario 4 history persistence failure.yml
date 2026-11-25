@@ -1,0 +1,35 @@
+# Scopo: verifica il 502 quando Encounter non registra una battaglia vinta.
+# Come: vince la battaglia di GM 27; reward riesce e il primo salvataggio history fallisce.
+# Collegato: variante 2 dello scenario 4; GM 29 ritenta e verifica la finalizzazione.
+info:
+  name: GM 28 - POST /battles/{battleId}/actions - scenario 4 - 502 history persistence failure
+  type: http
+  seq: 28
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles/{{gmHistoryRetryBattleId}}/actions"
+  body:
+    type: json
+    data: |-
+      {
+        "actionType": "attack",
+        "moveId": "programming-algorithms",
+        "playerId": "history-retry"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "502"
+    - expression: res.body.error
+      operator: eq
+      value: history_unavailable
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

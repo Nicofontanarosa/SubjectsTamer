@@ -1,0 +1,37 @@
+# Scopo: prepara lo stato per simulare un errore temporaneo di salvataggio ricompensa.
+# Come: crea la battaglia per reward-retry e conserva il battleId.
+# Collegato: variante 1 dello scenario 2; GM 23 induce il primo errore Collector e GM 24 ritenta.
+info:
+  name: GM 22 - POST /battles - scenario 2 - 201 reward retry setup
+  type: http
+  seq: 22
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles"
+  body:
+    type: json
+    data: |-
+      {
+        "playerId": "reward-retry"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        bru.setVar("gmRewardRetryBattleId", res.body.battleId);
+        bru.setVar("gmRewardRetryBossId", res.body.boss.id);
+    - type: tests
+      code: |-
+        test("creates the reward retry battle", function () {
+          expect(res.status).to.equal(201);
+          expect(res.body.status).to.equal("in_progress");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

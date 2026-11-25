@@ -1,0 +1,36 @@
+# Scopo: verifica il retry di un abbandono non ancora salvato in cronologia.
+# Come: ripete abandon dopo GM 33; Encounter accetta il secondo tentativo.
+# Collegato: variante 3 dello scenario 6; dipende da GM 32 e dal fallimento di GM 33.
+info:
+  name: GM 34 - POST /battles/{battleId}/actions - scenario 6 - 200 abandoned history retry finalized
+  type: http
+  seq: 34
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles/{{gmAbandonRetryBattleId}}/actions"
+  body:
+    type: json
+    data: |-
+      {
+        "actionType": "abandon",
+        "playerId": "history-abandon-retry"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("retry finalizes the abandoned battle", function () {
+          expect(res.status).to.equal(200);
+          expect(res.body.result).to.equal("loss");
+          expect(res.body.outcome).to.equal("abandoned");
+          expect(res.body.finalized).to.equal(true);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

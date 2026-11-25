@@ -1,0 +1,36 @@
+# Scopo: prepara una battaglia attiva per le prove di validazione delle azioni.
+# Come: avvia una battaglia valida e salva il battleId per le richieste successive.
+# Collegato: prepara la battaglia condivisa dagli scenari 2-4, usata da GM 14-19; GM 41 usa quella di GM 09.
+info:
+  name: GM 13 - POST /battles - scenario 3 - 201 action battle created
+  type: http
+  seq: 13
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles"
+  body:
+    type: json
+    data: |-
+      {
+        "playerId": "action-player"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        bru.setVar("gmActionBattleId", res.body.battleId);
+    - type: tests
+      code: |-
+        test("creates the battle used by action scenarios", function () {
+          expect(res.status).to.equal(201);
+          expect(res.body.status).to.equal("in_progress");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

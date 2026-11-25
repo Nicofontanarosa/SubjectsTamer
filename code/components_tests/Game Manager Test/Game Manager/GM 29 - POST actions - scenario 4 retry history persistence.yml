@@ -1,0 +1,36 @@
+# Scopo: verifica il retry della finalizzazione dopo un errore Encounter.
+# Come: ripete l'azione della battaglia di GM 27; Encounter accetta il secondo tentativo.
+# Collegato: variante 3 dello scenario 4; dipende dal 502 verificato in GM 28.
+info:
+  name: GM 29 - POST /battles/{battleId}/actions - scenario 4 - 200 history retry finalized
+  type: http
+  seq: 29
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles/{{gmHistoryRetryBattleId}}/actions"
+  body:
+    type: json
+    data: |-
+      {
+        "actionType": "attack",
+        "moveId": "programming-algorithms",
+        "playerId": "history-retry"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("retry finalizes after history storage recovers", function () {
+          expect(res.status).to.equal(200);
+          expect(res.body.finalized).to.equal(true);
+          expect(res.body.reward.id).to.equal(bru.getVar("gmHistoryRetryBossId"));
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

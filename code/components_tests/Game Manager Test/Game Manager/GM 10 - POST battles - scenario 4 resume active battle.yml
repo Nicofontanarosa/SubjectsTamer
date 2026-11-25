@@ -1,0 +1,34 @@
+# Scopo: verifica che una battaglia attiva venga ripresa, non duplicata.
+# Come: ripete POST /battles per resume-player e confronta battleId con GM 09.
+# Collegato: variante 2 dello scenario 4; dipende dalla battaglia creata da GM 09, riusata anche da GM 41.
+info:
+  name: GM 10 - POST /battles - scenario 4 - 200 existing battle resumed
+  type: http
+  seq: 10
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles"
+  body:
+    type: json
+    data: |-
+      {
+        "playerId": "resume-player"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("returns the already active battle", function () {
+          expect(res.status).to.equal(200);
+          expect(res.body.battleId).to.equal(bru.getVar("gmResumeBattleId"));
+          expect(res.body.status).to.equal("in_progress");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

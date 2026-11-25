@@ -1,0 +1,35 @@
+# Scopo: rifiuta una carta che non appartiene alla squadra attiva.
+# Come: invia un moveId estraneo al team; atteso 400 / invalid_attacker.
+# Collegato: scenario 2; usa la battaglia di GM 13; GM 18 la conclude con abandon nello scenario 4.
+info:
+  name: GM 17 - POST /battles/{battleId}/actions - scenario 2 - 400 invalid attacker
+  type: http
+  seq: 17
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles/{{gmActionBattleId}}/actions"
+  body:
+    type: json
+    data: |-
+      {
+        "actionType": "attack",
+        "moveId": "not-in-the-team",
+        "playerId": "action-player"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "400"
+    - expression: res.body.error
+      operator: eq
+      value: invalid_attacker
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

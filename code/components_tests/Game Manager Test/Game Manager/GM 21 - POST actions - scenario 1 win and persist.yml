@@ -1,0 +1,40 @@
+# Scopo: verifica vittoria, ricompensa, guarigione del team e finalizzazione.
+# Come: attacca con la carta ad alto attacco del team preparato da GM 20; controlla HTTP 200 e stato.
+# Collegato: variante 2 dello scenario 1; dipende da GM 20 e usa persistenze positive di Collector ed Encounter.
+info:
+  name: GM 21 - POST /battles/{battleId}/actions - scenario 1 - 200 win reward and history saved
+  type: http
+  seq: 21
+
+http:
+  method: POST
+  url: "{{gameManagerUrl}}/battles/{{gmWinBattleId}}/actions"
+  body:
+    type: json
+    data: |-
+      {
+        "actionType": "attack",
+        "moveId": "programming-algorithms",
+        "playerId": "win-player"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("wins, receives the boss and finalizes the battle", function () {
+          expect(res.status).to.equal(200);
+          expect(res.body.status).to.equal("won");
+          expect(res.body.result).to.equal("win");
+          expect(res.body.finalized).to.equal(true);
+          expect(res.body.reward.id).to.equal(bru.getVar("gmWinningBossId"));
+          expect(res.body.activeTurn).to.equal("complete");
+          expect(res.body.team[0].currentHp).to.equal(res.body.team[0].stats.hp);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

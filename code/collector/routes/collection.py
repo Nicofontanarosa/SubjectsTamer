@@ -1,19 +1,23 @@
 import random
+import sqlite3
 
 from flask import Blueprint, current_app, jsonify, request
 
 from common.game import error_response
 from common.storage import connect
-from routes.helpers import owned_ids, saved_team
+from routes.helpers import database_error_response, owned_ids, saved_team
 
 collection_bp = Blueprint("collection", __name__)
 
 # Returns the player's collection of monsters, their saved team, and progress information.
 @collection_bp.get("/players/<player_id>/collection")
 def get_collection(player_id):
-    with connect("collection.sqlite") as db:
-        ids = owned_ids(db, player_id)
-        team_ids = saved_team(db, player_id)
+    try:
+        with connect("collection.sqlite") as db:
+            ids = owned_ids(db, player_id)
+            team_ids = saved_team(db, player_id)
+    except sqlite3.Error:
+        return database_error_response("loading a player's collection")
     return jsonify(
         {
             "monsters": [current_app.config["MONSTERS"][monster_id] for monster_id in ids],
@@ -32,20 +36,23 @@ def initialize_collection(player_id):
     if len(candidates) < 3:
         return error_response("catalog_invalid", "At least three 6 or 9 CFU cards are required", 500)
     chosen = random.sample(candidates, 3)
-    with connect("collection.sqlite") as db:
-        existing = db.execute(
-            "SELECT monster_id FROM collection WHERE player_id = ?", (player_id,)
-        ).fetchall()
-        if existing:
-            return jsonify({"playerId": player_id, "monsterIds": [row["monster_id"] for row in existing]}), 200
-        db.executemany(
-            "INSERT INTO collection(player_id, monster_id) VALUES (?, ?)",
-            [(player_id, monster["id"]) for monster in chosen],
-        )
-        db.execute(
-            "INSERT INTO teams(player_id, slot_1, slot_2, slot_3) VALUES (?, ?, ?, ?)",
-            (player_id, *(monster["id"] for monster in chosen)),
-        )
+    try:
+        with connect("collection.sqlite") as db:
+            existing = db.execute(
+                "SELECT monster_id FROM collection WHERE player_id = ?", (player_id,)
+            ).fetchall()
+            if existing:
+                return jsonify({"playerId": player_id, "monsterIds": [row["monster_id"] for row in existing]}), 200
+            db.executemany(
+                "INSERT INTO collection(player_id, monster_id) VALUES (?, ?)",
+                [(player_id, monster["id"]) for monster in chosen],
+            )
+            db.execute(
+                "INSERT INTO teams(player_id, slot_1, slot_2, slot_3) VALUES (?, ?, ?, ?)",
+                (player_id, *(monster["id"] for monster in chosen)),
+            )
+    except sqlite3.Error:
+        return database_error_response("initializing a player's collection")
     return jsonify({"playerId": player_id, "monsterIds": [monster["id"] for monster in chosen]}), 201
 
 # Adds a new monster to the player's collection if it is valid and not already owned.
@@ -56,24 +63,30 @@ def add_monster(player_id):
     monsters = current_app.config["MONSTERS"]
     if not isinstance(monster_id, str) or monster_id not in monsters:
         return error_response("unknown_card", "A valid catalog card is required", 400)
-    with connect("collection.sqlite") as db:
-        collection_count = db.execute(
-            "SELECT COUNT(*) AS count FROM collection WHERE player_id = ?",
-            (player_id,),
-        ).fetchone()["count"]
-        if collection_count == 0:
-            return error_response("invalid_player", "No collection exists for this player ID", 400)
-        db.execute(
-            "INSERT OR IGNORE INTO collection(player_id, monster_id) VALUES (?, ?)",
-            (player_id, monster_id),
-        )
-        ids = owned_ids(db, player_id)
+    try:
+        with connect("collection.sqlite") as db:
+            collection_count = db.execute(
+                "SELECT COUNT(*) AS count FROM collection WHERE player_id = ?",
+                (player_id,),
+            ).fetchone()["count"]
+            if collection_count == 0:
+                return error_response("invalid_player", "No collection exists for this player ID", 400)
+            db.execute(
+                "INSERT OR IGNORE INTO collection(player_id, monster_id) VALUES (?, ?)",
+                (player_id, monster_id),
+            )
+            ids = owned_ids(db, player_id)
+    except sqlite3.Error:
+        return database_error_response("adding a monster to a player's collection")
     return jsonify({"playerId": player_id, "monster": monsters[monster_id], "owned": len(ids)}), 200
 
 # Deletes the player's collection and team from the database.
 @collection_bp.delete("/internal/players/<player_id>/collection")
 def delete_collection(player_id):
-    with connect("collection.sqlite") as db:
-        db.execute("DELETE FROM teams WHERE player_id = ?", (player_id,))
-        db.execute("DELETE FROM collection WHERE player_id = ?", (player_id,))
+    try:
+        with connect("collection.sqlite") as db:
+            db.execute("DELETE FROM teams WHERE player_id = ?", (player_id,))
+            db.execute("DELETE FROM collection WHERE player_id = ?", (player_id,))
+    except sqlite3.Error:
+        return database_error_response("deleting a player's collection")
     return "", 204

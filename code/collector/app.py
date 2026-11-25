@@ -1,5 +1,6 @@
 # Imports Python's standard module for logging.
 import logging
+import sqlite3
 from pathlib import Path
 
 from flask import Flask
@@ -23,23 +24,27 @@ app.config["ASSET_DIR"] = Path("/app/shared/assets")
 # the collection and teams tables without deleting existing data. Initialization runs at every startup, but creates
 # the file and tables only if they are missing.
 def initialize_database():
-    with connect("collection.sqlite") as db:
-        db.executescript(
-            """
-            CREATE TABLE IF NOT EXISTS collection (
-                player_id TEXT NOT NULL,
-                monster_id TEXT NOT NULL,
-                acquired_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                PRIMARY KEY (player_id, monster_id)
-            );
-            CREATE TABLE IF NOT EXISTS teams (
-                player_id TEXT PRIMARY KEY,
-                slot_1 TEXT NOT NULL,
-                slot_2 TEXT NOT NULL,
-                slot_3 TEXT NOT NULL
-            );
-            """
-        )
+    try:
+        with connect("collection.sqlite") as db:
+            db.executescript(
+                """
+                CREATE TABLE IF NOT EXISTS collection (
+                    player_id TEXT NOT NULL,
+                    monster_id TEXT NOT NULL,
+                    acquired_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    PRIMARY KEY (player_id, monster_id)
+                );
+                CREATE TABLE IF NOT EXISTS teams (
+                    player_id TEXT PRIMARY KEY,
+                    slot_1 TEXT NOT NULL,
+                    slot_2 TEXT NOT NULL,
+                    slot_3 TEXT NOT NULL
+                );
+                """
+            )
+    except sqlite3.Error:
+        app.logger.exception("Failed to initialize collector database")
+        raise
 
 # Tells Flask to attach the routes defined in a blueprint to the application. A blueprint groups endpoints separately;
 # registering it adds those routes to the application so Flask can handle requests to them.

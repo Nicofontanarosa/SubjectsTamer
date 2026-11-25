@@ -1,3 +1,12 @@
+from flask import current_app
+
+from common.game import error_response
+
+# Logs the database exception and returns the attempted operation without exposing database details.
+def database_error_response(operation):
+    current_app.logger.exception("Database operation failed while %s", operation)
+    return error_response("database_error", operation, 500)
+
 # Returns a list of monster IDs owned by the specified player, ordered by acquisition time and then by monster ID.
 def owned_ids(db, player_id):
     rows = db.execute(

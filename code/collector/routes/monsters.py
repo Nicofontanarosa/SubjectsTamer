@@ -1,8 +1,10 @@
+import sqlite3
+
 from flask import Blueprint, current_app, jsonify, request, send_file
 
 from common.game import error_response
 from common.storage import connect
-from routes.helpers import owned_ids
+from routes.helpers import database_error_response, owned_ids
 
 # Creates a Flask Blueprint called monsters_bp to group the monster routes defined in monsters.py.
 # "monsters" is the blueprint's internal name, used by Flask to identify it.
@@ -16,8 +18,11 @@ monsters_bp = Blueprint("monsters", __name__)
 def get_catalog():
     catalog = current_app.config["CATALOG"]
     player_id = request.args.get("playerId")
-    with connect("collection.sqlite") as db:
-        owned = set(owned_ids(db, player_id)) if player_id else set()
+    try:
+        with connect("collection.sqlite") as db:
+            owned = set(owned_ids(db, player_id)) if player_id else set()
+    except sqlite3.Error:
+        return database_error_response("loading the monster catalog")
     monsters = [{**monster, "owned": monster["id"] in owned} for monster in catalog]
     return jsonify({"monsters": monsters}), 200
 

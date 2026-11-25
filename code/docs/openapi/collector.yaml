@@ -15,6 +15,8 @@ paths:
       summary: Return catalog cards with optional ownership state
       responses:
         "200": { description: Catalog cards with ownership flags when playerId is supplied }
+        "500": { description: Database failure while loading the monster catalog }
+
   /monsters/{monsterId}/image:
     get:
       parameters:
@@ -37,6 +39,8 @@ paths:
         - $ref: "#/components/parameters/playerId"
       responses:
         "200": { description: Owned card details with active team and progress }
+        "500": { description: Database failure while loading a player's collection }
+
   /players/{playerId}/team:
     put:
       parameters:
@@ -63,6 +67,8 @@ paths:
       responses:
         "200": { description: Team saved }
         "400": { description: Invalid team size or duplicate or unknown card }
+        "500": { description: Database failure while updating a player's team }
+
   /internal/players/{playerId}/collection/initialize:
     post:
       parameters:
@@ -71,7 +77,8 @@ paths:
       responses:
         "201": { description: Starter collection created }
         "200": { description: Existing collection returned without reassignment }
-        "500": { description: Catalog does not contain enough eligible cards }
+        "500": { description: Catalog does not contain enough eligible cards or a database failure while initializing a player's collection }
+
   /internal/players/{playerId}/team:
     get:
       parameters:
@@ -80,6 +87,8 @@ paths:
       responses:
         "200": { description: Validated team }
         "400": { description: Team is missing or malformed or contains unknown cards or includes cards not owned by the player }
+        "500": { description: Database failure while loading a player's team }
+
   /internal/players/{playerId}/collection/monsters:
     post:
       parameters:
@@ -97,6 +106,8 @@ paths:
       responses:
         "200": { description: Card belongs to player's collection }
         "400": { description: Player has no collection or the card is unknown }
+        "500": { description: Database failure while adding a monster to a player's collection }
+
   /internal/players/{playerId}/collection:
     delete:
       parameters:
@@ -104,6 +115,8 @@ paths:
       summary: Delete collection and team
       responses:
         "204": { description: Player collection removed }
+        "500": { description: Database failure while deleting a player's collection }
+
   /health:
     get:
       responses:

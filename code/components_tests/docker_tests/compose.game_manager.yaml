@@ -26,7 +26,7 @@ services:
 
   collector-stub:
     build:
-      context: ./collector_stub
+      context: ./game_manager_components/collector_stub
     environment:
       CATALOG_PATH: /app/catalog-test.json
     volumes:
@@ -40,7 +40,7 @@ services:
 
   encounter-stub:
     build:
-      context: ./encounter_stub
+      context: ./game_manager_components/encounter_stub
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5005/health', timeout=2)"]
       interval: 5s

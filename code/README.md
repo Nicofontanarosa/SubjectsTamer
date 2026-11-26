@@ -37,6 +37,47 @@ This stops the services but preserves player accounts, collections, and history.
 
 Player Manager, Collector, and Encounter each own a persistent SQLite database. Active battle state is held in Game Manager memory and is discarded after 30 minutes of inactivity or when Game Manager restarts. Completed history and rewards are saved before a battle is reported complete.
 
+# 🧪 Component tests with Bruno
+
+The Bruno collection in `components_tests/Monster Tamer API/` contains component tests for Collector, Encounter, Player Manager, and Game Manager. Its `components-environments` environment points to the isolated test services on ports 5006–5010; it does not use the application stack in `docker-compose.yml`.
+
+Requirements: Docker with the Compose plugin and the Bruno CLI. If the CLI is not installed, install it once with:
+
+```sh
+npm install --global @usebruno/cli
+```
+
+From the `code/` directory, start all four test stacks:
+
+```sh
+docker compose -p collector-tests -f components_tests/docker_tests/compose.collector.yaml up --build -d --wait &&
+docker compose -p encounter-tests -f components_tests/docker_tests/compose.encounter.yaml up --build -d --wait &&
+docker compose -p player-manager-tests -f components_tests/docker_tests/compose.player_manager.yaml up --build -d --wait &&
+docker compose -p game-manager-tests -f components_tests/docker_tests/compose.game_manager.yaml up --build -d --wait
+```
+
+If startup fails with `500 Internal Server Error` referencing `~/.docker/desktop/docker.sock` or `buildx_buildkit_default`, the selected Docker Desktop engine/BuildKit is unavailable; this is not a Compose-file error. Check `docker context ls` and `docker version`. If the `default` context points to a running Docker Engine, switch to it and rerun the commands:
+
+```sh
+docker context use default
+docker version
+```
+
+Then run the full Bruno collection, still from `code/`:
+
+```sh
+bru run "components_tests/Monster Tamer API" --env components-environments
+```
+
+The same collection can be opened in the Bruno desktop app; select the `components-environments` environment and run the collection. After testing, stop the stacks and remove their isolated test databases (the seed containers will recreate them next time):
+
+```sh
+docker compose -p collector-tests -f components_tests/docker_tests/compose.collector.yaml down -v
+docker compose -p encounter-tests -f components_tests/docker_tests/compose.encounter.yaml down -v
+docker compose -p player-manager-tests -f components_tests/docker_tests/compose.player_manager.yaml down -v
+docker compose -p game-manager-tests -f components_tests/docker_tests/compose.game_manager.yaml down -v
+```
+
 # ⚙️ How does it work?
 
 For detailed architectural and functional specifications, please refer to the `doc/` directory. The OpenAPI specification files for the microservices are located in the `docs/openapi/` directory and can be viewed via Swagger UI.
@@ -117,7 +158,7 @@ The login screen only checks the password and selects a local player profile.
 
 2. Lack of Distributed Transactions for Deletion: Player deletion is coordinated by Player Manager without distributed transactions. Partial failures return a 502 error and leave orphan data in downstream services unless the client retries the idempotent DELETE requests.
 
-3. Missing Automated Testing: There are currently no unit, integration, or end-to-end (E2E) tests implemented across the microservices or the frontend client.
+3. Limited Automated Testing: Bruno component tests cover the microservices, but unit and end-to-end (E2E) test coverage remains limited, particularly for the frontend client.
 
 # 🙌 DISCLAIMER
 

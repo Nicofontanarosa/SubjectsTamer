@@ -30,3 +30,5 @@ variables:
     value: test-player-delete
   - name: player-failed-delete-id
     value: test-player-failed-delete
+  - name: gameManagerUrl
+    value: http://localhost:5010

@@ -1,4 +1,0 @@
-name: game-manager-test
-variables:
-  - name: gameManagerUrl
-    value: http://localhost:5010
